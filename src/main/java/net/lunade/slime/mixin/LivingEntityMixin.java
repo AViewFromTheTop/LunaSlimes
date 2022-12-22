@@ -17,7 +17,7 @@ public class LivingEntityMixin {
     @Inject(at = @At("RETURN"), method = "hurt")
     public void hurt(DamageSource damageSource, float f, CallbackInfoReturnable<Boolean> infoReturnable) {
         if (infoReturnable.getReturnValue() && LivingEntity.class.cast(this) instanceof Slime slime) {
-            if (!slime.isTiny()) {
+            if (!slime.isTiny() && slime.isDeadOrDying()) {
                 int split = ((SlimeInterface)slime).spawnSingleSlime();
                 slime.setSize(slime.getSize() - split, true);
                 slime.deathTime = 0;
