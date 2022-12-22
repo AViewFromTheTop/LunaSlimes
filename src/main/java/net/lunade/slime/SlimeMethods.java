@@ -80,10 +80,23 @@ public class SlimeMethods {
                 slime.setSize(splitOff = i % 2 == 0 ? (int) (i * 0.5) : 1, true);
                 slime.moveTo(origin.getX() + (double) g, origin.getY() + 0.5, origin.getZ() + (double) h, origin.getRandom().nextFloat() * 360.0f, 0.0f);
                 ((SlimeInterface)slime).setMergeCooldown(100);
+                SlimeMethods.spawnSlimeParticles(origin);
                 origin.level.addFreshEntity(slime);
             }
         }
         return splitOff;
+    }
+
+    public static void spawnSlimeParticles(Slime slime) {
+        int i = slime.getSize();
+        for(int j = 0; j < (i * i) * 4; ++j) {
+            float f = slime.getRandom().nextFloat() * 6.2831855F;
+            float g = slime.getRandom().nextFloat() * 0.5F + 0.5F;
+            float h = Mth.sin(f) * (float)i * 0.5F * g;
+            float k = Mth.cos(f) * (float)i * 0.5F * g;
+            float l = Mth.cos(f) * (float)i * 0.5F * g;
+            slime.level.addParticle(slime.getParticleType(), slime.getX() + (double)h, slime.getY() + l, slime.getZ() + (double)k, 0.0D, 0.0D, 0.0D);
+        }
     }
 
 }
