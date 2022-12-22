@@ -1,11 +1,10 @@
 package net.lunade.slime.mixin;
 
-import net.lunade.slime.impl.SlimeInterface;
+import net.lunade.slime.SlimeMethods;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Slime;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -18,7 +17,7 @@ public class LivingEntityMixin {
     public void hurt(DamageSource damageSource, float f, CallbackInfoReturnable<Boolean> infoReturnable) {
         if (infoReturnable.getReturnValue() && LivingEntity.class.cast(this) instanceof Slime slime) {
             if (!slime.isTiny() && slime.isDeadOrDying()) {
-                int split = ((SlimeInterface)slime).spawnSingleSlime();
+                int split = SlimeMethods.spawnSingleSlime(slime);
                 slime.setSize(slime.getSize() - split, true);
                 slime.deathTime = 0;
             }
