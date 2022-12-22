@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "id": "lunaslimes",
+  "version": "${version}",
+
+  "name": "Luna Slimes",
+  "description": "Modifies Slimes I guess",
+  "authors": [
+    "Luna",
+    "Merp"
+  ],
+
+  "license": "MIT",
+  "icon": "assets/lunade/copper_icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "net.lunade.slime.LunaSlimesMain"
+    ],
+    "client": [
+      "net.lunade.slime.LunaSlimesClient"
+    ]
+  },
+  "mixins": [
+    "lunaslimes.mixins.json"
+  ],
+
+  "accessWidener": "lunaslimes.accesswidener",
+
+  "depends": {
+    "fabricloader": ">=0.14.6",
+    "fabric": ">=0.65.1",
+    "minecraft": ">=1.19.3",
+    "java": ">=17"
+  },
+  "custom": {
+    "modupdater": {
+      "strategy": "curseforge",
+      "projectID": "571336",
+      "strict": "false"
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "minVersion": "0.8.5",
+  "package": "net.lunade.slime.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "client": [
+    "client.SlimeRendererMixin"
+  ],
+  "mixins": [
+    "LivingEntityMixin",
+    "SlimeMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
