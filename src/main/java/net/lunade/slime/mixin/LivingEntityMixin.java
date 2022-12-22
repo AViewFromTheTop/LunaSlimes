@@ -14,18 +14,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(LivingEntity.class)
 public class LivingEntityMixin {
 
-    @Unique float prevHealth;
-
-    @Inject(at = @At("HEAD"), method = "hurt")
-    public void savePrevHealth(DamageSource damageSource, float f, CallbackInfoReturnable<Boolean> infoReturnable) {
-        this.prevHealth = LivingEntity.class.cast(this).getHealth();
-    }
-
     @Inject(at = @At("RETURN"), method = "hurt")
     public void hurt(DamageSource damageSource, float f, CallbackInfoReturnable<Boolean> infoReturnable) {
         if (infoReturnable.getReturnValue() && LivingEntity.class.cast(this) instanceof Slime slime) {
             if (!slime.isTiny()) {
-                slime.setHealth(this.prevHealth);
                 int split = ((SlimeInterface)slime).spawnSingleSlime();
                 slime.setSize(slime.getSize() - split, true);
                 slime.deathTime = 0;
