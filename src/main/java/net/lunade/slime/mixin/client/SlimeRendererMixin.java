@@ -24,7 +24,7 @@ public class SlimeRendererMixin {
         float spawnAnimProgress = ((SlimeInterface)slime).spawnAnimProgress(f);
         float splitAnimProgress = ((SlimeInterface)slime).splitAnimProgress(f);
 
-        float splitValue = (float) (((splitAnimProgress + (0.10345F * Math.PI)) * Math.PI) * 10F);
+        float splitValue = (float) (((splitAnimProgress + (0.0955F * Math.PI)) * Math.PI) * 5F);
         float splitAnimXZ = (float) ((Math.cos(splitValue) * 0.1F) + 1F);
         float splitAnimY = (float) (-(Math.cos(splitValue) * 0.025F) + 1F);
         poseStack.scale(splitAnimXZ, splitAnimY, splitAnimXZ);
