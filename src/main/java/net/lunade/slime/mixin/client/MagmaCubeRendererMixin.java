@@ -30,22 +30,22 @@ public class MagmaCubeRendererMixin {
         poseStack.scale(splitAnimXZ, splitAnimY, splitAnimXZ);
         poseStack.translate(0.0F, -(2.05F - (splitAnimY * 2.05F)), 0.0F);
 
+        float size = ((SlimeInterface)slime).getSizeScale(f);
         float splitAnimXZShadow = splitAnimXZ * 2F;
-        float size = ((((SlimeInterface)slime).getSizeScale(f) * 0.999F) * 0.75F) * splitAnimXZShadow;
-        float squish = Mth.lerp(f, ((SlimeInterface)slime).prevSquish(), slime.squish) / (size * 0.5f + 1.0f);
+        float shadowSize = ((size * 0.999F) * 0.75F) * splitAnimXZShadow;
+        float squish = Mth.lerp(f, ((SlimeInterface)slime).prevSquish(), slime.squish) / (shadowSize * 0.5f + 1.0f);
         float j = (1.0F / (squish + 1.0F));
-        ((RendererShadowInterface)this).setShadowRadius(0.25F * (j * size));
+        ((RendererShadowInterface)this).setShadowRadius(0.25F * (j * shadowSize));
 
-        float i = ((SlimeInterface)slime).getSizeScale(f);
-        float g = Mth.lerp(f, ((SlimeInterface)slime).prevSquish(), slime.squish) / ((i) * 0.5f + 1.0f);
+        float g = Mth.lerp(f, ((SlimeInterface)slime).prevSquish(), slime.squish) / ((size) * 0.5f + 1.0f);
         this.h = (1.0F / (g + 1.0F));
-        this.i = i;
+        this.i = size;
     }
 
     @ModifyArgs(at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;scale(FFF)V"), method = "scale")
     public void setScaleArgs(Args args) {
         args.set(0, this.h * this.i);
-        args.set(1, 1F / h * this.i);
+        args.set(1, 1F / this.h * this.i);
         args.set(2, this.h * this.i);
     }
 
