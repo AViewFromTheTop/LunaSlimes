@@ -29,10 +29,6 @@ public class ConfigValues {
         return VISUALS.particles;
     }
 
-    public static boolean merging() {
-        return GAMEPLAY.merging;
-    }
-
     public static int maxSize() {
         return GAMEPLAY.maxSize;
     }

@@ -22,12 +22,8 @@
   "tooltip.lunaslimes.particles": "Spawns particles upon Slime splitting.",
 
   "option.lunaslimes.gameplay": "Gameplay",
-  "option.lunaslimes.merging": "Slime Merging",
-  "option.lunaslimes.merging.false": "OFF",
-  "option.lunaslimes.merging.true": "ON",
-  "tooltip.lunaslimes.merging": "Slimes can merge together.",
   "option.lunaslimes.max_size": "Slime Merge Cap",
-  "tooltip.lunaslimes.max_size": "The highest size a Slime can reach through merging.",
+  "tooltip.lunaslimes.max_size": "The highest size a Slime can reach through merging.\nSetting to 1 will disable merging.",
   "option.lunaslimes.merge_cooldown": "Slime Merge Cooldown",
   "tooltip.lunaslimes.merge_cooldown": "The time a Slime must wait before merging again.",
   "option.lunaslimes.on_split_cooldown": "Split Slime Merge Cooldown",

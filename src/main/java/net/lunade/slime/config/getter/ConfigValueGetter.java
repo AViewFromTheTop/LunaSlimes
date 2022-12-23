@@ -24,10 +24,6 @@ public class ConfigValueGetter {
         return !LunaSlimesMain.HAS_CLOTH_CONFIG || ConfigValues.particles();
     }
 
-    public static boolean merging() {
-        return !LunaSlimesMain.HAS_CLOTH_CONFIG || ConfigValues.merging();
-    }
-
     public static int mergeCooldown() {
         return LunaSlimesMain.HAS_CLOTH_CONFIG ? ConfigValues.mergeCooldown() : 0;
     }

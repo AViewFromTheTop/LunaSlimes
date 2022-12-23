@@ -14,7 +14,6 @@ import static net.lunade.slime.config.LunaSlimesConfig.tooltip;
 @Config(name = "gameplay")
 public final class GameplayConfig implements ConfigData {
 
-    public boolean merging = true;
     public int maxSize = 7;
     public int mergeCooldown = 0;
     public int onSplitCooldown = 100;
@@ -25,14 +24,6 @@ public final class GameplayConfig implements ConfigData {
     static void setupEntries(ConfigCategory category, ConfigEntryBuilder entryBuilder) {
         var config = LunaSlimesConfig.get().gameplay;
         category.setBackground(new ResourceLocation("lunaslimes", "textures/config/gameplay.png"));
-
-        var merging = category.addEntry(entryBuilder.startBooleanToggle(text("merging"), config.merging)
-                .setDefaultValue(true)
-                .setSaveConsumer(newValue -> config.merging = newValue)
-                .setYesNoTextSupplier(bool -> text("merging." + bool))
-                .setTooltip(tooltip("merging"))
-                .build()
-        );
 
         var maxSize = category.addEntry(entryBuilder.startIntSlider(text("max_size"), config.maxSize, 1, 127)
                 .setDefaultValue(7)
