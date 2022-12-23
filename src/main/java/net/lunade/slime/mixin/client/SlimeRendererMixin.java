@@ -47,8 +47,8 @@ public class SlimeRendererMixin {
     @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/MobRenderer;render(Lnet/minecraft/world/entity/Mob;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", shift = At.Shift.BEFORE), method = "render")
     public void render(Slime slime, float f, float g, PoseStack poseStack, MultiBufferSource multiBufferSource, int i, CallbackInfo info) {
         if (ConfigValueGetter.newShadows()) {
-            float slimeSize = ConfigValueGetter.growAnim() ? ((SlimeInterface) slime).getSizeScale(f) : slime.getSize();
-            float wobbleAnimProgress = ConfigValueGetter.wobbleAnim() ? ((SlimeInterface) slime).wobbleAnimProgress(f) : 0F;
+            float slimeSize = ConfigValueGetter.growAnim() ? ((SlimeInterface) slime).getSizeScale(this.partialTick) : slime.getSize();
+            float wobbleAnimProgress = ConfigValueGetter.wobbleAnim() ? ((SlimeInterface) slime).wobbleAnimProgress(this.partialTick) : 0F;
             float wobbleXZ = (float) ((Math.cos((float) (((wobbleAnimProgress + (0.0955F * Math.PI)) * Math.PI) * 5F)) * 0.1F) + 1F) * 2F;
             float size = ((slimeSize * 0.999F) * 0.75F) * wobbleXZ;
             float squish = (Mth.lerp(this.partialTick, ((SlimeInterface) slime).prevSquish(), slime.squish) * ConfigValueGetter.squishMultiplier()) / (size * 0.5f + 1.0f);
