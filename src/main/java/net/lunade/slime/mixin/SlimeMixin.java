@@ -121,7 +121,7 @@ public class SlimeMixin implements SlimeInterface {
     @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;addFreshEntity(Lnet/minecraft/world/entity/Entity;)Z"), method = "remove")
     public boolean mergeCooldownForSplitSlimes(Level par1, Entity par2) {
         if (par2 instanceof Slime) {
-            ((SlimeInterface) par2).setMergeCooldown(ConfigValueGetter.onSplitCooldown() * 2);
+            ((SlimeInterface) par2).setMergeCooldown(Math.max(ConfigValueGetter.onSplitCooldown(), ConfigValueGetter.splitCooldown()) * 2);
         }
         return par1.addFreshEntity(par2);
     }
