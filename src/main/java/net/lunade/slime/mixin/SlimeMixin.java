@@ -106,8 +106,8 @@ public class SlimeMixin implements SlimeInterface {
         if (mobSpawnType == MobSpawnType.NATURAL || mobSpawnType == MobSpawnType.SPAWNER) {
             ((SlimeInterface)slime).setMergeCooldown(ConfigValueGetter.spawnedMergeCooldown());
         }
-        slime.getEntityData().define(PREV_SIZE, 0F);
-        slime.getEntityData().define(CURRENT_SIZE, 0F);
+        slime.getEntityData().set(PREV_SIZE, 0F);
+        slime.getEntityData().set(CURRENT_SIZE, 0F);
     }
 
     @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/ai/attributes/AttributeInstance;setBaseValue(D)V", ordinal = 0, shift = At.Shift.AFTER), method = "setSize")
