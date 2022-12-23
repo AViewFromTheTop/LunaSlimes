@@ -47,8 +47,8 @@ public class SlimeMixin implements SlimeInterface {
         Slime slime = Slime.class.cast(this);
         slime.getEntityData().define(PREV_WOBBLE_ANIM_PROGRESS, 0);
         slime.getEntityData().define(WOBBLE_ANIM_PROGRESS, 0);
-        slime.getEntityData().define(PREV_SIZE, 0F);
-        slime.getEntityData().define(CURRENT_SIZE, 0F);
+        slime.getEntityData().define(PREV_SIZE, 1F);
+        slime.getEntityData().define(CURRENT_SIZE, 1F);
     }
 
     @Inject(at = @At("TAIL"), method = "addAdditionalSaveData")
