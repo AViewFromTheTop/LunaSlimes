@@ -8,9 +8,9 @@ public interface SlimeInterface {
 
     void setMergeCooldown(int i);
 
-    float splitAnimProgress(float tickDelta);
+    float wobbleAnimProgress(float tickDelta);
 
-    void playSplitAnim();
+    void playWobbleAnim();
 
     float getSizeScale(float tickDelta);
 

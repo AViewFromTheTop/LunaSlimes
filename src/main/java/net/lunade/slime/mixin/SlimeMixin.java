@@ -24,26 +24,26 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Slime.class)
 public class SlimeMixin implements SlimeInterface {
-    @Unique private static final EntityDataAccessor<Integer> PREV_SPLIT_PROGRESS = SynchedEntityData.defineId(Slime.class, EntityDataSerializers.INT);
-    @Unique private static final EntityDataAccessor<Integer> SPLIT_ANIM_PROGRESS = SynchedEntityData.defineId(Slime.class, EntityDataSerializers.INT);
+    @Unique private static final EntityDataAccessor<Integer> PREV_WOBBLE_ANIM_PROGRESS = SynchedEntityData.defineId(Slime.class, EntityDataSerializers.INT);
+    @Unique private static final EntityDataAccessor<Integer> WOBBLE_ANIM_PROGRESS = SynchedEntityData.defineId(Slime.class, EntityDataSerializers.INT);
     @Unique private static final EntityDataAccessor<Float> PREV_SIZE = SynchedEntityData.defineId(Slime.class, EntityDataSerializers.FLOAT);
     @Unique private static final EntityDataAccessor<Float> CURRENT_SIZE = SynchedEntityData.defineId(Slime.class, EntityDataSerializers.FLOAT);
 
-    @Unique private static final int SPLIT_ANIM_LENGTH = 10;
+    @Unique private static final int WOBBLE_ANIM_LENGTH = 10;
 
     @Unique public int mergeCooldown;
 
     @Unique public float previousSquish;
-    @Unique public int prevSplitAnim;
-    @Unique public int splitAnim;
+    @Unique public int prevWobbleAnim;
+    @Unique public int wobbleAnim;
     @Unique public float prevSize;
     @Unique public float currentSize;
 
     @Inject(at = @At("TAIL"), method = "defineSynchedData")
     protected void defineSynchedData(CallbackInfo info) {
         Slime slime = Slime.class.cast(this);
-        slime.getEntityData().define(PREV_SPLIT_PROGRESS, 0);
-        slime.getEntityData().define(SPLIT_ANIM_PROGRESS, 0);
+        slime.getEntityData().define(PREV_WOBBLE_ANIM_PROGRESS, 0);
+        slime.getEntityData().define(WOBBLE_ANIM_PROGRESS, 0);
         slime.getEntityData().define(PREV_SIZE, 0F);
         slime.getEntityData().define(CURRENT_SIZE, 0F);
     }
@@ -51,8 +51,8 @@ public class SlimeMixin implements SlimeInterface {
     @Inject(at = @At("TAIL"), method = "addAdditionalSaveData")
     public void addAdditionalSaveData(CompoundTag compoundTag, CallbackInfo info) {
         Slime slime = Slime.class.cast(this);
-        compoundTag.putInt("PrevSplitAnimProgress", slime.getEntityData().get(PREV_SPLIT_PROGRESS));
-        compoundTag.putInt("SplitAnimProgress", slime.getEntityData().get(SPLIT_ANIM_PROGRESS));
+        compoundTag.putInt("PrevWobbleAnimProgress", slime.getEntityData().get(PREV_WOBBLE_ANIM_PROGRESS));
+        compoundTag.putInt("WobbleAnimProgress", slime.getEntityData().get(WOBBLE_ANIM_PROGRESS));
         compoundTag.putFloat("PrevSize", slime.getEntityData().get(PREV_SIZE));
         compoundTag.putFloat("CurrentSize", slime.getEntityData().get(CURRENT_SIZE));
         compoundTag.putInt("MergeCooldown", this.getMergeCooldown());
@@ -61,8 +61,8 @@ public class SlimeMixin implements SlimeInterface {
     @Inject(at = @At("TAIL"), method = "readAdditionalSaveData")
     public void readAdditionalSaveData(CompoundTag compoundTag, CallbackInfo info) {
         Slime slime = Slime.class.cast(this);
-        slime.getEntityData().set(PREV_SPLIT_PROGRESS, compoundTag.getInt("PrevSplitAnimProgress"));
-        slime.getEntityData().set(SPLIT_ANIM_PROGRESS, compoundTag.getInt("SplitAnimProgress"));
+        slime.getEntityData().set(PREV_WOBBLE_ANIM_PROGRESS, compoundTag.getInt("PrevWobbleAnimProgress"));
+        slime.getEntityData().set(WOBBLE_ANIM_PROGRESS, compoundTag.getInt("WobbleAnimProgress"));
         slime.getEntityData().set(PREV_SIZE, compoundTag.getFloat("PrevSize"));
         slime.getEntityData().set(CURRENT_SIZE, compoundTag.getFloat("CurrentSize"));
         this.setMergeCooldown(compoundTag.getInt("MergeCooldown"));
@@ -79,15 +79,15 @@ public class SlimeMixin implements SlimeInterface {
     public void tick(CallbackInfo info) {
         Slime slime = Slime.class.cast(this);
         this.previousSquish = Slime.class.cast(this).squish;
-        slime.getEntityData().set(PREV_SPLIT_PROGRESS, slime.getEntityData().get(SPLIT_ANIM_PROGRESS));
+        slime.getEntityData().set(PREV_WOBBLE_ANIM_PROGRESS, slime.getEntityData().get(WOBBLE_ANIM_PROGRESS));
         slime.getEntityData().set(PREV_SIZE, slime.getEntityData().get(CURRENT_SIZE));
-        this.prevSplitAnim = slime.getEntityData().get(PREV_SPLIT_PROGRESS);
+        this.prevWobbleAnim = slime.getEntityData().get(PREV_WOBBLE_ANIM_PROGRESS);
         this.prevSize = slime.getEntityData().get(PREV_SIZE);
 
-        slime.getEntityData().set(SPLIT_ANIM_PROGRESS, Math.max(0, slime.getEntityData().get(SPLIT_ANIM_PROGRESS) - 1));
+        slime.getEntityData().set(WOBBLE_ANIM_PROGRESS, Math.max(0, slime.getEntityData().get(WOBBLE_ANIM_PROGRESS) - 1));
         float sizeDiff = slime.getSize() - slime.getEntityData().get(CURRENT_SIZE);
         slime.getEntityData().set(CURRENT_SIZE, slime.getEntityData().get(CURRENT_SIZE) + sizeDiff * 0.25F);
-        this.splitAnim = slime.getEntityData().get(SPLIT_ANIM_PROGRESS);
+        this.wobbleAnim = slime.getEntityData().get(WOBBLE_ANIM_PROGRESS);
         this.currentSize = slime.getEntityData().get(CURRENT_SIZE);
     }
 
@@ -98,7 +98,7 @@ public class SlimeMixin implements SlimeInterface {
 
     @Inject(at = @At("HEAD"), method = "finalizeSpawn")
     public void finalizeSpawn(ServerLevelAccessor serverLevelAccessor, DifficultyInstance difficultyInstance, MobSpawnType mobSpawnType, @Nullable SpawnGroupData spawnGroupData, @Nullable CompoundTag compoundTag, CallbackInfoReturnable<SpawnGroupData> info) {
-        ((SlimeInterface)Slime.class.cast(this)).playSplitAnim();
+        ((SlimeInterface)Slime.class.cast(this)).playWobbleAnim();
     }
 
     @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/ai/attributes/AttributeInstance;setBaseValue(D)V", ordinal = 0, shift = At.Shift.AFTER), method = "setSize")
@@ -125,14 +125,14 @@ public class SlimeMixin implements SlimeInterface {
     }
 
     @Override
-    public float splitAnimProgress(float tickDelta) {
-        return 1F - (Mth.lerp(tickDelta, this.prevSplitAnim, this.splitAnim) / SPLIT_ANIM_LENGTH);
+    public float wobbleAnimProgress(float tickDelta) {
+        return 1F - (Mth.lerp(tickDelta, this.prevWobbleAnim, this.wobbleAnim) / WOBBLE_ANIM_LENGTH);
     }
 
     @Override
-    public void playSplitAnim() {
+    public void playWobbleAnim() {
         Slime slime = Slime.class.cast(this);
-        slime.getEntityData().set(SPLIT_ANIM_PROGRESS, SPLIT_ANIM_LENGTH);
+        slime.getEntityData().set(WOBBLE_ANIM_PROGRESS, WOBBLE_ANIM_LENGTH);
     }
 
     @Override

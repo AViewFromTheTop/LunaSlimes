@@ -28,7 +28,8 @@ public class SlimeMethods {
             boolean verticalCollision = vec3.y != vec32.y;
             if (!horizontalCollision && !verticalCollision) {
                 slime1.setSize(thisSize + 1, true);
-                ((SlimeInterface)slime1).playSplitAnim();
+                ((SlimeInterface)slime1).playWobbleAnim();
+                ((SlimeInterface)slime2).playWobbleAnim();
                 slime1.setPos(newPos);
                 if (otherSize - 1 <= 0) {
                     slime2.discard();
@@ -82,8 +83,8 @@ public class SlimeMethods {
                 slime.setSize(splitOff = i % 2 == 0 ? (int) (i * 0.5) : 1, true);
                 slime.moveTo(origin.getX() + (double) g, origin.getY() + 0.5, origin.getZ() + (double) h, origin.getRandom().nextFloat() * 360.0f, 0.0f);
                 ((SlimeInterface)origin).setMergeCooldown(100);
-                ((SlimeInterface)origin).playSplitAnim();
-                ((SlimeInterface)slime).playSplitAnim();
+                ((SlimeInterface)origin).playWobbleAnim();
+                ((SlimeInterface)slime).playWobbleAnim();
                 SlimeMethods.spawnSlimeParticles(origin);
                 origin.level.addFreshEntity(slime);
             }
