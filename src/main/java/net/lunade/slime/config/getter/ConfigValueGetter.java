@@ -20,4 +20,32 @@ public class ConfigValueGetter {
         return !LunaSlimesMain.HAS_CLOTH_CONFIG || ConfigValues.newShadows();
     }
 
+    public static boolean particles() {
+        return !LunaSlimesMain.HAS_CLOTH_CONFIG || ConfigValues.particles();
+    }
+
+    public static boolean merging() {
+        return !LunaSlimesMain.HAS_CLOTH_CONFIG || ConfigValues.merging();
+    }
+
+    public static int mergeCooldown() {
+        return LunaSlimesMain.HAS_CLOTH_CONFIG ? ConfigValues.mergeCooldown() : 0;
+    }
+
+    public static int maxSize() {
+        return LunaSlimesMain.HAS_CLOTH_CONFIG ? ConfigValues.maxSize() : 7;
+    }
+
+    public static int onSplitCooldown() {
+        return LunaSlimesMain.HAS_CLOTH_CONFIG ? ConfigValues.onSplitCooldown() : 100;
+    }
+
+    public static int splitCooldown() {
+        return LunaSlimesMain.HAS_CLOTH_CONFIG ? ConfigValues.splitCooldown() : 0;
+    }
+
+    public static boolean useSplitting() {
+        return !LunaSlimesMain.HAS_CLOTH_CONFIG || ConfigValues.useSplitting();
+    }
+
 }

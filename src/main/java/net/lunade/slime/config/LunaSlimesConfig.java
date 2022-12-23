@@ -16,6 +16,10 @@ import net.minecraft.network.chat.Component;
 @Config(name = "lunaslimes")
 public class LunaSlimesConfig extends PartitioningSerializer.GlobalData {
 
+    @ConfigEntry.Category("gameplay")
+    @ConfigEntry.Gui.TransitiveObject
+    public final GameplayConfig gameplay = new GameplayConfig();
+
     @ConfigEntry.Category("visuals")
     @ConfigEntry.Gui.TransitiveObject
     public final VisualConfig visuals = new VisualConfig();
@@ -24,9 +28,14 @@ public class LunaSlimesConfig extends PartitioningSerializer.GlobalData {
     public static Screen buildScreen(Screen parent) {
         var configBuilder = ConfigBuilder.create().setParentScreen(parent).setTitle(text("component.title"));
         configBuilder.setSavingRunnable(() -> AutoConfig.getConfigHolder(LunaSlimesConfig.class).save());
-        var animations = configBuilder.getOrCreateCategory(text("visuals"));
         ConfigEntryBuilder entryBuilder = configBuilder.entryBuilder();
-        VisualConfig.setupEntries(animations, entryBuilder);
+
+        var gameplayTab = configBuilder.getOrCreateCategory(text("gameplay"));
+        GameplayConfig.setupEntries(gameplayTab, entryBuilder);
+
+        var visualTab = configBuilder.getOrCreateCategory(text("visuals"));
+        VisualConfig.setupEntries(visualTab, entryBuilder);
+
         return configBuilder.build();
     }
 

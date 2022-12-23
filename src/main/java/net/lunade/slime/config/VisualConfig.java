@@ -18,11 +18,12 @@ public final class VisualConfig implements ConfigData {
     public boolean wobbleAnim = true;
     public float squishMultiplier = 2F;
     public boolean newShadows = true;
+    public boolean particles = true;
 
     @Environment(EnvType.CLIENT)
     static void setupEntries(ConfigCategory category, ConfigEntryBuilder entryBuilder) {
         var config = LunaSlimesConfig.get().visuals;
-        category.setBackground(new ResourceLocation("lunaslimes", "textures/config/animations.png"));
+        category.setBackground(new ResourceLocation("lunaslimes", "textures/config/visuals.png"));
 
         var growAnim = category.addEntry(entryBuilder.startBooleanToggle(text("grow_anim"), config.growAnim)
                 .setDefaultValue(true)
@@ -54,6 +55,14 @@ public final class VisualConfig implements ConfigData {
                 .setSaveConsumer(newValue -> config.newShadows = newValue)
                 .setYesNoTextSupplier(bool -> text("new_shadows." + bool))
                 .setTooltip(tooltip("new_shadows"))
+                .build()
+        );
+
+        var particles = category.addEntry(entryBuilder.startBooleanToggle(text("particles"), config.particles)
+                .setDefaultValue(true)
+                .setSaveConsumer(newValue -> config.particles = newValue)
+                .setYesNoTextSupplier(bool -> text("particles." + bool))
+                .setTooltip(tooltip("particles"))
                 .build()
         );
     }
