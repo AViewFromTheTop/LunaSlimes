@@ -34,7 +34,7 @@ public class MagmaCubeRendererMixin {
         float i = ((SlimeInterface)slime).getSizeScale(f);
         float g = Mth.lerp(f, ((SlimeInterface)slime).prevSquish(), slime.squish) / ((i) * 0.5f + 1.0f);
         float h = (1.0F / (g + 1.0F));
-        poseStack.scale(h, 1.0F / h * i, h);
+        poseStack.scale(h * i, 1.0F / h * i, h * i);
     }
 
 }
