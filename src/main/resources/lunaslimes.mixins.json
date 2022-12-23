@@ -4,6 +4,7 @@
   "package": "net.lunade.slime.mixin",
   "compatibilityLevel": "JAVA_17",
   "client": [
+    "client.EntityRendererMixin",
     "client.SlimeRendererMixin"
   ],
   "mixins": [
