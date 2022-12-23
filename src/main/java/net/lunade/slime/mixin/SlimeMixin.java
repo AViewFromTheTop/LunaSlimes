@@ -103,7 +103,7 @@ public class SlimeMixin implements SlimeInterface {
     public void finalizeSpawn(ServerLevelAccessor serverLevelAccessor, DifficultyInstance difficultyInstance, MobSpawnType mobSpawnType, @Nullable SpawnGroupData spawnGroupData, @Nullable CompoundTag compoundTag, CallbackInfoReturnable<SpawnGroupData> info) {
         Slime slime = Slime.class.cast(this);
         ((SlimeInterface)slime).playWobbleAnim();
-        if (mobSpawnType == MobSpawnType.NATURAL || mobSpawnType == MobSpawnType.SPAWNER) {
+        if (mobSpawnType == MobSpawnType.NATURAL || mobSpawnType == MobSpawnType.SPAWNER || mobSpawnType == MobSpawnType.CHUNK_GENERATION) {
             ((SlimeInterface)slime).setMergeCooldown(ConfigValueGetter.spawnedMergeCooldown());
         }
         slime.getEntityData().set(PREV_SIZE, 0F);
