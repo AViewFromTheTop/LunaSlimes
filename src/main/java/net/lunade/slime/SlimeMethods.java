@@ -28,6 +28,7 @@ public class SlimeMethods {
             boolean verticalCollision = vec3.y != vec32.y;
             if (!horizontalCollision && !verticalCollision) {
                 slime1.setSize(thisSize + 1, true);
+                ((SlimeInterface)slime1).playSplitAnim();
                 slime1.setPos(newPos);
                 if (otherSize - 1 <= 0) {
                     slime2.discard();
