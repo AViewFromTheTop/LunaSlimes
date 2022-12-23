@@ -8,10 +8,10 @@ public interface SlimeInterface {
 
     void setMergeCooldown(int i);
 
-    float spawnAnimProgress(float tickDelta);
-
     float splitAnimProgress(float tickDelta);
 
     void playSplitAnim();
+
+    float getSizeScale(float tickDelta);
 
 }

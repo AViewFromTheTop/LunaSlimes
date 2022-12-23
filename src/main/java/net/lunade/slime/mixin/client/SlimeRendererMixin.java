@@ -19,6 +19,11 @@ public class SlimeRendererMixin {
     @Unique private static final ResourceLocation SLIME_2 = new ResourceLocation("lunaslimes", "textures/entity/slime/slime_2.png");
     @Unique private static final ResourceLocation SLIME_4 = new ResourceLocation("lunaslimes", "textures/entity/slime/slime_4.png");
 
+    @ModifyVariable(at = @At("STORE"), method = "scale", ordinal = 2)
+    public float modifySize(float original, Slime slime, PoseStack poseStack, float f) {
+        return ((SlimeInterface)slime).getSizeScale(f);
+    }
+
     @ModifyVariable(at = @At("STORE"), method = "scale", ordinal = 3)
     public float anims(float original, Slime slime, PoseStack poseStack, float f) {
         float spawnAnimProgress = ((SlimeInterface)slime).spawnAnimProgress(f);
@@ -30,7 +35,7 @@ public class SlimeRendererMixin {
         poseStack.scale(splitAnimXZ, splitAnimY, splitAnimXZ);
         poseStack.translate(0.0F, -(2.05F - (splitAnimY * 2.05F)), 0.0F);
 
-        return Mth.lerp(f, ((SlimeInterface)slime).prevSquish(), slime.squish) / (((float)slime.getSize()) * 0.5f + 1.0f);
+        return Mth.lerp(f, ((SlimeInterface)slime).prevSquish(), slime.squish) / ((((SlimeInterface)slime).getSizeScale(f)) * 0.5f + 1.0f);
     }
 
     @Inject(at = @At("HEAD"), method = "getTextureLocation", cancellable = true)
