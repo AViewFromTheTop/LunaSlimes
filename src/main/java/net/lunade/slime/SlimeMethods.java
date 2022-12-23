@@ -1,8 +1,6 @@
 package net.lunade.slime;
 
 import net.lunade.slime.impl.SlimeInterface;
-import net.minecraft.core.particles.BlockParticleOption;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
@@ -94,7 +92,7 @@ public class SlimeMethods {
 
     public static void spawnSlimeParticles(Slime slime) {
         if (slime.level instanceof ServerLevel level) {
-            level.sendParticles(ParticleTypes.ITEM_SLIME, slime.getX(), slime.getY(0.6666666666666666D), slime.getZ(), level.random.nextInt(slime.getSize() * 6, slime.getSize() * 12), slime.getBbWidth() / 4.0F, slime.getBbHeight() / 4.0F, slime.getBbWidth() / 4.0F, 0.05D);
+            level.sendParticles(slime.getParticleType(), slime.getX(), slime.getY(0.6666666666666666D), slime.getZ(), level.random.nextInt(slime.getSize() * 6, slime.getSize() * 12), slime.getBbWidth() / 4.0F, slime.getBbHeight() / 4.0F, slime.getBbWidth() / 4.0F, 0.05D);
         }
     }
 

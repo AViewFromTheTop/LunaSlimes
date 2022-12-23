@@ -22,14 +22,13 @@ public class MagmaCubeRendererMixin {
     @Inject(at = @At("HEAD"), method = "scale")
     public void anims(MagmaCube slime, PoseStack poseStack, float f, CallbackInfo info) {
         float splitAnimProgress = ((SlimeInterface)slime).splitAnimProgress(f);
-
         float splitValue = (float) (((splitAnimProgress + (0.0955F * Math.PI)) * Math.PI) * 5F);
         float splitAnimXZ = (float) ((Math.cos(splitValue) * 0.1F) + 1F);
         float splitAnimY = (float) (-(Math.cos(splitValue) * 0.025F) + 1F);
         poseStack.scale(splitAnimXZ, splitAnimY, splitAnimXZ);
         poseStack.translate(0.0F, -(2.05F - (splitAnimY * 2.05F)), 0.0F);
 
-        float splitAnimXZShadow = (float) ((Math.cos((float) (((splitAnimProgress + (0.0955F * Math.PI)) * Math.PI) * 5F)) * 0.1F) + 1F) * 2F;
+        float splitAnimXZShadow = splitAnimXZ * 2F;
         float size = ((((SlimeInterface)slime).getSizeScale(f) * 0.999F) * 0.75F) * splitAnimXZShadow;
         float squish = Mth.lerp(f, ((SlimeInterface)slime).prevSquish(), slime.squish) / (size * 0.5f + 1.0f);
         float j = (1.0F / (squish + 1.0F));
