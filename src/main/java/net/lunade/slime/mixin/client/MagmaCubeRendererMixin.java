@@ -1,6 +1,7 @@
 package net.lunade.slime.mixin.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.lunade.slime.config.getter.ConfigValueGetter;
 import net.lunade.slime.impl.RendererShadowInterface;
 import net.lunade.slime.impl.SlimeInterface;
 import net.minecraft.client.renderer.entity.MagmaCubeRenderer;
@@ -29,15 +30,18 @@ public class MagmaCubeRendererMixin {
         float splitAnimY = (float) (-(Math.cos(splitValue) * 0.025F) + 1F);
         poseStack.scale(splitAnimXZ, splitAnimY, splitAnimXZ);
         poseStack.translate(0.0F, -(2.05F - (splitAnimY * 2.05F)), 0F);
+        float size = ConfigValueGetter.growAnim() ? ((SlimeInterface) slime).getSizeScale(f) : slime.getSize();
+        float squishValue = Mth.lerp(f, ((SlimeInterface)slime).prevSquish(), slime.squish) * ConfigValueGetter.squishMultiplier();
 
-        float size = ((SlimeInterface)slime).getSizeScale(f);
-        float splitAnimXZShadow = splitAnimXZ * 2F;
-        float shadowSize = ((size * 0.999F) * 0.75F) * splitAnimXZShadow;
-        float squish = Mth.lerp(f, ((SlimeInterface)slime).prevSquish(), slime.squish) / (shadowSize * 0.5F + 1F);
-        float j = (1F / (squish + 1F));
-        ((RendererShadowInterface)this).setShadowRadius(0.25F * (j * shadowSize));
+        if (ConfigValueGetter.newShadows()) {
+            float splitAnimXZShadow = splitAnimXZ * 2F;
+            float shadowSize = ((size * 0.999F) * 0.75F) * splitAnimXZShadow;
+            float squish = squishValue / (shadowSize * 0.5F + 1F);
+            float j = (1F / (squish + 1F));
+            ((RendererShadowInterface) this).setShadowRadius(0.25F * (j * shadowSize));
+        }
 
-        float g = Mth.lerp(f, ((SlimeInterface)slime).prevSquish(), slime.squish) / ((size) * 0.5F + 1F);
+        float g = squishValue / ((size) * 0.5F + 1F);
         this.h = (1F / (g + 1F));
         this.i = size;
         this.yStretch = 1F / this.h * size;

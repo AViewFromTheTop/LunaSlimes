@@ -19,4 +19,8 @@ public class ConfigValues {
         return VISUALS.squishMultiplier;
     }
 
+    public static boolean newShadows() {
+        return VISUALS.newShadows;
+    }
+
 }
