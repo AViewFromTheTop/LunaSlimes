@@ -45,6 +45,10 @@ public class ConfigValues {
         return GAMEPLAY.splitCooldown;
     }
 
+    public static int spawnedMergeCooldown() {
+        return GAMEPLAY.spawnedMergeCooldown;
+    }
+
     public static boolean useSplitting() {
         return GAMEPLAY.useSplitting;
     }

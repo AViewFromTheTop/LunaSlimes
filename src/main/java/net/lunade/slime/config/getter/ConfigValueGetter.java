@@ -40,6 +40,10 @@ public class ConfigValueGetter {
         return LunaSlimesMain.HAS_CLOTH_CONFIG ? ConfigValues.splitCooldown() : 0;
     }
 
+    public static int spawnedMergeCooldown() {
+        return LunaSlimesMain.HAS_CLOTH_CONFIG ? ConfigValues.spawnedMergeCooldown() : 0;
+    }
+
     public static boolean useSplitting() {
         return !LunaSlimesMain.HAS_CLOTH_CONFIG || ConfigValues.useSplitting();
     }

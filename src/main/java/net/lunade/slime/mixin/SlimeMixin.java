@@ -102,6 +102,9 @@ public class SlimeMixin implements SlimeInterface {
     @Inject(at = @At("HEAD"), method = "finalizeSpawn")
     public void finalizeSpawn(ServerLevelAccessor serverLevelAccessor, DifficultyInstance difficultyInstance, MobSpawnType mobSpawnType, @Nullable SpawnGroupData spawnGroupData, @Nullable CompoundTag compoundTag, CallbackInfoReturnable<SpawnGroupData> info) {
         ((SlimeInterface)Slime.class.cast(this)).playWobbleAnim();
+        if (mobSpawnType == MobSpawnType.NATURAL || mobSpawnType == MobSpawnType.SPAWNER) {
+            ((SlimeInterface) Slime.class.cast(this)).setMergeCooldown(ConfigValueGetter.spawnedMergeCooldown());
+        }
     }
 
     @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/ai/attributes/AttributeInstance;setBaseValue(D)V", ordinal = 0, shift = At.Shift.AFTER), method = "setSize")

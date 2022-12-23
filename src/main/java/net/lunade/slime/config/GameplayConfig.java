@@ -18,6 +18,7 @@ public final class GameplayConfig implements ConfigData {
     public int mergeCooldown = 0;
     public int onSplitCooldown = 100;
     public int splitCooldown = 0;
+    public int spawnedMergeCooldown = 0;
     public boolean useSplitting = true;
 
     @Environment(EnvType.CLIENT)
@@ -56,6 +57,15 @@ public final class GameplayConfig implements ConfigData {
                 .setDefaultValue(0)
                 .setSaveConsumer(newValue -> config.splitCooldown = newValue)
                 .setTooltip(tooltip("split_cooldown"))
+                .setMin(0)
+                .setMax(500)
+                .build()
+        );
+
+        var spawnedMergeCooldown = category.addEntry(entryBuilder.startIntSlider(text("spawned_merge_cooldown"), config.spawnedMergeCooldown, 0, 500)
+                .setDefaultValue(0)
+                .setSaveConsumer(newValue -> config.spawnedMergeCooldown = newValue)
+                .setTooltip(tooltip("spawned_merge_cooldown"))
                 .setMin(0)
                 .setMax(500)
                 .build()

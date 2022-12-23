@@ -30,6 +30,8 @@
   "tooltip.lunaslimes.on_split_cooldown": "The time a Slime that has been split must wait before being able to merge.",
   "option.lunaslimes.split_cooldown": "Spawned Split Slime Merge Cooldown",
   "tooltip.lunaslimes.split_cooldown": "The time a Slime spawned from splitting must wait until it can merge.",
+  "option.lunaslimes.spawned_merge_cooldown": "Spawned Slime Merge Cooldown",
+  "tooltip.lunaslimes.spawned_merge_cooldown": "The time a naturally spawned Slime must wait before merging.",
   "option.lunaslimes.use_splitting": "Slime Splitting",
   "option.lunaslimes.use_splitting.false": "OFF",
   "option.lunaslimes.use_splitting.true": "ON",
