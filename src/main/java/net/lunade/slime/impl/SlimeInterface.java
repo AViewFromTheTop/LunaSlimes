@@ -14,6 +14,4 @@ public interface SlimeInterface {
 
     float getSizeScale(float tickDelta);
 
-    void spawnerSizeFix(float size);
-
 }

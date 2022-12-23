@@ -10,7 +10,6 @@
     "client.SlimeRendererMixin"
   ],
   "mixins": [
-    "BaseSpawnerMixin",
     "LivingEntityMixin",
     "SlimeMixin"
   ],
