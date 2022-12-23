@@ -19,6 +19,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -106,6 +107,19 @@ public class SlimeMixin implements SlimeInterface {
         int clampedSize = Mth.clamp(i, 1, 127);
         Slime.class.cast(this).getAttribute(Attributes.MAX_HEALTH).setBaseValue(clampedSize % 2 == 0 ? clampedSize * clampedSize : clampedSize);
     }
+
+    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Mob;tick()V", shift = At.Shift.AFTER), method = "tick")
+    public void moveDecreaseSquish(CallbackInfo info) {
+        Slime.class.cast(this).decreaseSquish();
+    }
+
+    @Inject(at = @At(value = "FIELD", target = "Lnet/minecraft/world/entity/monster/Slime;targetSquish:F", ordinal = 0, shift = At.Shift.AFTER), method = "tick")
+    public void newLandSquish(CallbackInfo info) {
+        Slime.class.cast(this).targetSquish -= 0.5F;
+    }
+
+    @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/monster/Slime;decreaseSquish()V"), method = "tick")
+    public void stopDecreaseSquish(Slime slime) { }
 
     @Override
     public float prevSquish() {
