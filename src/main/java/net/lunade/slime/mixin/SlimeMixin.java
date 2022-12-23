@@ -1,6 +1,7 @@
 package net.lunade.slime.mixin;
 
 import net.lunade.slime.SlimeMethods;
+import net.lunade.slime.config.getter.ConfigValueGetter;
 import net.lunade.slime.impl.SlimeInterface;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -13,6 +14,7 @@ import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Slime;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -115,6 +117,14 @@ public class SlimeMixin implements SlimeInterface {
 
     @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/monster/Slime;decreaseSquish()V"), method = "tick")
     public void stopDecreaseSquish(Slime slime) { }
+
+    @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;addFreshEntity(Lnet/minecraft/world/entity/Entity;)Z"), method = "remove")
+    public boolean mergeCooldownForSplitSlimes(Level par1, Entity par2) {
+        if (par2 instanceof Slime) {
+            ((SlimeInterface) par2).setMergeCooldown(ConfigValueGetter.onSplitCooldown() * 2);
+        }
+        return par1.addFreshEntity(par2);
+    }
 
     @Override
     public float prevSquish() {
