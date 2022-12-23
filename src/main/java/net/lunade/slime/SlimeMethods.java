@@ -17,34 +17,36 @@ import java.util.List;
 public class SlimeMethods {
 
     public static void mergeSlimes(Slime slime1, Slime slime2) {
-        int thisSize = slime1.getSize();
-        int otherSize = slime2.getSize();
-        if ((thisSize > otherSize || thisSize == otherSize) && thisSize <= ConfigValueGetter.maxSize() - 1 && ((SlimeInterface)slime1).getMergeCooldown() <= 0 && ((SlimeInterface)slime2).getMergeCooldown() <= 0) {
-            EntityDimensions oldDimensions = getDimensionsForSize(slime1, thisSize);
-            EntityDimensions inflated = getDimensionsForSize(slime1, thisSize + 1);
-            Vec3 newPos = slime1.position().add(0F, (inflated.height - oldDimensions.height) * 0.5F, 0F);
-            Vec3 vec3 = slime1.getDeltaMovement();
-            Vec3 vec32 = collideWithBox(slime1, vec3, inflated.makeBoundingBox(newPos));
-            boolean horizontalCollision = !Mth.equal(vec3.x, vec32.x) || !Mth.equal(vec3.z, vec32.z);
-            boolean verticalCollision = vec3.y != vec32.y;
-            if (!horizontalCollision && !verticalCollision) {
-                slime1.setSize(thisSize + 1, true);
-                ((SlimeInterface)slime1).setMergeCooldown(ConfigValueGetter.mergeCooldown());
-                ((SlimeInterface)slime1).playWobbleAnim();
-                ((SlimeInterface)slime2).playWobbleAnim();
-                if (slime2.isPersistenceRequired()) {
-                    slime1.setPersistenceRequired();
-                }
-                if (slime2.hasCustomName() && !slime1.hasCustomName()) {
-                    slime1.setCustomName(slime2.getCustomName());
-                }
-                slime1.setInvulnerable(slime2.isInvulnerable());
-                slime1.setSilent(slime2.isSilent());
-                slime1.setPos(newPos);
-                if (otherSize - 1 <= 0) {
-                    slime2.discard();
-                } else {
-                    slime2.setSize(otherSize - 1, true);
+        if (slime2.getType() == slime1.getType()) {
+            int thisSize = slime1.getSize();
+            int otherSize = slime2.getSize();
+            if ((thisSize > otherSize || thisSize == otherSize) && thisSize <= ConfigValueGetter.maxSize() - 1 && ((SlimeInterface) slime1).getMergeCooldown() <= 0 && ((SlimeInterface) slime2).getMergeCooldown() <= 0) {
+                EntityDimensions oldDimensions = getDimensionsForSize(slime1, thisSize);
+                EntityDimensions inflated = getDimensionsForSize(slime1, thisSize + 1);
+                Vec3 newPos = slime1.position().add(0F, (inflated.height - oldDimensions.height) * 0.5F, 0F);
+                Vec3 vec3 = slime1.getDeltaMovement();
+                Vec3 vec32 = collideWithBox(slime1, vec3, inflated.makeBoundingBox(newPos));
+                boolean horizontalCollision = !Mth.equal(vec3.x, vec32.x) || !Mth.equal(vec3.z, vec32.z);
+                boolean verticalCollision = vec3.y != vec32.y;
+                if (!horizontalCollision && !verticalCollision) {
+                    slime1.setSize(thisSize + 1, true);
+                    ((SlimeInterface) slime1).setMergeCooldown(ConfigValueGetter.mergeCooldown());
+                    ((SlimeInterface) slime1).playWobbleAnim();
+                    ((SlimeInterface) slime2).playWobbleAnim();
+                    if (slime2.isPersistenceRequired()) {
+                        slime1.setPersistenceRequired();
+                    }
+                    if (slime2.hasCustomName() && !slime1.hasCustomName()) {
+                        slime1.setCustomName(slime2.getCustomName());
+                    }
+                    slime1.setInvulnerable(slime2.isInvulnerable());
+                    slime1.setSilent(slime2.isSilent());
+                    slime1.setPos(newPos);
+                    if (otherSize - 1 <= 0) {
+                        slime2.discard();
+                    } else {
+                        slime2.setSize(otherSize - 1, true);
+                    }
                 }
             }
         }

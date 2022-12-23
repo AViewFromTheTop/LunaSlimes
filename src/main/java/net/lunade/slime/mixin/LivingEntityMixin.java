@@ -3,6 +3,7 @@ package net.lunade.slime.mixin;
 import net.lunade.slime.SlimeMethods;
 import net.lunade.slime.config.getter.ConfigValueGetter;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Slime;
 import org.spongepowered.asm.mixin.Mixin;
@@ -32,6 +33,14 @@ public class LivingEntityMixin {
             if (damageSource != DamageSource.OUT_OF_WORLD && !slime.isTiny()  && ConfigValueGetter.useSplitting()) {
                 info.cancel();
             }
+        }
+    }
+
+    @Inject(at = @At("HEAD"), method = "doPush")
+    public void doPush(Entity entity, CallbackInfo info) {
+        LivingEntity thisEntity = LivingEntity.class.cast(this);
+        if (thisEntity instanceof Slime && entity instanceof Slime slime2) {
+            SlimeMethods.mergeSlimes(Slime.class.cast(this), slime2);
         }
     }
 
