@@ -20,9 +20,8 @@ public class MagmaCubeRendererMixin {
     @Unique float h;
     @Unique float i;
 
-    @Inject(at = @At("HEAD"), method = "scale", cancellable = true)
+    @Inject(at = @At("HEAD"), method = "scale")
     public void anims(MagmaCube slime, PoseStack poseStack, float f, CallbackInfo info) {
-        info.cancel();
         float splitAnimProgress = ((SlimeInterface)slime).wobbleAnimProgress(f);
         float splitValue = (float) (((splitAnimProgress + (0.0955F * Math.PI)) * Math.PI) * 5F);
         float splitAnimXZ = (float) ((Math.cos(splitValue) * 0.1F) + 1F);
