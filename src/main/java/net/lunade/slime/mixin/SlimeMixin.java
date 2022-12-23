@@ -11,6 +11,7 @@ import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.SpawnGroupData;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Slime;
 import net.minecraft.world.level.ServerLevelAccessor;
 import org.jetbrains.annotations.Nullable;
@@ -98,6 +99,12 @@ public class SlimeMixin implements SlimeInterface {
     @Inject(at = @At("HEAD"), method = "finalizeSpawn")
     public void finalizeSpawn(ServerLevelAccessor serverLevelAccessor, DifficultyInstance difficultyInstance, MobSpawnType mobSpawnType, @Nullable SpawnGroupData spawnGroupData, @Nullable CompoundTag compoundTag, CallbackInfoReturnable<SpawnGroupData> info) {
         ((SlimeInterface)Slime.class.cast(this)).playSplitAnim();
+    }
+
+    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/ai/attributes/AttributeInstance;setBaseValue(D)V", ordinal = 0, shift = At.Shift.AFTER), method = "setSize")
+    public void oddHealth(int i, boolean bl, CallbackInfo info) {
+        int clampedSize = Mth.clamp(i, 1, 127);
+        Slime.class.cast(this).getAttribute(Attributes.MAX_HEALTH).setBaseValue(clampedSize % 2 == 0 ? clampedSize * clampedSize : clampedSize);
     }
 
     @Override

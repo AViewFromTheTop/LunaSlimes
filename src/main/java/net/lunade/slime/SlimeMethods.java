@@ -80,9 +80,6 @@ public class SlimeMethods {
                 slime.setNoAi(bl);
                 slime.setInvulnerable(origin.isInvulnerable());
                 slime.setSize(splitOff = i % 2 == 0 ? (int) (i * 0.5) : 1, true);
-                if (splitOff == 1) {
-                    slime.setHealth(slime.getHealth() * 0.5F);
-                }
                 slime.moveTo(origin.getX() + (double) g, origin.getY() + 0.5, origin.getZ() + (double) h, origin.getRandom().nextFloat() * 360.0f, 0.0f);
                 ((SlimeInterface)origin).setMergeCooldown(100);
                 ((SlimeInterface)origin).playSplitAnim();
