@@ -96,17 +96,22 @@ repositories {
 dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
 	mappings(loom.layered {
-		// please annoy treetrain if this doesnt work
 		it.officialMojangMappings {
 			setNameSyntheticMembers(false)
 		}
 	})
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-	//modImplementation "de.guntram.mcmod:crowdin-translate:1.4+1.19"
-	//include "de.guntram.mcmod:crowdin-translate:1.4+1.19"
-
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+
+	// Mod Menu
+	modImplementation("com.terraformersmc:modmenu:${modmenu_version}")
+
+	// Cloth Config
+	modImplementation("me.shedaniel.cloth:cloth-config-fabric:${cloth_config_version}") {
+		exclude(group: "net.fabricmc.fabric-api")
+		exclude(group: "com.terraformersmc")
+	}
 }
 
 processResources {

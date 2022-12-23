@@ -20,6 +20,9 @@
     ],
     "client": [
       "net.lunade.slime.LunaSlimesClient"
+    ],
+    "modmenu": [
+      "net.lunade.slime.LunaSlimesModMenu"
     ]
   },
   "mixins": [

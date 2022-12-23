@@ -1,0 +1,18 @@
+{
+  "option.lunaslimes.component.title": "Luna Slimes Options",
+  "option.wilderwild.visuals": "Visuals",
+  "option.lunaslimes.grow_anim": "Growing Animation",
+  "option.lunaslimes.grow_anim.false": "OFF",
+  "option.lunaslimes.grow_anim.true": "ON",
+  "tooltip.lunaslimes.grow_anim": "New growing animation for Slimes",
+  "option.lunaslimes.wobble_anim": "Wobble Animation",
+  "option.lunaslimes.wobble_anim.false": "OFF",
+  "option.lunaslimes.wobble_anim.true": "ON",
+  "tooltip.lunaslimes.wobble_anim": "Plays when spawning or splitting/merging with other Slimes.",
+  "option.lunaslimes.squish_multiplier": "Squish Intensity",
+  "tooltip.lunaslimes.squish_multiplier": "Intensity for Slime squishing (jumping/landing animations.)",
+  "option.lunaslimes.new_shadows": "New Shadow Scaling",
+  "option.lunaslimes.new_shadows.false": "OFF",
+  "option.lunaslimes.new_shadows.true": "ON",
+  "tooltip.lunaslimes.new_shadows": "Scales Slime shadows to match their rendered size."
+}
