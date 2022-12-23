@@ -47,8 +47,8 @@ public class SlimeMixin implements SlimeInterface {
         Slime slime = Slime.class.cast(this);
         slime.getEntityData().define(PREV_WOBBLE_ANIM_PROGRESS, 0);
         slime.getEntityData().define(WOBBLE_ANIM_PROGRESS, 0);
-        slime.getEntityData().define(PREV_SIZE, 0F);
-        slime.getEntityData().define(CURRENT_SIZE, 0F);
+        slime.getEntityData().define(PREV_SIZE, 1F);
+        slime.getEntityData().define(CURRENT_SIZE, 1F);
     }
 
     @Inject(at = @At("TAIL"), method = "addAdditionalSaveData")
@@ -101,10 +101,13 @@ public class SlimeMixin implements SlimeInterface {
 
     @Inject(at = @At("HEAD"), method = "finalizeSpawn")
     public void finalizeSpawn(ServerLevelAccessor serverLevelAccessor, DifficultyInstance difficultyInstance, MobSpawnType mobSpawnType, @Nullable SpawnGroupData spawnGroupData, @Nullable CompoundTag compoundTag, CallbackInfoReturnable<SpawnGroupData> info) {
-        ((SlimeInterface)Slime.class.cast(this)).playWobbleAnim();
+        Slime slime = Slime.class.cast(this);
+        ((SlimeInterface)slime).playWobbleAnim();
         if (mobSpawnType == MobSpawnType.NATURAL || mobSpawnType == MobSpawnType.SPAWNER) {
-            ((SlimeInterface) Slime.class.cast(this)).setMergeCooldown(ConfigValueGetter.spawnedMergeCooldown());
+            ((SlimeInterface)slime).setMergeCooldown(ConfigValueGetter.spawnedMergeCooldown());
         }
+        slime.getEntityData().define(PREV_SIZE, 0F);
+        slime.getEntityData().define(CURRENT_SIZE, 0F);
     }
 
     @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/ai/attributes/AttributeInstance;setBaseValue(D)V", ordinal = 0, shift = At.Shift.AFTER), method = "setSize")
@@ -156,7 +159,9 @@ public class SlimeMixin implements SlimeInterface {
     @Override
     public void playWobbleAnim() {
         Slime slime = Slime.class.cast(this);
-        slime.getEntityData().set(WOBBLE_ANIM_PROGRESS, WOBBLE_ANIM_LENGTH);
+        if (slime.getEntityData().get(WOBBLE_ANIM_PROGRESS) == 0) {
+            slime.getEntityData().set(WOBBLE_ANIM_PROGRESS, WOBBLE_ANIM_LENGTH);
+        }
     }
 
     @Override
