@@ -19,6 +19,7 @@ public class MagmaCubeRendererMixin {
 
     @Unique float h;
     @Unique float i;
+    @Unique float yStretch;
 
     @Inject(at = @At("HEAD"), method = "scale")
     public void anims(MagmaCube slime, PoseStack poseStack, float f, CallbackInfo info) {
@@ -39,13 +40,17 @@ public class MagmaCubeRendererMixin {
         float g = Mth.lerp(f, ((SlimeInterface)slime).prevSquish(), slime.squish) / ((size) * 0.5f + 1.0f);
         this.h = (1.0F / (g + 1.0F));
         this.i = size;
+        this.yStretch = 1F / this.h * size;
+        float offSize = size / ((size) * 0.5f + 1.0f);
+        poseStack.translate(0.0F, -(offSize - (yStretch * offSize)), 0.0F);
     }
 
     @ModifyArgs(at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;scale(FFF)V"), method = "scale")
     public void setScaleArgs(Args args) {
-        args.set(0, this.h * this.i);
-        args.set(1, 1F / this.h * this.i);
-        args.set(2, this.h * this.i);
+        float x = this.h * this.i;
+        args.set(0, x);
+        args.set(1, this.yStretch);
+        args.set(2, x);
     }
 
 }
