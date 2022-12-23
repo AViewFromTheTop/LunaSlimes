@@ -11,7 +11,7 @@
   ],
 
   "license": "MIT",
-  "icon": "assets/lunade/copper_icon.png",
+  "icon": "assets/lunaslimes/lunaslimes.png",
 
   "environment": "*",
   "entrypoints": {
