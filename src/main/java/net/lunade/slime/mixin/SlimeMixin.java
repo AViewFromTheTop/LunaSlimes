@@ -47,8 +47,8 @@ public class SlimeMixin implements SlimeInterface {
         Slime slime = Slime.class.cast(this);
         slime.getEntityData().define(PREV_WOBBLE_ANIM_PROGRESS, 0);
         slime.getEntityData().define(WOBBLE_ANIM_PROGRESS, 0);
-        slime.getEntityData().define(PREV_SIZE, 1F);
-        slime.getEntityData().define(CURRENT_SIZE, 1F);
+        slime.getEntityData().define(PREV_SIZE, 0F);
+        slime.getEntityData().define(CURRENT_SIZE, 0F);
     }
 
     @Inject(at = @At("TAIL"), method = "addAdditionalSaveData")
@@ -167,6 +167,12 @@ public class SlimeMixin implements SlimeInterface {
     @Override
     public float getSizeScale(float tickDelta) {
         return Mth.lerp(tickDelta, this.prevSize, this.currentSize);
+    }
+
+    @Override
+    public void spawnerSizeFix(float size) {
+        this.prevSize = 1F;
+        this.currentSize = 1F;
     }
 
 }
