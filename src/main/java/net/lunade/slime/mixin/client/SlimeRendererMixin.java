@@ -56,7 +56,7 @@ public class SlimeRendererMixin {
     @Inject(at = @At("HEAD"), method = "getTextureLocation", cancellable = true)
     public void getTextureLocation(Slime slime, CallbackInfoReturnable<ResourceLocation> info) {
         int size = slime.getSize();
-        info.setReturnValue(size == 1 ? SLIME_1 : size == 2 ? SLIME_2 : SLIME_4);
+        info.setReturnValue(size == 1 ? SLIME_1 : size == 2 || size == 3 ? SLIME_2 : SLIME_4);
     }
 
 }
