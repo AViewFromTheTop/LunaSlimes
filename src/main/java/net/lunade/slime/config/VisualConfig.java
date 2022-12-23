@@ -16,7 +16,7 @@ public final class VisualConfig implements ConfigData {
 
     public boolean growAnim = true;
     public boolean wobbleAnim = true;
-    public float squishMultiplier = 2F;
+    public int squishMultiplier = 20;
     public boolean newShadows = true;
     public boolean particles = true;
 
@@ -41,12 +41,12 @@ public final class VisualConfig implements ConfigData {
                 .build()
         );
 
-        var squishMultiplier = category.addEntry(entryBuilder.startFloatField(text("squish_multiplier"), config.squishMultiplier)
-                .setDefaultValue(2F)
+        var squishMultiplier = category.addEntry(entryBuilder.startIntSlider(text("squish_multiplier"), config.squishMultiplier, 0, 50)
+                .setDefaultValue(20)
                 .setSaveConsumer(newValue -> config.squishMultiplier = newValue)
                 .setTooltip(tooltip("squish_multiplier"))
-                .setMin(0F)
-                .setMax(5F)
+                .setMin(0)
+                .setMax(50)
                 .build()
         );
 

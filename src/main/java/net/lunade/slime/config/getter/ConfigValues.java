@@ -18,7 +18,7 @@ public class ConfigValues {
     }
 
     public static float squishMultiplier() {
-        return VISUALS.squishMultiplier;
+        return (float) VISUALS.squishMultiplier * 0.1F;
     }
 
     public static boolean newShadows() {

@@ -34,7 +34,7 @@ public final class GameplayConfig implements ConfigData {
                 .build()
         );
 
-        var maxSize = category.addEntry(entryBuilder.startIntField(text("max_size"), config.maxSize)
+        var maxSize = category.addEntry(entryBuilder.startIntSlider(text("max_size"), config.maxSize, 1, 127)
                 .setDefaultValue(7)
                 .setSaveConsumer(newValue -> config.maxSize = newValue)
                 .setTooltip(tooltip("max_size"))
@@ -43,7 +43,7 @@ public final class GameplayConfig implements ConfigData {
                 .build()
         );
 
-        var mergeCooldown = category.addEntry(entryBuilder.startIntField(text("merge_cooldown"), config.mergeCooldown)
+        var mergeCooldown = category.addEntry(entryBuilder.startIntSlider(text("merge_cooldown"), config.mergeCooldown, 0, 500)
                 .setDefaultValue(0)
                 .setSaveConsumer(newValue -> config.mergeCooldown = newValue)
                 .setTooltip(tooltip("merge_cooldown"))
@@ -52,7 +52,7 @@ public final class GameplayConfig implements ConfigData {
                 .build()
         );
 
-        var onSplitCooldown = category.addEntry(entryBuilder.startIntField(text("on_split_cooldown"), config.onSplitCooldown)
+        var onSplitCooldown = category.addEntry(entryBuilder.startIntSlider(text("on_split_cooldown"), config.onSplitCooldown, 0, 500)
                 .setDefaultValue(100)
                 .setSaveConsumer(newValue -> config.onSplitCooldown = newValue)
                 .setTooltip(tooltip("on_split_cooldown"))
@@ -61,7 +61,7 @@ public final class GameplayConfig implements ConfigData {
                 .build()
         );
 
-        var splitCooldown = category.addEntry(entryBuilder.startIntField(text("split_cooldown"), config.splitCooldown)
+        var splitCooldown = category.addEntry(entryBuilder.startIntSlider(text("split_cooldown"), config.splitCooldown, 0, 500)
                 .setDefaultValue(0)
                 .setSaveConsumer(newValue -> config.splitCooldown = newValue)
                 .setTooltip(tooltip("split_cooldown"))
