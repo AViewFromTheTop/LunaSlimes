@@ -20,7 +20,16 @@ public class SlimeRendererMixin {
     @Unique private static final ResourceLocation SLIME_4 = new ResourceLocation("lunaslimes", "textures/entity/slime/slime_4.png");
 
     @ModifyVariable(at = @At("STORE"), method = "scale", ordinal = 3)
-    public float newLerp(float original, Slime slime, PoseStack poseStack, float f) {
+    public float anims(float original, Slime slime, PoseStack poseStack, float f) {
+        float spawnAnimProgress = ((SlimeInterface)slime).spawnAnimProgress(f);
+        float splitAnimProgress = ((SlimeInterface)slime).splitAnimProgress(f);
+
+        float splitValue = (float) (((splitAnimProgress + (0.10345F * Math.PI)) * Math.PI) * 10F);
+        float splitAnimXZ = (float) ((Math.cos(splitValue) * 0.1F) + 1F);
+        float splitAnimY = (float) (-(Math.cos(splitValue) * 0.025F) + 1F);
+        poseStack.scale(splitAnimXZ, splitAnimY, splitAnimXZ);
+        poseStack.translate(0.0F, -(2.05F - (splitAnimY * 2.05F)), 0.0F);
+
         return Mth.lerp(f, ((SlimeInterface)slime).prevSquish(), slime.squish) / (((float)slime.getSize()) * 0.5f + 1.0f);
     }
 

@@ -1,7 +1,10 @@
 package net.lunade.slime;
 
 import net.lunade.slime.impl.SlimeInterface;
+import net.minecraft.core.particles.BlockParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
@@ -79,7 +82,9 @@ public class SlimeMethods {
                 slime.setInvulnerable(origin.isInvulnerable());
                 slime.setSize(splitOff = i % 2 == 0 ? (int) (i * 0.5) : 1, true);
                 slime.moveTo(origin.getX() + (double) g, origin.getY() + 0.5, origin.getZ() + (double) h, origin.getRandom().nextFloat() * 360.0f, 0.0f);
-                ((SlimeInterface)slime).setMergeCooldown(100);
+                ((SlimeInterface)origin).setMergeCooldown(100);
+                ((SlimeInterface)origin).playSplitAnim();
+                ((SlimeInterface)slime).playSplitAnim();
                 SlimeMethods.spawnSlimeParticles(origin);
                 origin.level.addFreshEntity(slime);
             }
@@ -88,14 +93,8 @@ public class SlimeMethods {
     }
 
     public static void spawnSlimeParticles(Slime slime) {
-        int i = slime.getSize();
-        for(int j = 0; j < (i * i) * 4; ++j) {
-            float f = slime.getRandom().nextFloat() * 6.2831855F;
-            float g = slime.getRandom().nextFloat() * 0.5F + 0.5F;
-            float h = Mth.sin(f) * (float)i * 0.5F * g;
-            float k = Mth.cos(f) * (float)i * 0.5F * g;
-            float l = Mth.cos(f) * (float)i * 0.5F * g;
-            slime.level.addParticle(slime.getParticleType(), slime.getX() + (double)h, slime.getY() + l, slime.getZ() + (double)k, 0.0D, 0.0D, 0.0D);
+        if (slime.level instanceof ServerLevel level) {
+            level.sendParticles(ParticleTypes.ITEM_SLIME, slime.getX(), slime.getY(0.6666666666666666D), slime.getZ(), level.random.nextInt(slime.getSize() * 6, slime.getSize() * 12), slime.getBbWidth() / 4.0F, slime.getBbHeight() / 4.0F, slime.getBbWidth() / 4.0F, 0.05D);
         }
     }
 

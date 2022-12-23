@@ -6,6 +6,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.monster.Slime;
 import org.spongepowered.asm.mixin.Mixin;
@@ -22,18 +23,23 @@ public class SlimeMixin implements SlimeInterface {
     @Unique private static final EntityDataAccessor<Integer> SPLIT_ANIM_PROGRESS = SynchedEntityData.defineId(Slime.class, EntityDataSerializers.INT);
 
     @Unique private static final int SPAWN_ANIM_LENGTH = 20;
-    @Unique private static final int SPLIT_ANIM_LENGTH = 20;
+    @Unique private static final int SPLIT_ANIM_LENGTH = 10;
+
+    @Unique public int mergeCooldown;
 
     @Unique public float previousSquish;
-    @Unique public int mergeCooldown;
+    @Unique public int prevSpawnAnim;
+    @Unique public int spawnAnim;
+    @Unique public int prevSplitAnim;
+    @Unique public int splitAnim;
 
     @Inject(at = @At("TAIL"), method = "defineSynchedData")
     protected void defineSynchedData(CallbackInfo info) {
         Slime slime = Slime.class.cast(this);
-        slime.getEntityData().define(PREV_SPAWN_PROGRESS, SPAWN_ANIM_LENGTH);
-        slime.getEntityData().define(SPAWN_ANIM_PROGRESS, SPAWN_ANIM_LENGTH);
-        slime.getEntityData().define(PREV_SPLIT_PROGRESS, SPLIT_ANIM_LENGTH);
-        slime.getEntityData().define(SPLIT_ANIM_PROGRESS, SPLIT_ANIM_LENGTH);
+        slime.getEntityData().define(PREV_SPAWN_PROGRESS, 0);
+        slime.getEntityData().define(SPAWN_ANIM_PROGRESS, 0);
+        slime.getEntityData().define(PREV_SPLIT_PROGRESS, 0);
+        slime.getEntityData().define(SPLIT_ANIM_PROGRESS, 0);
     }
 
     @Inject(at = @At("TAIL"), method = "addAdditionalSaveData")
@@ -64,8 +70,18 @@ public class SlimeMixin implements SlimeInterface {
     }
 
     @Inject(at = @At("HEAD"), method = "tick")
-    public void squishAnimFix(CallbackInfo info) {
+    public void tick(CallbackInfo info) {
+        Slime slime = Slime.class.cast(this);
         this.previousSquish = Slime.class.cast(this).squish;
+        slime.getEntityData().set(PREV_SPAWN_PROGRESS, slime.getEntityData().get(SPAWN_ANIM_PROGRESS));
+        slime.getEntityData().set(PREV_SPLIT_PROGRESS, slime.getEntityData().get(SPLIT_ANIM_PROGRESS));
+        this.prevSpawnAnim = slime.getEntityData().get(PREV_SPAWN_PROGRESS);
+        this.prevSplitAnim = slime.getEntityData().get(PREV_SPLIT_PROGRESS);
+
+        slime.getEntityData().set(SPAWN_ANIM_PROGRESS, Math.max(0, slime.getEntityData().get(SPAWN_ANIM_PROGRESS) - 1));
+        slime.getEntityData().set(SPLIT_ANIM_PROGRESS, Math.max(0, slime.getEntityData().get(SPLIT_ANIM_PROGRESS) - 1));
+        this.spawnAnim = slime.getEntityData().get(SPAWN_ANIM_PROGRESS);
+        this.splitAnim = slime.getEntityData().get(SPLIT_ANIM_PROGRESS);
     }
 
     @Inject(at = @At("HEAD"), method = "tick")
@@ -88,6 +104,22 @@ public class SlimeMixin implements SlimeInterface {
     @Override
     public void setMergeCooldown(int i) {
         this.mergeCooldown = i;
+    }
+
+    @Override
+    public float spawnAnimProgress(float tickDelta) {
+        return 1F - (Mth.lerp(tickDelta, this.prevSpawnAnim, this.spawnAnim) / SPAWN_ANIM_LENGTH);
+    }
+
+    @Override
+    public float splitAnimProgress(float tickDelta) {
+        return 1F - (Mth.lerp(tickDelta, this.prevSplitAnim, this.splitAnim) / SPLIT_ANIM_LENGTH);
+    }
+
+    @Override
+    public void playSplitAnim() {
+        Slime slime = Slime.class.cast(this);
+        slime.getEntityData().set(SPLIT_ANIM_PROGRESS, SPLIT_ANIM_LENGTH);
     }
 
 }
