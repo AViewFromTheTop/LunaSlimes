@@ -46,8 +46,8 @@ public class SlimeRendererMixin {
     @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/MobRenderer;render(Lnet/minecraft/world/entity/Mob;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", shift = At.Shift.BEFORE), method = "render")
     public void render(Slime slime, float f, float g, PoseStack poseStack, MultiBufferSource multiBufferSource, int i, CallbackInfo info) {
         float splitAnimProgress = ((SlimeInterface)slime).splitAnimProgress(this.partialTick);
-        float splitAnimXZ = (float) ((Math.cos((float) (((splitAnimProgress + (0.0955F * Math.PI)) * Math.PI) * 5F)) * 0.1F) + 1F);
-        float size = ((SlimeInterface)slime).getSizeScale(this.partialTick) * splitAnimXZ;
+        float splitAnimXZ = (float) ((Math.cos((float) (((splitAnimProgress + (0.0955F * Math.PI)) * Math.PI) * 5F)) * 0.1F) + 1F) * 2F;
+        float size = ((((SlimeInterface)slime).getSizeScale(this.partialTick) * 0.999F) * 0.75F) * splitAnimXZ;
         float squish = Mth.lerp(this.partialTick, ((SlimeInterface)slime).prevSquish(), slime.squish) / (size * 0.5f + 1.0f);
         float j = (1.0F / (squish + 1.0F));
         ((RendererShadowInterface)this).setShadowRadius(0.25F * (j * size));
