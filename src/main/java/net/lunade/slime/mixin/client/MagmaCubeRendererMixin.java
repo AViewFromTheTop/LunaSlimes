@@ -28,21 +28,19 @@ public class MagmaCubeRendererMixin {
         float splitAnimXZ = (float) ((Math.cos(splitValue) * 0.1F) + 1F);
         float splitAnimY = (float) (-(Math.cos(splitValue) * 0.025F) + 1F);
         poseStack.scale(splitAnimXZ, splitAnimY, splitAnimXZ);
-        poseStack.translate(0.0F, -(2.05F - (splitAnimY * 2.05F)), 0.0F);
+        poseStack.translate(0.0F, -(2.05F - (splitAnimY * 2.05F)), 0F);
 
         float size = ((SlimeInterface)slime).getSizeScale(f);
         float splitAnimXZShadow = splitAnimXZ * 2F;
         float shadowSize = ((size * 0.999F) * 0.75F) * splitAnimXZShadow;
-        float squish = Mth.lerp(f, ((SlimeInterface)slime).prevSquish(), slime.squish) / (shadowSize * 0.5f + 1.0f);
-        float j = (1.0F / (squish + 1.0F));
+        float squish = Mth.lerp(f, ((SlimeInterface)slime).prevSquish(), slime.squish) / (shadowSize * 0.5F + 1F);
+        float j = (1F / (squish + 1F));
         ((RendererShadowInterface)this).setShadowRadius(0.25F * (j * shadowSize));
 
-        float g = Mth.lerp(f, ((SlimeInterface)slime).prevSquish(), slime.squish) / ((size) * 0.5f + 1.0f);
-        this.h = (1.0F / (g + 1.0F));
+        float g = Mth.lerp(f, ((SlimeInterface)slime).prevSquish(), slime.squish) / ((size) * 0.5F + 1F);
+        this.h = (1F / (g + 1F));
         this.i = size;
         this.yStretch = 1F / this.h * size;
-        float offSize = size / ((size) * 0.5f + 1.0f);
-        poseStack.translate(0.0F, -(offSize - (yStretch * offSize)), 0.0F);
     }
 
     @ModifyArgs(at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;scale(FFF)V"), method = "scale")
