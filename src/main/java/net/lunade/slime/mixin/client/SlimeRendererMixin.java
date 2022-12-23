@@ -23,7 +23,6 @@ public class SlimeRendererMixin {
     @Unique private static final ResourceLocation SLIME_4 = new ResourceLocation("lunaslimes", "textures/entity/slime/slime_4.png");
 
     @Unique float partialTick;
-    @Unique float splitAnimXZ;
 
     @ModifyVariable(at = @At("STORE"), method = "scale", ordinal = 2)
     public float modifySize(float original, Slime slime, PoseStack poseStack, float f) {
@@ -36,9 +35,9 @@ public class SlimeRendererMixin {
         float splitAnimProgress = ((SlimeInterface)slime).splitAnimProgress(f);
 
         float splitValue = (float) (((splitAnimProgress + (0.0955F * Math.PI)) * Math.PI) * 5F);
-        this.splitAnimXZ = (float) ((Math.cos(splitValue) * 0.1F) + 1F);
+        float splitAnimXZ = (float) ((Math.cos(splitValue) * 0.1F) + 1F);
         float splitAnimY = (float) (-(Math.cos(splitValue) * 0.025F) + 1F);
-        poseStack.scale(this.splitAnimXZ, splitAnimY, this.splitAnimXZ);
+        poseStack.scale(splitAnimXZ, splitAnimY, splitAnimXZ);
         poseStack.translate(0.0F, -(2.05F - (splitAnimY * 2.05F)), 0.0F);
 
         return Mth.lerp(f, ((SlimeInterface)slime).prevSquish(), slime.squish) / ((((SlimeInterface)slime).getSizeScale(f)) * 0.5f + 1.0f);
@@ -46,7 +45,13 @@ public class SlimeRendererMixin {
 
     @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/MobRenderer;render(Lnet/minecraft/world/entity/Mob;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", shift = At.Shift.BEFORE), method = "render")
     public void render(Slime slime, float f, float g, PoseStack poseStack, MultiBufferSource multiBufferSource, int i, CallbackInfo info) {
-        ((RendererShadowInterface)this).setShadowRadius(0.25F * (((SlimeInterface)slime).getSizeScale(partialTick) + (splitAnimXZ * 2)));
+        float splitAnimProgress = ((SlimeInterface)slime).splitAnimProgress(this.partialTick);
+        float splitValue = (float) (((splitAnimProgress + (0.0955F * Math.PI)) * Math.PI) * 5F);
+        float splitAnimXZ = (float) ((Math.cos(splitValue) * 0.1F) + 1F);
+        float size = ((SlimeInterface)slime).getSizeScale(this.partialTick) * splitAnimXZ;
+        float squish = Mth.lerp(this.partialTick, ((SlimeInterface)slime).prevSquish(), slime.squish) / ((((SlimeInterface)slime).getSizeScale(f)) * 0.5f + 1.0f);
+        float j = (1.0F / (squish + 1.0F));
+        ((RendererShadowInterface)this).setShadowRadius(0.25F * (j * size));
     }
 
     @Inject(at = @At("HEAD"), method = "getTextureLocation", cancellable = true)
