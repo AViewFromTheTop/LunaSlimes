@@ -39,8 +39,8 @@ public class SlimeMixin implements SlimeInterface {
     @Unique public float previousSquish;
     @Unique public int prevWobbleAnim;
     @Unique public int wobbleAnim;
-    @Unique public float prevSize;
-    @Unique public float currentSize;
+    @Unique public float prevSize = 1F;
+    @Unique public float currentSize = 1F;
 
     @Inject(at = @At("TAIL"), method = "defineSynchedData")
     protected void defineSynchedData(CallbackInfo info) {
@@ -107,7 +107,9 @@ public class SlimeMixin implements SlimeInterface {
             ((SlimeInterface)slime).setMergeCooldown(ConfigValueGetter.spawnedMergeCooldown());
         }
         slime.getEntityData().set(PREV_SIZE, 0F);
+        this.prevSize = 0F;
         slime.getEntityData().set(CURRENT_SIZE, 0F);
+        this.currentSize = 0F;
     }
 
     @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/ai/attributes/AttributeInstance;setBaseValue(D)V", ordinal = 0, shift = At.Shift.AFTER), method = "setSize")
@@ -167,12 +169,6 @@ public class SlimeMixin implements SlimeInterface {
     @Override
     public float getSizeScale(float tickDelta) {
         return Mth.lerp(tickDelta, this.prevSize, this.currentSize);
-    }
-
-    @Override
-    public void spawnerSizeFix(float size) {
-        this.prevSize = 1F;
-        this.currentSize = 1F;
     }
 
 }
