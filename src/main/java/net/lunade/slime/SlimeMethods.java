@@ -32,6 +32,14 @@ public class SlimeMethods {
                 ((SlimeInterface)slime1).setMergeCooldown(ConfigValueGetter.mergeCooldown());
                 ((SlimeInterface)slime1).playWobbleAnim();
                 ((SlimeInterface)slime2).playWobbleAnim();
+                if (slime2.isPersistenceRequired()) {
+                    slime1.setPersistenceRequired();
+                }
+                if (slime2.hasCustomName() && !slime1.hasCustomName()) {
+                    slime1.setCustomName(slime2.getCustomName());
+                }
+                slime1.setInvulnerable(slime2.isInvulnerable());
+                slime1.setSilent(slime2.isSilent());
                 slime1.setPos(newPos);
                 if (otherSize - 1 <= 0) {
                     slime2.discard();
@@ -64,6 +72,7 @@ public class SlimeMethods {
                 slime.setCustomName(component);
                 slime.setNoAi(bl);
                 slime.setInvulnerable(origin.isInvulnerable());
+                slime.setSilent(origin.isSilent());
                 slime.setSize(splitOff = i % 2 == 0 ? (int) (i * 0.5) : 1, true);
                 slime.moveTo(origin.getX() + (double) g, origin.getY() + 0.5, origin.getZ() + (double) h, origin.getRandom().nextFloat() * 360.0f, 0.0f);
                 ((SlimeInterface)origin).setMergeCooldown(ConfigValueGetter.onSplitCooldown());
