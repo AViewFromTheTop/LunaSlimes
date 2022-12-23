@@ -45,7 +45,7 @@ public class SlimeRendererMixin {
     }
 
     @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/MobRenderer;render(Lnet/minecraft/world/entity/Mob;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", shift = At.Shift.BEFORE), method = "render")
-    public void render(Slime slime, float f, float g, PoseStack poseStack, MultiBufferSource multiBufferSource, int i, CallbackInfo info) {
+    public void newShadow(Slime slime, float f, float g, PoseStack poseStack, MultiBufferSource multiBufferSource, int i, CallbackInfo info) {
         if (ConfigValueGetter.newShadows()) {
             float slimeSize = ConfigValueGetter.growAnim() ? ((SlimeInterface) slime).getSizeScale(this.partialTick) : slime.getSize();
             float wobbleAnimProgress = ConfigValueGetter.wobbleAnim() ? ((SlimeInterface) slime).wobbleAnimProgress(this.partialTick) : 0F;

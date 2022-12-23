@@ -39,6 +39,8 @@ public class MagmaCubeRendererMixin {
             float squish = squishValue / (shadowSize * 0.5F + 1F);
             float j = (1F / (squish + 1F));
             ((RendererShadowInterface) this).setShadowRadius(0.25F * (j * shadowSize));
+        } else {
+            ((RendererShadowInterface) this).setShadowRadius(0.25F);
         }
 
         float g = squishValue / ((size) * 0.5F + 1F);
