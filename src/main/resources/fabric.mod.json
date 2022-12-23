@@ -37,11 +37,7 @@
     "minecraft": ">=1.19.3",
     "java": ">=17"
   },
-  "custom": {
-    "modupdater": {
-      "strategy": "curseforge",
-      "projectID": "571336",
-      "strict": "false"
-    }
+  "suggests": {
+    "cloth-config": "*"
   }
 }
