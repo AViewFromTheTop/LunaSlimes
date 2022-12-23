@@ -40,7 +40,7 @@ public class SlimeRendererMixin {
         poseStack.scale(splitAnimXZ, splitAnimY, splitAnimXZ);
         poseStack.translate(0.0F, -(2.05F - (splitAnimY * 2.05F)), 0.0F);
 
-        return (Mth.lerp(f, ((SlimeInterface)slime).prevSquish(), slime.squish) * 1.75F) / ((((SlimeInterface)slime).getSizeScale(f)) * 0.5f + 1.0f);
+        return (Mth.lerp(f, ((SlimeInterface)slime).prevSquish(), slime.squish) * 2F) / ((((SlimeInterface)slime).getSizeScale(f)) * 0.5f + 1.0f);
     }
 
     @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/MobRenderer;render(Lnet/minecraft/world/entity/Mob;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", shift = At.Shift.BEFORE), method = "render")

@@ -113,11 +113,6 @@ public class SlimeMixin implements SlimeInterface {
         Slime.class.cast(this).decreaseSquish();
     }
 
-    @Inject(at = @At(value = "FIELD", target = "Lnet/minecraft/world/entity/monster/Slime;targetSquish:F", ordinal = 0, shift = At.Shift.AFTER), method = "tick")
-    public void newLandSquish(CallbackInfo info) {
-        Slime.class.cast(this).targetSquish -= 0.5F;
-    }
-
     @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/monster/Slime;decreaseSquish()V"), method = "tick")
     public void stopDecreaseSquish(Slime slime) { }
 
