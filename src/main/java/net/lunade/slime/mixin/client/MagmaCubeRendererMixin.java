@@ -10,10 +10,15 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 @Mixin(MagmaCubeRenderer.class)
 public class MagmaCubeRendererMixin {
+
+    @Unique float h;
+    @Unique float i;
 
     @Inject(at = @At("HEAD"), method = "scale", cancellable = true)
     public void anims(MagmaCube slime, PoseStack poseStack, float f, CallbackInfo info) {
@@ -33,8 +38,15 @@ public class MagmaCubeRendererMixin {
 
         float i = ((SlimeInterface)slime).getSizeScale(f);
         float g = Mth.lerp(f, ((SlimeInterface)slime).prevSquish(), slime.squish) / ((i) * 0.5f + 1.0f);
-        float h = (1.0F / (g + 1.0F));
-        poseStack.scale(h * i, 1.0F / h * i, h * i);
+        this.h = (1.0F / (g + 1.0F));
+        this.i = i;
+    }
+
+    @ModifyArgs(at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;scale(FFF)V"), method = "scale")
+    public void setScaleArgs(Args args) {
+        args.set(0, this.h * this.i);
+        args.set(1, 1F / h * this.i);
+        args.set(2, this.h * this.i);
     }
 
 }
