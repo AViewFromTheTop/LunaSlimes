@@ -29,6 +29,10 @@ public class ConfigValues {
         return VISUALS.particles;
     }
 
+    public static boolean scaleTextures() {
+        return VISUALS.scaleTextures;
+    }
+
     public static int maxSize() {
         return GAMEPLAY.maxSize;
     }

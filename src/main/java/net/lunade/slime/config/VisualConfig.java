@@ -19,6 +19,7 @@ public final class VisualConfig implements ConfigData {
     public int squishMultiplier = 20;
     public boolean newShadows = true;
     public boolean particles = true;
+    public boolean scaleTextures = true;
 
     @Environment(EnvType.CLIENT)
     static void setupEntries(ConfigCategory category, ConfigEntryBuilder entryBuilder) {
@@ -63,6 +64,14 @@ public final class VisualConfig implements ConfigData {
                 .setSaveConsumer(newValue -> config.particles = newValue)
                 .setYesNoTextSupplier(bool -> text("particles." + bool))
                 .setTooltip(tooltip("particles"))
+                .build()
+        );
+
+        var scaleTextures = category.addEntry(entryBuilder.startBooleanToggle(text("scale_textures"), config.scaleTextures)
+                .setDefaultValue(true)
+                .setSaveConsumer(newValue -> config.scaleTextures = newValue)
+                .setYesNoTextSupplier(bool -> text("scale_textures." + bool))
+                .setTooltip(tooltip("scale_textures"))
                 .build()
         );
     }

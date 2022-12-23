@@ -83,6 +83,14 @@ public class SlimeMethods {
         }
     }
 
+    public static float getSlimeScale(Slime slime, float partialTick) {
+        return ConfigValueGetter.growAnim() ? ((SlimeInterface) slime).getSizeScale(partialTick) : slime.getSize();
+    }
+
+    public static float getSlimeWobbleAnimProgress(Slime slime, float partialTick) {
+        return ConfigValueGetter.wobbleAnim() ? ((SlimeInterface)slime).wobbleAnimProgress(partialTick) : 0F;
+    }
+
     private static Vec3 collideWithBox(Slime slime, Vec3 vec3, AABB aABB) {
         List<VoxelShape> list = slime.level.getEntityCollisions(slime, aABB.expandTowards(vec3));
         Vec3 vec32 = vec3.lengthSqr() == 0.0 ? vec3 : Entity.collideBoundingBox(slime, vec3, aABB, slime.level, list);

@@ -1,6 +1,7 @@
 package net.lunade.slime.mixin.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.lunade.slime.SlimeMethods;
 import net.lunade.slime.config.getter.ConfigValueGetter;
 import net.lunade.slime.impl.RendererShadowInterface;
 import net.lunade.slime.impl.SlimeInterface;
@@ -24,13 +25,13 @@ public class MagmaCubeRendererMixin {
 
     @Inject(at = @At("HEAD"), method = "scale")
     public void anims(MagmaCube slime, PoseStack poseStack, float f, CallbackInfo info) {
-        float splitAnimProgress = ((SlimeInterface)slime).wobbleAnimProgress(f);
+        float splitAnimProgress = SlimeMethods.getSlimeWobbleAnimProgress(slime, f);
         float splitValue = (float) (((splitAnimProgress + (0.0955F * Math.PI)) * Math.PI) * 5F);
         float splitAnimXZ = (float) ((Math.cos(splitValue) * 0.1F) + 1F);
         float splitAnimY = (float) (-(Math.cos(splitValue) * 0.025F) + 1F);
         poseStack.scale(splitAnimXZ, splitAnimY, splitAnimXZ);
         poseStack.translate(0.0F, -(2.05F - (splitAnimY * 2.05F)), 0F);
-        float size = ConfigValueGetter.growAnim() ? ((SlimeInterface) slime).getSizeScale(f) : slime.getSize();
+        float size = SlimeMethods.getSlimeScale(slime, f);
         float squishValue = Mth.lerp(f, ((SlimeInterface)slime).prevSquish(), slime.squish) * ConfigValueGetter.squishMultiplier();
 
         if (ConfigValueGetter.newShadows()) {

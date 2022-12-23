@@ -20,6 +20,10 @@
   "option.lunaslimes.particles.false": "OFF",
   "option.lunaslimes.particles.true": "ON",
   "tooltip.lunaslimes.particles": "Spawns particles upon Slime splitting.",
+  "option.lunaslimes.scale_textures": "Scaled Textures",
+  "option.lunaslimes.scale_textures.false": "OFF",
+  "option.lunaslimes.scale_textures.true": "ON",
+  "tooltip.lunaslimes.scale_textures": "Bigger Slimes will use higher resolution textures.",
 
   "option.lunaslimes.gameplay": "Gameplay",
   "option.lunaslimes.max_size": "Slime Merge Cap",
