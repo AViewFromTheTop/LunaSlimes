@@ -122,10 +122,12 @@ public class SlimeMixin implements SlimeInterface {
     public void stopDecreaseSquish(Slime slime) { }
 
     @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;addFreshEntity(Lnet/minecraft/world/entity/Entity;)Z"), method = "remove")
-    public boolean mergeCooldownForSplitSlimes(Level par1, Entity par2) {
+    public boolean beforeSpawnNewSlime(Level par1, Entity par2) {
         if (par2 instanceof Slime) {
             ((SlimeInterface) par2).setMergeCooldown(Math.max(ConfigValueGetter.onSplitCooldown(), ConfigValueGetter.splitCooldown()) * 2);
         }
+        Slime slime = Slime.class.cast(this);
+        par2.setSilent(slime.isSilent());
         return par1.addFreshEntity(par2);
     }
 
