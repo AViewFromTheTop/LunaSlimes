@@ -43,4 +43,9 @@ public class SlimeMoveControlMixin {
         }
     }
 
+    @Inject(at = @At("TAIL"), method = "tick")
+    public void tickTail(CallbackInfo info) {
+        ((SlimeInterface)slime).setJumpDelay(this.jumpDelay);
+    }
+
 }
