@@ -14,9 +14,9 @@ public class MobMixin {
     @Inject(at = @At("HEAD"), method = "handleEntityEvent")
     public void handleEntityEvent(byte b, CallbackInfo info) {
         Mob mob = Mob.class.cast(this);
-        if (mob instanceof Slime slime && b == (byte) 62) {
+        if (mob instanceof Slime slime && b == (byte) 61) {
             slime.targetSquish = -0.05F;
-            ((SlimeInterface)slime).setJumpAnticTicks(2);
+            ((SlimeInterface)slime).setJumpAnticTicks(3);
         }
     }
 
