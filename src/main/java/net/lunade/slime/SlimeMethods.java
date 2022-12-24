@@ -32,6 +32,9 @@ public class SlimeMethods {
                     slime1.setSize(thisSize + 1, true);
                     ((SlimeInterface) slime1).setMergeCooldown(ConfigValueGetter.mergeCooldown());
                     ((SlimeInterface) slime1).playWobbleAnim();
+                    if (ConfigValueGetter.mergeSounds()) {
+                        slime1.playSound(LunaSlimesMain.SLIME_MERGE, 0.8F, 1.0f + (slime1.getRandom().nextFloat() - slime1.getRandom().nextFloat()) * 0.4f);
+                    }
                     ((SlimeInterface) slime2).playWobbleAnim();
                     if (slime2.isPersistenceRequired()) {
                         slime1.setPersistenceRequired();
@@ -83,6 +86,9 @@ public class SlimeMethods {
                 ((SlimeInterface)slime).playWobbleAnim();
                 SlimeMethods.spawnSlimeParticles(origin);
                 origin.level.addFreshEntity(slime);
+                if (ConfigValueGetter.mergeSounds()) {
+                    slime.playSound(LunaSlimesMain.SLIME_SPLIT, 0.8F, 1.0f + (slime.getRandom().nextFloat() - slime.getRandom().nextFloat()) * 0.4f);
+                }
             }
         }
         return splitOff;

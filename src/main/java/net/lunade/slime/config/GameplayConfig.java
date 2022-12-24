@@ -14,7 +14,7 @@ import static net.lunade.slime.config.LunaSlimesConfig.tooltip;
 @Config(name = "gameplay")
 public final class GameplayConfig implements ConfigData {
 
-    public int maxSize = 7;
+    public int maxSize = 4;
     public int mergeCooldown = 0;
     public int onSplitCooldown = 100;
     public int splitCooldown = 0;
@@ -27,7 +27,7 @@ public final class GameplayConfig implements ConfigData {
         category.setBackground(new ResourceLocation("lunaslimes", "textures/config/gameplay.png"));
 
         var maxSize = category.addEntry(entryBuilder.startIntSlider(text("max_size"), config.maxSize, 1, 127)
-                .setDefaultValue(7)
+                .setDefaultValue(4)
                 .setSaveConsumer(newValue -> config.maxSize = newValue)
                 .setTooltip(tooltip("max_size"))
                 .setMin(1)
