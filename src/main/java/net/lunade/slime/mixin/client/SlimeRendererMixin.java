@@ -29,7 +29,7 @@ public class SlimeRendererMixin {
     @ModifyVariable(at = @At("STORE"), method = "scale", ordinal = 2)
     public float modifySize(float original, Slime slime, PoseStack poseStack, float f) {
         this.partialTick = f;
-        return ConfigValueGetter.growAnim() ? ((SlimeInterface)slime).getSizeScale(f) : original;
+        return SlimeMethods.getSlimeScale(slime, f);
     }
 
     @ModifyVariable(at = @At("STORE"), method = "scale", ordinal = 3)

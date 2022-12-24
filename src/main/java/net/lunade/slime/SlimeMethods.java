@@ -107,7 +107,7 @@ public class SlimeMethods {
     }
 
     public static float getSlimeScale(Slime slime, float partialTick) {
-        return ConfigValueGetter.growAnim() ? ((SlimeInterface) slime).getSizeScale(partialTick) : slime.getSize();
+        return (ConfigValueGetter.growAnim() ? ((SlimeInterface) slime).getSizeScale(partialTick) : slime.getSize()) * ((SlimeInterface)slime).getDeathProgress(partialTick);
     }
 
     public static float getSlimeWobbleAnimProgress(Slime slime, float partialTick) {
