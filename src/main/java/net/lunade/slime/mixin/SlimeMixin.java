@@ -31,6 +31,7 @@ public class SlimeMixin implements SlimeInterface {
     @Unique private static final EntityDataAccessor<Float> PREV_SIZE = SynchedEntityData.defineId(Slime.class, EntityDataSerializers.FLOAT);
     @Unique private static final EntityDataAccessor<Float> CURRENT_SIZE = SynchedEntityData.defineId(Slime.class, EntityDataSerializers.FLOAT);
     @Unique private static final EntityDataAccessor<Float> TARGET_SQUISH = SynchedEntityData.defineId(Slime.class, EntityDataSerializers.FLOAT);
+    @Unique private static final EntityDataAccessor<Boolean> JUMP_ANTIC = SynchedEntityData.defineId(Slime.class, EntityDataSerializers.BOOLEAN);
 
     @Unique private static final int WOBBLE_ANIM_LENGTH = 10;
 
@@ -54,6 +55,7 @@ public class SlimeMixin implements SlimeInterface {
         slime.getEntityData().define(PREV_SIZE, 0F);
         slime.getEntityData().define(CURRENT_SIZE, 0F);
         slime.getEntityData().define(TARGET_SQUISH, 0F);
+        slime.getEntityData().define(JUMP_ANTIC, false);
     }
 
     @Inject(at = @At("TAIL"), method = "addAdditionalSaveData")
@@ -120,6 +122,11 @@ public class SlimeMixin implements SlimeInterface {
             slime.getEntityData().set(TARGET_SQUISH, slime.targetSquish);
         }
         slime.targetSquish = Slime.class.cast(this).getEntityData().get(TARGET_SQUISH);
+
+        if (!slime.level.isClientSide) {
+            slime.getEntityData().set(JUMP_ANTIC, this.jumpAntic);
+        }
+        this.jumpAntic = Slime.class.cast(this).getEntityData().get(JUMP_ANTIC);
     }
 
     @Inject(at = @At(value = "FIELD", target = "Lnet/minecraft/world/entity/monster/Slime;targetSquish:F", ordinal = 1, shift = At.Shift.BEFORE), method = "tick")
