@@ -102,7 +102,7 @@ public class SlimeMethods {
 
     public static void spawnSlimeLandParticles(Slime slime) {
         if (slime.level instanceof ServerLevel level) {
-            level.sendParticles(slime.getParticleType(), slime.getX(), slime.getY(), slime.getZ(), level.random.nextInt(slime.getSize() * 3, slime.getSize() * 6), slime.getBbWidth() / 3.5F, 0F, slime.getBbWidth() / 3.5F, 0.05D);
+            level.sendParticles(slime.getParticleType(), slime.getX(), slime.getY(), slime.getZ(), level.random.nextInt(slime.getSize() * 6, slime.getSize() * 8), slime.getBbWidth() / 3.5F, 0F, slime.getBbWidth() / 3.5F, 0.05D);
         }
     }
 

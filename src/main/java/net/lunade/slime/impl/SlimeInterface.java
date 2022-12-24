@@ -26,4 +26,6 @@ public interface SlimeInterface {
 
     void setJumpDelay(int i);
 
+    void setDeathAnim(boolean bl);
+
 }

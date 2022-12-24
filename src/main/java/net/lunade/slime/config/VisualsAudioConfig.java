@@ -18,6 +18,7 @@ public final class VisualsAudioConfig implements ConfigData {
     public boolean wobbleAnim = true;
     public int squishMultiplier = 20;
     public boolean jumpAntic = true;
+    public boolean deathAnim = true;
     public boolean newShadows = true;
     public boolean particles = true;
     public boolean scaleTextures = true;
@@ -59,6 +60,14 @@ public final class VisualsAudioConfig implements ConfigData {
                 .setSaveConsumer(newValue -> config.jumpAntic = newValue)
                 .setYesNoTextSupplier(bool -> text("jump_antic." + bool))
                 .setTooltip(tooltip("jump_antic"))
+                .build()
+        );
+
+        var deathAnim = category.addEntry(entryBuilder.startBooleanToggle(text("death_anim"), config.deathAnim)
+                .setDefaultValue(true)
+                .setSaveConsumer(newValue -> config.deathAnim = newValue)
+                .setYesNoTextSupplier(bool -> text("death_anim." + bool))
+                .setTooltip(tooltip("death_anim"))
                 .build()
         );
 
