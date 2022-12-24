@@ -32,13 +32,13 @@ public class SlimeMoveControlMixin {
         if (ConfigValueGetter.jumpAntic()) {
             boolean antic = this.slime.isOnGround() && !this.slime.isInWater();
             if (this.jumpDelay == 3 && antic) {
-                this.slime.targetSquish = -0.1F;
+                this.slime.targetSquish = -0.05F;
                 ((SlimeInterface)this.slime).setJumpAntic(true);
             } else if (this.jumpDelay == 2 && antic) {
-                this.slime.targetSquish = -0.25F;
+                this.slime.targetSquish = -0.15F;
                 ((SlimeInterface)this.slime).setJumpAntic(true);
             } else if (this.jumpDelay == 1 && antic) {
-                this.slime.targetSquish = -0.4F;
+                this.slime.targetSquish = -0.3F;
                 ((SlimeInterface)this.slime).setJumpAntic(true);
             } else {
                 ((SlimeInterface)this.slime).setJumpAntic(false);
