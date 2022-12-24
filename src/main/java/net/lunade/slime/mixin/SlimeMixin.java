@@ -19,10 +19,7 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
-import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -112,10 +109,11 @@ public class SlimeMixin implements SlimeInterface {
         }
     }
 
-    @ModifyVariable(at = @At(value = "FIELD", target = "Lnet/minecraft/world/entity/monster/Slime;targetSquish:F", ordinal = 0), method = "tick")
-    public float delaySquish(float original) {
+    @Inject(at = @At(value = "FIELD", target = "Lnet/minecraft/world/entity/monster/Slime;targetSquish:F", ordinal = 0, shift = At.Shift.AFTER), method = "tick")
+    public void delaySquish(CallbackInfo info) {
+        Slime slime = Slime.class.cast(this);
+        slime.targetSquish = slime.targetSquish + 0.5F;
         this.hasLanded = true;
-        return 0F;
     }
 
     @Inject(at = @At("HEAD"), method = "tick")
