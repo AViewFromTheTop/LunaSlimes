@@ -17,7 +17,7 @@ public class SlimeMoveControlMixin {
 
     @Inject(at = @At("HEAD"), method = "tick")
     public void tick(CallbackInfo info) {
-        if (this.jumpDelay == 10) {
+        if (this.jumpDelay == 10 && slime.isOnGround() && !slime.isInWater()) {
             this.slime.targetSquish = -0.25F;
         }
     }
