@@ -13,6 +13,7 @@
     "BaseSpawnerMixin",
     "LivingEntityMixin",
     "MagmaCubeMixin",
+    "MobMixin",
     "SlimeMixin",
     "SlimeMoveControlMixin"
   ],
