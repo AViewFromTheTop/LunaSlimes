@@ -14,4 +14,6 @@ public interface SlimeInterface {
 
     float getSizeScale(float tickDelta);
 
+    void cheatSize(float f);
+
 }

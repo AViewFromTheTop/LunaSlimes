@@ -10,8 +10,10 @@
     "client.SlimeRendererMixin"
   ],
   "mixins": [
+    "BaseSpawnerMixin",
     "LivingEntityMixin",
-    "SlimeMixin"
+    "SlimeMixin",
+    "SlimeMoveControlMixin"
   ],
   "injectors": {
     "defaultRequire": 1
