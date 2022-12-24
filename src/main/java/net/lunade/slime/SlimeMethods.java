@@ -94,6 +94,12 @@ public class SlimeMethods {
         }
     }
 
+    public static void spawnSlimeLandParticles(Slime slime) {
+        if (slime.level instanceof ServerLevel level) {
+            level.sendParticles(slime.getParticleType(), slime.getX(), slime.getY(), slime.getZ(), level.random.nextInt(slime.getSize() * 2, slime.getSize() * 4), slime.getBbWidth() / 4.0F, 0F, slime.getBbWidth() / 4.0F, 0.05D);
+        }
+    }
+
     public static float getSlimeScale(Slime slime, float partialTick) {
         return ConfigValueGetter.growAnim() ? ((SlimeInterface) slime).getSizeScale(partialTick) : slime.getSize();
     }

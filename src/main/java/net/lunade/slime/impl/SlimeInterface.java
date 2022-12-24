@@ -18,6 +18,8 @@ public interface SlimeInterface {
 
     void setJumpAntic(boolean bl);
 
+    void setJumpAnticTicks(int i);
+
     int getJumpDelay();
 
     void setJumpDelay(int i);
