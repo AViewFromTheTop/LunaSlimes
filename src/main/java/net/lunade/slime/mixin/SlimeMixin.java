@@ -105,6 +105,11 @@ public class SlimeMixin implements SlimeInterface {
         this.wobbleAnim = slime.getEntityData().get(WOBBLE_ANIM_PROGRESS);
         this.currentSize = slime.getEntityData().get(CURRENT_SIZE);
 
+        if (!slime.level.isClientSide) {
+            slime.getEntityData().set(TARGET_SQUISH, slime.targetSquish);
+        }
+        slime.targetSquish = Slime.class.cast(this).getEntityData().get(TARGET_SQUISH);
+
         if (this.hasLanded) {
             this.hasLanded = false;
             slime.targetSquish = -0.5F;
@@ -124,10 +129,6 @@ public class SlimeMixin implements SlimeInterface {
         if (this.hasLanded) {
             slime.targetSquish = this.prevTargetSquish;
         }
-        if (!slime.level.isClientSide) {
-            slime.getEntityData().set(TARGET_SQUISH, slime.targetSquish);
-        }
-        slime.targetSquish = Slime.class.cast(this).getEntityData().get(TARGET_SQUISH);
     }
 
     @Inject(at = @At("HEAD"), method = "tick")
