@@ -122,14 +122,14 @@ public class SlimeMixin implements SlimeInterface {
         slime.targetSquish = Slime.class.cast(this).getEntityData().get(TARGET_SQUISH);
     }
 
-    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/monster/Slime;getSize()I", shift = At.Shift.AFTER), method = "tick")
+    @Inject(at = @At(value = "FIELD", target = "Lnet/minecraft/world/entity/monster/Slime;targetSquish:F", ordinal = 1, shift = At.Shift.BEFORE), method = "tick")
     public void captureSquish(CallbackInfo info) {
         Slime slime = Slime.class.cast(this);
         this.prevTargetSquish = slime.targetSquish;
         this.landDelays.add(3);
     }
 
-    @Inject(at = @At(value = "FIELD", target = "Lnet/minecraft/world/entity/monster/Slime;targetSquish:F", ordinal = 0, shift = At.Shift.AFTER), method = "tick")
+    @Inject(at = @At(value = "FIELD", target = "Lnet/minecraft/world/entity/monster/Slime;targetSquish:F", ordinal = 1, shift = At.Shift.AFTER), method = "tick")
     public void afterField(CallbackInfo info) {
         Slime slime = Slime.class.cast(this);
         slime.targetSquish = this.prevTargetSquish;
