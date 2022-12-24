@@ -86,7 +86,7 @@ public class SlimeMethods {
                 ((SlimeInterface)slime).playWobbleAnim();
                 SlimeMethods.spawnSlimeParticles(origin);
                 origin.level.addFreshEntity(slime);
-                if (ConfigValueGetter.mergeSounds()) {
+                if (ConfigValueGetter.splitSounds()) {
                     slime.playSound(LunaSlimesMain.SLIME_SPLIT, 1F, 1F + (slime.getRandom().nextFloat() - slime.getRandom().nextFloat()) * 0.4f);
                 }
             }
@@ -102,7 +102,7 @@ public class SlimeMethods {
 
     public static void spawnSlimeLandParticles(Slime slime) {
         if (slime.level instanceof ServerLevel level) {
-            level.sendParticles(slime.getParticleType(), slime.getX(), slime.getY(), slime.getZ(), level.random.nextInt(slime.getSize() * 2, slime.getSize() * 4), slime.getBbWidth() / 4.0F, 0F, slime.getBbWidth() / 4.0F, 0.05D);
+            level.sendParticles(slime.getParticleType(), slime.getX(), slime.getY(), slime.getZ(), level.random.nextInt(slime.getSize() * 3, slime.getSize() * 6), slime.getBbWidth() / 4.0F, 0F, slime.getBbWidth() / 4.0F, 0.05D);
         }
     }
 
