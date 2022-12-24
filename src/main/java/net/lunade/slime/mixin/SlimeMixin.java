@@ -257,6 +257,12 @@ public class SlimeMixin implements SlimeInterface {
 
     @Unique
     @Override
+    public boolean getJumpAntic() {
+        return this.jumpAntic;
+    }
+
+    @Unique
+    @Override
     public void setJumpAnticTicks(int i) {
         this.jumpSquishes = i;
     }
