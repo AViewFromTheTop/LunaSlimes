@@ -39,16 +39,16 @@ public class SlimeMixin implements SlimeInterface {
     @Unique public float previousSquish;
     @Unique public int prevWobbleAnim;
     @Unique public int wobbleAnim;
-    @Unique public float prevSize = 1F;
-    @Unique public float currentSize = 1F;
+    @Unique public float prevSize = 0F;
+    @Unique public float currentSize = 0F;
 
     @Inject(at = @At("TAIL"), method = "defineSynchedData")
     protected void defineSynchedData(CallbackInfo info) {
         Slime slime = Slime.class.cast(this);
         slime.getEntityData().define(PREV_WOBBLE_ANIM_PROGRESS, 0);
         slime.getEntityData().define(WOBBLE_ANIM_PROGRESS, 0);
-        slime.getEntityData().define(PREV_SIZE, 1F);
-        slime.getEntityData().define(CURRENT_SIZE, 1F);
+        slime.getEntityData().define(PREV_SIZE, 0F);
+        slime.getEntityData().define(CURRENT_SIZE, 0F);
     }
 
     @Inject(at = @At("TAIL"), method = "addAdditionalSaveData")
@@ -106,10 +106,6 @@ public class SlimeMixin implements SlimeInterface {
         if (mobSpawnType == MobSpawnType.NATURAL || mobSpawnType == MobSpawnType.SPAWNER || mobSpawnType == MobSpawnType.CHUNK_GENERATION) {
             ((SlimeInterface)slime).setMergeCooldown(ConfigValueGetter.spawnedMergeCooldown());
         }
-        slime.getEntityData().set(PREV_SIZE, 0F);
-        this.prevSize = 0F;
-        slime.getEntityData().set(CURRENT_SIZE, 0F);
-        this.currentSize = 0F;
     }
 
     @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/ai/attributes/AttributeInstance;setBaseValue(D)V", ordinal = 0, shift = At.Shift.AFTER), method = "setSize")
@@ -169,6 +165,15 @@ public class SlimeMixin implements SlimeInterface {
     @Override
     public float getSizeScale(float tickDelta) {
         return Mth.lerp(tickDelta, this.prevSize, this.currentSize);
+    }
+
+    @Override
+    public void cheatSize(float f) {
+        Slime slime = Slime.class.cast(this);
+        slime.getEntityData().set(PREV_SIZE, f);
+        slime.getEntityData().set(CURRENT_SIZE, f);
+        this.prevSize = f;
+        this.currentSize = f;
     }
 
 }
