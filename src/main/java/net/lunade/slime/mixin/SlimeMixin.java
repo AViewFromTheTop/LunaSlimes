@@ -98,7 +98,7 @@ public class SlimeMixin implements SlimeInterface {
         this.currentSize = slime.getEntityData().get(CURRENT_SIZE);
     }
 
-    @Inject(at = @At("HEAD"), method = "tick")
+    @Inject(at = @At("TAIL"), method = "tick")
     public void tickTail(CallbackInfo info) {
         Slime slime = Slime.class.cast(this);
         if (!slime.level.isClientSide) {
