@@ -106,21 +106,20 @@ public class SlimeMixin implements SlimeInterface {
         this.wobbleAnim = slime.getEntityData().get(WOBBLE_ANIM_PROGRESS);
         this.currentSize = slime.getEntityData().get(CURRENT_SIZE);
 
-        if (!slime.level.isClientSide) {
-            slime.getEntityData().set(TARGET_SQUISH, slime.targetSquish);
-        }
-        slime.targetSquish = Slime.class.cast(this).getEntityData().get(TARGET_SQUISH);
-
-        for (int array : this.landDelays) {
-            int index = this.landDelays.indexOf(array);
+        for (int index = 0; index < this.landDelays.size(); index++) {
+            int array = this.landDelays.getInt(index);
             array -= 1;
             this.landDelays.set(index, array);
             if (array <= 0) {
                 slime.targetSquish = -0.5F;
             }
         }
-
         this.landDelays.removeIf((integer -> integer <= 0));
+
+        if (!slime.level.isClientSide) {
+            slime.getEntityData().set(TARGET_SQUISH, slime.targetSquish);
+        }
+        slime.targetSquish = Slime.class.cast(this).getEntityData().get(TARGET_SQUISH);
     }
 
     @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/monster/Slime;getSize()I", shift = At.Shift.AFTER), method = "tick")
