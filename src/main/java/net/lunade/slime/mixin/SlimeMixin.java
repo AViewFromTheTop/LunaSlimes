@@ -31,6 +31,7 @@ public class SlimeMixin implements SlimeInterface {
     @Unique private static final EntityDataAccessor<Integer> WOBBLE_ANIM_PROGRESS = SynchedEntityData.defineId(Slime.class, EntityDataSerializers.INT);
     @Unique private static final EntityDataAccessor<Float> PREV_SIZE = SynchedEntityData.defineId(Slime.class, EntityDataSerializers.FLOAT);
     @Unique private static final EntityDataAccessor<Float> CURRENT_SIZE = SynchedEntityData.defineId(Slime.class, EntityDataSerializers.FLOAT);
+    @Unique private static final EntityDataAccessor<Float> TARGET_SQUISH = SynchedEntityData.defineId(Slime.class, EntityDataSerializers.FLOAT);
 
     @Unique private static final int WOBBLE_ANIM_LENGTH = 10;
 
@@ -49,6 +50,7 @@ public class SlimeMixin implements SlimeInterface {
         slime.getEntityData().define(WOBBLE_ANIM_PROGRESS, 0);
         slime.getEntityData().define(PREV_SIZE, 0F);
         slime.getEntityData().define(CURRENT_SIZE, 0F);
+        slime.getEntityData().define(TARGET_SQUISH, 0F);
     }
 
     @Inject(at = @At("TAIL"), method = "addAdditionalSaveData")
@@ -59,6 +61,7 @@ public class SlimeMixin implements SlimeInterface {
         compoundTag.putFloat("PrevSize", slime.getEntityData().get(PREV_SIZE));
         compoundTag.putFloat("CurrentSize", slime.getEntityData().get(CURRENT_SIZE));
         compoundTag.putInt("MergeCooldown", this.getMergeCooldown());
+        compoundTag.putFloat("TargetSquish", slime.getEntityData().get(TARGET_SQUISH));
     }
 
     @Inject(at = @At("TAIL"), method = "readAdditionalSaveData")
@@ -69,6 +72,7 @@ public class SlimeMixin implements SlimeInterface {
         slime.getEntityData().set(PREV_SIZE, compoundTag.getFloat("PrevSize"));
         slime.getEntityData().set(CURRENT_SIZE, compoundTag.getFloat("CurrentSize"));
         this.setMergeCooldown(compoundTag.getInt("MergeCooldown"));
+        slime.getEntityData().set(TARGET_SQUISH, compoundTag.getFloat("TargetSquish"));
     }
 
     @Inject(at = @At("HEAD"), method = "push")
@@ -92,8 +96,15 @@ public class SlimeMixin implements SlimeInterface {
         slime.getEntityData().set(CURRENT_SIZE, slime.getEntityData().get(CURRENT_SIZE) + sizeDiff * 0.25F);
         this.wobbleAnim = slime.getEntityData().get(WOBBLE_ANIM_PROGRESS);
         this.currentSize = slime.getEntityData().get(CURRENT_SIZE);
+    }
 
-
+    @Inject(at = @At("TAIL"), method = "tick")
+    public void tickTail(CallbackInfo info) {
+        Slime slime = Slime.class.cast(this);
+        if (!slime.level.isClientSide) {
+            slime.getEntityData().set(TARGET_SQUISH, slime.targetSquish);
+        }
+        slime.targetSquish = Slime.class.cast(this).getEntityData().get(TARGET_SQUISH);
     }
 
     @Inject(at = @At("HEAD"), method = "tick")
