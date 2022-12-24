@@ -105,6 +105,7 @@ public class SlimeMixin implements SlimeInterface {
         this.currentSize = slime.getEntityData().get(CURRENT_SIZE);
 
         if (this.hasLanded) {
+            this.hasLanded = false;
             slime.targetSquish = -0.5F;
         }
     }
