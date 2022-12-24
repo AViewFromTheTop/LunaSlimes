@@ -111,7 +111,7 @@ public class SlimeMixin implements SlimeInterface {
         }
     }
 
-    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/monster/Slime;getSquishSound()Lnet/minecraft/sounds/SoundEvent;", shift = At.Shift.BEFORE), method = "tick")
+    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/monster/Slime;getSize()I", shift = At.Shift.AFTER), method = "tick")
     public void captureSquish(CallbackInfo info) {
         Slime slime = Slime.class.cast(this);
         this.prevTargetSquish = slime.targetSquish;
