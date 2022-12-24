@@ -20,6 +20,10 @@ public class ConfigValueGetter {
         return !LunaSlimesMain.HAS_CLOTH_CONFIG || ConfigValues.jumpAntic();
     }
 
+    public static boolean deathAnim() {
+        return !LunaSlimesMain.HAS_CLOTH_CONFIG || ConfigValues.deathAnim();
+    }
+
     public static boolean newShadows() {
         return !LunaSlimesMain.HAS_CLOTH_CONFIG || ConfigValues.newShadows();
     }

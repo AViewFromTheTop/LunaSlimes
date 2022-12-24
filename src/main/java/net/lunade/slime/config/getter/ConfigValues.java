@@ -25,6 +25,10 @@ public class ConfigValues {
         return VISUALS_AUDIO.jumpAntic;
     }
 
+    public static boolean deathAnim() {
+        return VISUALS_AUDIO.deathAnim;
+    }
+
     public static boolean newShadows() {
         return VISUALS_AUDIO.newShadows;
     }
