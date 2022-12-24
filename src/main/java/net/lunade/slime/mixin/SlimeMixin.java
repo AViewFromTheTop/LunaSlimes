@@ -47,6 +47,7 @@ public class SlimeMixin implements SlimeInterface {
     @Unique public float currentSize = 0F;
     @Unique public boolean jumpAntic;
     @Unique public float prevTargetSquish;
+    @Unique public int prevDeathTime;
 
     @Inject(at = @At("TAIL"), method = "defineSynchedData")
     protected void defineSynchedData(CallbackInfo info) {
@@ -105,6 +106,7 @@ public class SlimeMixin implements SlimeInterface {
         slime.getEntityData().set(CURRENT_SIZE, slime.getEntityData().get(CURRENT_SIZE) + sizeDiff * 0.25F);
         this.wobbleAnim = slime.getEntityData().get(WOBBLE_ANIM_PROGRESS);
         this.currentSize = slime.getEntityData().get(CURRENT_SIZE);
+        this.prevDeathTime = slime.deathTime;
 
         for (int index = 0; index < this.landDelays.size(); index++) {
             int array = this.landDelays.getInt(index);
@@ -278,6 +280,12 @@ public class SlimeMixin implements SlimeInterface {
     @Override
     public void setJumpDelay(int i) {
         this.jumpDelay = i;
+    }
+
+    @Unique
+    @Override
+    public float getDeathProgress(float partialTick) {
+        return ConfigValueGetter.deathAnim() && Slime.class.cast(this).isDeadOrDying() ? ((20F - Mth.lerp(partialTick, this.prevDeathTime, (Slime.class.cast(this).deathTime))) / 20F) : 1F;
     }
 
 }
