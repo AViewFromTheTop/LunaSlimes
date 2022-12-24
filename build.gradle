@@ -103,9 +103,9 @@ dependencies {
 			setNameSyntheticMembers(false)
 		}
 	})
-	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	modCompileOnly "net.fabricmc:fabric-loader:${project.loader_version}"
 
-	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+	modCompileOnly "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
 	// Mod Menu
 	modCompileOnly("com.terraformersmc:modmenu:${modmenu_version}")
