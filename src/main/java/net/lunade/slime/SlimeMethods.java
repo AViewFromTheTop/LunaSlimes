@@ -17,7 +17,7 @@ import java.util.List;
 public class SlimeMethods {
 
     public static void mergeSlimes(Slime slime1, Slime slime2) {
-        if (slime2.getType() == slime1.getType()) {
+        if (slime2.getType() == slime1.getType() && slime1.isAlive() && slime2.isAlive()) {
             int thisSize = slime1.getSize();
             int otherSize = slime2.getSize();
             if ((thisSize > otherSize || thisSize == otherSize) && thisSize <= ConfigValueGetter.maxSize() - 1 && ((SlimeInterface) slime1).getMergeCooldown() <= 0 && ((SlimeInterface) slime2).getMergeCooldown() <= 0) {
@@ -33,7 +33,7 @@ public class SlimeMethods {
                     ((SlimeInterface) slime1).setMergeCooldown(ConfigValueGetter.mergeCooldown());
                     ((SlimeInterface) slime1).playWobbleAnim();
                     if (ConfigValueGetter.mergeSounds()) {
-                        slime1.playSound(LunaSlimesMain.SLIME_MERGE, 0.8F, 1.0f + (slime1.getRandom().nextFloat() - slime1.getRandom().nextFloat()) * 0.4f);
+                        slime1.playSound(LunaSlimesMain.SLIME_MERGE, 1F, 1F + (slime1.getRandom().nextFloat() - slime1.getRandom().nextFloat()) * 0.4f);
                     }
                     ((SlimeInterface) slime2).playWobbleAnim();
                     if (slime2.isPersistenceRequired()) {
@@ -87,7 +87,7 @@ public class SlimeMethods {
                 SlimeMethods.spawnSlimeParticles(origin);
                 origin.level.addFreshEntity(slime);
                 if (ConfigValueGetter.mergeSounds()) {
-                    slime.playSound(LunaSlimesMain.SLIME_SPLIT, 0.8F, 1.0f + (slime.getRandom().nextFloat() - slime.getRandom().nextFloat()) * 0.4f);
+                    slime.playSound(LunaSlimesMain.SLIME_SPLIT, 1F, 1F + (slime.getRandom().nextFloat() - slime.getRandom().nextFloat()) * 0.4f);
                 }
             }
         }
