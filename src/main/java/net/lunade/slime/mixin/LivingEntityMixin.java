@@ -44,4 +44,14 @@ public class LivingEntityMixin {
         }
     }
 
+    @Inject(at = @At("HEAD"), method = "knockback", cancellable = true)
+    public void knockback(double d, double e, double f, CallbackInfo info) {
+        LivingEntity entity = LivingEntity.class.cast(this);
+        if (entity instanceof Slime slime) {
+            if (slime.isTiny() && slime.isDeadOrDying() && ConfigValueGetter.deathAnim()) {
+                info.cancel();
+            }
+        }
+    }
+
 }

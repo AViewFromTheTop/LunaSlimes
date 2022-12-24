@@ -1,8 +1,8 @@
 package net.lunade.slime.config.getter;
 
 import net.lunade.slime.config.GameplayConfig;
-import net.lunade.slime.config.VisualsAudioConfig;
 import net.lunade.slime.config.LunaSlimesConfig;
+import net.lunade.slime.config.VisualsAudioConfig;
 
 public class ConfigValues {
 
