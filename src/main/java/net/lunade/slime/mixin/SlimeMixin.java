@@ -98,11 +98,12 @@ public class SlimeMixin implements SlimeInterface {
         this.currentSize = slime.getEntityData().get(CURRENT_SIZE);
     }
 
-    @Inject(at = @At("TAIL"), method = "tick")
+    @Inject(at = @At("HEAD"), method = "tick")
     public void tickTail(CallbackInfo info) {
         Slime slime = Slime.class.cast(this);
         if (!slime.level.isClientSide) {
             slime.getEntityData().set(TARGET_SQUISH, slime.targetSquish);
+            Slime.class.cast(this).decreaseSquish();
         }
         slime.targetSquish = Slime.class.cast(this).getEntityData().get(TARGET_SQUISH);
     }
@@ -127,9 +128,11 @@ public class SlimeMixin implements SlimeInterface {
         Slime.class.cast(this).getAttribute(Attributes.MAX_HEALTH).setBaseValue(clampedSize % 2 == 0 ? clampedSize * clampedSize : clampedSize);
     }
 
-    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Mob;tick()V", shift = At.Shift.BEFORE), method = "tick")
-    public void moveDecreaseSquish(CallbackInfo info) {
-        Slime.class.cast(this).decreaseSquish();
+    @Inject(at = @At("HEAD"), method = "decreaseSquish", cancellable = true)
+    public void decreaseSquish(CallbackInfo info) {
+        if (Slime.class.cast(this).level.isClientSide) {
+            info.cancel();
+        }
     }
 
     @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/monster/Slime;decreaseSquish()V"), method = "tick")

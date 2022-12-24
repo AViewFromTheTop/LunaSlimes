@@ -12,6 +12,7 @@
   "mixins": [
     "BaseSpawnerMixin",
     "LivingEntityMixin",
+    "MagmaCubeMixin",
     "SlimeMixin",
     "SlimeMoveControlMixin"
   ],
