@@ -16,4 +16,10 @@ public interface SlimeInterface {
 
     void cheatSize(float f);
 
+    void setJumpAntic(boolean bl);
+
+    int getJumpDelay();
+
+    void setJumpDelay(int i);
+
 }
