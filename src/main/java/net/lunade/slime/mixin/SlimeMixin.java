@@ -1,5 +1,6 @@
 package net.lunade.slime.mixin;
 
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 import net.lunade.slime.SlimeMethods;
 import net.lunade.slime.config.getter.ConfigValueGetter;
 import net.lunade.slime.impl.SlimeInterface;
@@ -35,7 +36,7 @@ public class SlimeMixin implements SlimeInterface {
 
     @Unique public int mergeCooldown;
     @Unique public int jumpDelay;
-    @Unique public boolean hasLanded;
+    @Unique public IntArrayList landDelays = new IntArrayList();
 
     @Unique public float previousSquish;
     @Unique public int prevWobbleAnim;
@@ -66,7 +67,7 @@ public class SlimeMixin implements SlimeInterface {
         compoundTag.putFloat("TargetSquish", slime.getEntityData().get(TARGET_SQUISH));
         compoundTag.putBoolean("JumpAntic", this.jumpAntic);
         compoundTag.putInt("SlimeJumpDelay", this.jumpDelay);
-        compoundTag.putBoolean("HasLanded", this.hasLanded);
+        compoundTag.putIntArray("LandDelays", this.landDelays);
     }
 
     @Inject(at = @At("TAIL"), method = "readAdditionalSaveData")
@@ -80,7 +81,7 @@ public class SlimeMixin implements SlimeInterface {
         slime.getEntityData().set(TARGET_SQUISH, compoundTag.getFloat("TargetSquish"));
         this.jumpAntic = compoundTag.getBoolean("JumpAntic");
         this.jumpDelay = compoundTag.getInt("SlimeJumpDelay");
-        this.hasLanded = compoundTag.getBoolean("HasLanded");
+        this.landDelays = IntArrayList.wrap(compoundTag.getIntArray("LandDelays"));
     }
 
     @Inject(at = @At("HEAD"), method = "push")
@@ -105,30 +106,33 @@ public class SlimeMixin implements SlimeInterface {
         this.wobbleAnim = slime.getEntityData().get(WOBBLE_ANIM_PROGRESS);
         this.currentSize = slime.getEntityData().get(CURRENT_SIZE);
 
+        for (int index = 0; index < this.landDelays.size(); index++) {
+            int array = this.landDelays.getInt(index);
+            array -= 1;
+            this.landDelays.set(index, array);
+            if (array <= 0) {
+                slime.targetSquish = -0.5F;
+            }
+        }
+        this.landDelays.removeIf((integer -> integer <= 0));
+
         if (!slime.level.isClientSide) {
             slime.getEntityData().set(TARGET_SQUISH, slime.targetSquish);
         }
         slime.targetSquish = Slime.class.cast(this).getEntityData().get(TARGET_SQUISH);
-
-        if (this.hasLanded) {
-            this.hasLanded = false;
-            slime.targetSquish = -0.5F;
-        }
     }
 
     @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/monster/Slime;getSize()I", shift = At.Shift.AFTER), method = "tick")
     public void captureSquish(CallbackInfo info) {
         Slime slime = Slime.class.cast(this);
         this.prevTargetSquish = slime.targetSquish;
-        this.hasLanded = true;
+        this.landDelays.add(2);
     }
 
     @Inject(at = @At("TAIL"), method = "tick")
     public void tickTail(CallbackInfo info) {
         Slime slime = Slime.class.cast(this);
-        if (this.hasLanded) {
-            slime.targetSquish = this.prevTargetSquish;
-        }
+        slime.targetSquish = this.prevTargetSquish;
     }
 
     @Inject(at = @At("HEAD"), method = "tick")
