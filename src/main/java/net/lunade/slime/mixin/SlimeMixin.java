@@ -158,6 +158,7 @@ public class SlimeMixin implements SlimeInterface {
         return par1.addFreshEntity(par2);
     }
 
+    @Unique
     @Override
     public float prevSquish() {
         return this.previousSquish;
@@ -175,11 +176,13 @@ public class SlimeMixin implements SlimeInterface {
         this.mergeCooldown = i;
     }
 
+    @Unique
     @Override
     public float wobbleAnimProgress(float tickDelta) {
         return 1F - (Mth.lerp(tickDelta, this.prevWobbleAnim, this.wobbleAnim) / WOBBLE_ANIM_LENGTH);
     }
 
+    @Unique
     @Override
     public void playWobbleAnim() {
         Slime slime = Slime.class.cast(this);
@@ -188,11 +191,13 @@ public class SlimeMixin implements SlimeInterface {
         }
     }
 
+    @Unique
     @Override
     public float getSizeScale(float tickDelta) {
         return Mth.lerp(tickDelta, this.prevSize, this.currentSize);
     }
 
+    @Unique
     @Override
     public void cheatSize(float f) {
         Slime slime = Slime.class.cast(this);
@@ -202,16 +207,19 @@ public class SlimeMixin implements SlimeInterface {
         this.currentSize = f;
     }
 
+    @Unique
     @Override
     public void setJumpAntic(boolean bl) {
         this.jumpAntic = bl;
     }
 
+    @Unique
     @Override
     public int getJumpDelay() {
         return this.jumpDelay;
     }
 
+    @Unique
     @Override
     public void setJumpDelay(int i) {
         this.jumpDelay = i;
