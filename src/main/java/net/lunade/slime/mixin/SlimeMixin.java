@@ -111,22 +111,19 @@ public class SlimeMixin implements SlimeInterface {
         }
     }
 
-    @Inject(at = @At(value = "FIELD", target = "Lnet/minecraft/world/entity/monster/Slime;targetSquish:F", ordinal = 0, shift = At.Shift.BEFORE), method = "tick")
+    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/monster/Slime;getSquishSound()Lnet/minecraft/sounds/SoundEvent;", shift = At.Shift.BEFORE), method = "tick")
     public void captureSquish(CallbackInfo info) {
         Slime slime = Slime.class.cast(this);
         this.prevTargetSquish = slime.targetSquish;
         this.hasLanded = true;
     }
 
-    @Inject(at = @At(value = "FIELD", target = "Lnet/minecraft/world/entity/monster/Slime;targetSquish:F", ordinal = 0, shift = At.Shift.AFTER), method = "tick")
-    public void delaySquish(CallbackInfo info) {
-        Slime slime = Slime.class.cast(this);
-        slime.targetSquish = this.prevTargetSquish;
-    }
-
     @Inject(at = @At("HEAD"), method = "tick")
     public void tickTail(CallbackInfo info) {
         Slime slime = Slime.class.cast(this);
+        if (this.hasLanded) {
+            slime.targetSquish = this.prevTargetSquish;
+        }
         if (!slime.level.isClientSide) {
             slime.getEntityData().set(TARGET_SQUISH, slime.targetSquish);
         }
