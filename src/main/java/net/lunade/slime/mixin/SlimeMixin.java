@@ -124,15 +124,17 @@ public class SlimeMixin implements SlimeInterface {
         }
         this.jumpAntic = Slime.class.cast(this).getEntityData().get(JUMP_ANTIC);
 
-        if (this.jumpSquishes > 0) {
-            if (this.jumpSquishes == 3 && this.jumpAntic) {
-                slime.targetSquish = -0.05F;
-            } else if (this.jumpSquishes == 2 && this.jumpAntic) {
-                slime.targetSquish = -0.15F;
-            } else if (this.jumpSquishes == 1 && this.jumpAntic) {
-                slime.targetSquish = -0.3F;
+        if (ConfigValueGetter.jumpAntic()) {
+            if (this.jumpSquishes > 0) {
+                if (this.jumpSquishes == 3 && this.jumpAntic) {
+                    slime.targetSquish = -0.05F;
+                } else if (this.jumpSquishes == 2 && this.jumpAntic) {
+                    slime.targetSquish = -0.15F;
+                } else if (this.jumpSquishes == 1 && this.jumpAntic) {
+                    slime.targetSquish = -0.3F;
+                }
+                --this.jumpSquishes;
             }
-            --this.jumpSquishes;
         }
     }
 
@@ -158,7 +160,7 @@ public class SlimeMixin implements SlimeInterface {
     public void finalizeSpawn(ServerLevelAccessor serverLevelAccessor, DifficultyInstance difficultyInstance, MobSpawnType mobSpawnType, @Nullable SpawnGroupData spawnGroupData, @Nullable CompoundTag compoundTag, CallbackInfoReturnable<SpawnGroupData> info) {
         Slime slime = Slime.class.cast(this);
         ((SlimeInterface)slime).playWobbleAnim();
-        if (mobSpawnType == MobSpawnType.NATURAL || mobSpawnType == MobSpawnType.SPAWNER || mobSpawnType == MobSpawnType.CHUNK_GENERATION) {
+        if (mobSpawnType != MobSpawnType.SPAWN_EGG && mobSpawnType != MobSpawnType.MOB_SUMMONED && mobSpawnType != MobSpawnType.BUCKET && mobSpawnType != MobSpawnType.DISPENSER) {
             ((SlimeInterface)slime).setMergeCooldown(ConfigValueGetter.spawnedMergeCooldown());
         }
     }
@@ -171,7 +173,7 @@ public class SlimeMixin implements SlimeInterface {
 
     @Inject(at = @At("HEAD"), method = "decreaseSquish", cancellable = true)
     public void decreaseSquish(CallbackInfo info) {
-        if (this.jumpAntic) {
+        if (this.jumpAntic && ConfigValueGetter.jumpAntic()) {
             info.cancel();
         }
     }

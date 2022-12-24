@@ -20,9 +20,9 @@ public class LunaSlimesConfig extends PartitioningSerializer.GlobalData {
     @ConfigEntry.Gui.TransitiveObject
     public final GameplayConfig gameplay = new GameplayConfig();
 
-    @ConfigEntry.Category("visuals")
+    @ConfigEntry.Category("visuals_audio")
     @ConfigEntry.Gui.TransitiveObject
-    public final VisualConfig visuals = new VisualConfig();
+    public final VisualsAudioConfig visuals_audio = new VisualsAudioConfig();
 
     @Environment(EnvType.CLIENT)
     public static Screen buildScreen(Screen parent) {
@@ -33,8 +33,8 @@ public class LunaSlimesConfig extends PartitioningSerializer.GlobalData {
         var gameplayTab = configBuilder.getOrCreateCategory(text("gameplay"));
         GameplayConfig.setupEntries(gameplayTab, entryBuilder);
 
-        var visualTab = configBuilder.getOrCreateCategory(text("visuals"));
-        VisualConfig.setupEntries(visualTab, entryBuilder);
+        var visualTab = configBuilder.getOrCreateCategory(text("visuals_audio"));
+        VisualsAudioConfig.setupEntries(visualTab, entryBuilder);
 
         return configBuilder.build();
     }

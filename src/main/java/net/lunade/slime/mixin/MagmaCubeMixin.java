@@ -1,5 +1,6 @@
 package net.lunade.slime.mixin;
 
+import net.lunade.slime.config.getter.ConfigValueGetter;
 import net.lunade.slime.impl.SlimeInterface;
 import net.minecraft.world.entity.monster.MagmaCube;
 import net.minecraft.world.entity.monster.Slime;
@@ -13,7 +14,7 @@ public class MagmaCubeMixin {
 
     @Inject(at = @At("HEAD"), method = "decreaseSquish", cancellable = true)
     public void decreaseSquish(CallbackInfo info) {
-        if (((SlimeInterface)Slime.class.cast(this)).getJumpAntic()) {
+        if (((SlimeInterface)Slime.class.cast(this)).getJumpAntic() && ConfigValueGetter.jumpAntic()) {
             info.cancel();
         }
     }
