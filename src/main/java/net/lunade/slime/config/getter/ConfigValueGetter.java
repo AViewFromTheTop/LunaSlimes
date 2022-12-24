@@ -16,6 +16,10 @@ public class ConfigValueGetter {
         return LunaSlimesMain.HAS_CLOTH_CONFIG ? ConfigValues.squishMultiplier() : 2F;
     }
 
+    public static boolean jumpAntic() {
+        return !LunaSlimesMain.HAS_CLOTH_CONFIG || ConfigValues.jumpAntic();
+    }
+
     public static boolean newShadows() {
         return !LunaSlimesMain.HAS_CLOTH_CONFIG || ConfigValues.newShadows();
     }
