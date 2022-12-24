@@ -21,6 +21,10 @@ public class ConfigValues {
         return (float) VISUALS.squishMultiplier * 0.1F;
     }
 
+    public static boolean jumpAntic() {
+        return VISUALS.jumpAntic;
+    }
+
     public static boolean newShadows() {
         return VISUALS.newShadows;
     }

@@ -1,6 +1,6 @@
 package net.lunade.slime.mixin;
 
-
+import net.lunade.slime.config.getter.ConfigValueGetter;
 import net.minecraft.world.entity.monster.Slime;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -17,13 +17,15 @@ public class SlimeMoveControlMixin {
 
     @Inject(at = @At("HEAD"), method = "tick")
     public void tick(CallbackInfo info) {
-        boolean antic = slime.isOnGround() && !slime.isInWater();
-        if (this.jumpDelay == 3 && antic) {
-            this.slime.targetSquish = -0.5F;
-        } else if (this.jumpDelay == 2 && antic) {
-            this.slime.targetSquish = -0.8F;
-        } else if (this.jumpDelay == 1 && antic) {
-            this.slime.targetSquish = -1.1F;
+        if (ConfigValueGetter.jumpAntic()) {
+            boolean antic = slime.isOnGround() && !slime.isInWater();
+            if (this.jumpDelay == 3 && antic) {
+                this.slime.targetSquish = -0.3F;
+            } else if (this.jumpDelay == 2 && antic) {
+                this.slime.targetSquish = -0.4F;
+            } else if (this.jumpDelay == 1 && antic) {
+                this.slime.targetSquish = -0.575F;
+            }
         }
     }
 

@@ -17,6 +17,7 @@ public final class VisualConfig implements ConfigData {
     public boolean growAnim = true;
     public boolean wobbleAnim = true;
     public int squishMultiplier = 20;
+    public boolean jumpAntic = true;
     public boolean newShadows = true;
     public boolean particles = true;
     public boolean scaleTextures = true;
@@ -48,6 +49,14 @@ public final class VisualConfig implements ConfigData {
                 .setTooltip(tooltip("squish_multiplier"))
                 .setMin(0)
                 .setMax(50)
+                .build()
+        );
+
+        var jumpAntic = category.addEntry(entryBuilder.startBooleanToggle(text("jump_antic"), config.jumpAntic)
+                .setDefaultValue(true)
+                .setSaveConsumer(newValue -> config.jumpAntic = newValue)
+                .setYesNoTextSupplier(bool -> text("jump_antic." + bool))
+                .setTooltip(tooltip("jump_antic"))
                 .build()
         );
 
