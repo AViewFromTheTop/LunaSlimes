@@ -92,6 +92,8 @@ public class SlimeMixin implements SlimeInterface {
         slime.getEntityData().set(CURRENT_SIZE, slime.getEntityData().get(CURRENT_SIZE) + sizeDiff * 0.25F);
         this.wobbleAnim = slime.getEntityData().get(WOBBLE_ANIM_PROGRESS);
         this.currentSize = slime.getEntityData().get(CURRENT_SIZE);
+
+
     }
 
     @Inject(at = @At("HEAD"), method = "tick")
