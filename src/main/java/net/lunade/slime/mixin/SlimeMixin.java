@@ -36,12 +36,14 @@ public class SlimeMixin implements SlimeInterface {
     @Unique private static final int WOBBLE_ANIM_LENGTH = 10;
 
     @Unique public int mergeCooldown;
+    @Unique public int jumpDelay;
 
     @Unique public float previousSquish;
     @Unique public int prevWobbleAnim;
     @Unique public int wobbleAnim;
     @Unique public float prevSize = 0F;
     @Unique public float currentSize = 0F;
+    @Unique public boolean jumpAntic;
 
     @Inject(at = @At("TAIL"), method = "defineSynchedData")
     protected void defineSynchedData(CallbackInfo info) {
@@ -62,6 +64,8 @@ public class SlimeMixin implements SlimeInterface {
         compoundTag.putFloat("CurrentSize", slime.getEntityData().get(CURRENT_SIZE));
         compoundTag.putInt("MergeCooldown", this.getMergeCooldown());
         compoundTag.putFloat("TargetSquish", slime.getEntityData().get(TARGET_SQUISH));
+        compoundTag.putBoolean("JumpAntic", this.jumpAntic);
+        compoundTag.putInt("SlimeJumpDelay", this.jumpDelay);
     }
 
     @Inject(at = @At("TAIL"), method = "readAdditionalSaveData")
@@ -73,6 +77,8 @@ public class SlimeMixin implements SlimeInterface {
         slime.getEntityData().set(CURRENT_SIZE, compoundTag.getFloat("CurrentSize"));
         this.setMergeCooldown(compoundTag.getInt("MergeCooldown"));
         slime.getEntityData().set(TARGET_SQUISH, compoundTag.getFloat("TargetSquish"));
+        this.jumpAntic = compoundTag.getBoolean("JumpAntic");
+        this.jumpDelay = compoundTag.getInt("SlimeJumpDelay");
     }
 
     @Inject(at = @At("HEAD"), method = "push")
@@ -98,12 +104,11 @@ public class SlimeMixin implements SlimeInterface {
         this.currentSize = slime.getEntityData().get(CURRENT_SIZE);
     }
 
-    @Inject(at = @At("TAIL"), method = "tick")
+    @Inject(at = @At("HEAD"), method = "tick")
     public void tickTail(CallbackInfo info) {
         Slime slime = Slime.class.cast(this);
         if (!slime.level.isClientSide) {
             slime.getEntityData().set(TARGET_SQUISH, slime.targetSquish);
-            Slime.class.cast(this).decreaseSquish();
         }
         slime.targetSquish = Slime.class.cast(this).getEntityData().get(TARGET_SQUISH);
     }
@@ -130,9 +135,14 @@ public class SlimeMixin implements SlimeInterface {
 
     @Inject(at = @At("HEAD"), method = "decreaseSquish", cancellable = true)
     public void decreaseSquish(CallbackInfo info) {
-        if (Slime.class.cast(this).level.isClientSide) {
+        if (Slime.class.cast(this).level.isClientSide || this.jumpAntic) {
             info.cancel();
         }
+    }
+
+    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Mob;tick()V", shift = At.Shift.BEFORE), method = "tick")
+    public void moveDecreaseSquish(CallbackInfo info) {
+        Slime.class.cast(this).decreaseSquish();
     }
 
     @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/monster/Slime;decreaseSquish()V"), method = "tick")
@@ -190,6 +200,21 @@ public class SlimeMixin implements SlimeInterface {
         slime.getEntityData().set(CURRENT_SIZE, f);
         this.prevSize = f;
         this.currentSize = f;
+    }
+
+    @Override
+    public void setJumpAntic(boolean bl) {
+        this.jumpAntic = bl;
+    }
+
+    @Override
+    public int getJumpDelay() {
+        return this.jumpDelay;
+    }
+
+    @Override
+    public void setJumpDelay(int i) {
+        this.jumpDelay = i;
     }
 
 }
