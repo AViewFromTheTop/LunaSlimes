@@ -33,7 +33,6 @@ public class SlimeMixin implements SlimeInterface {
     @Unique private static final EntityDataAccessor<Float> PREV_SIZE = SynchedEntityData.defineId(Slime.class, EntityDataSerializers.FLOAT);
     @Unique private static final EntityDataAccessor<Float> CURRENT_SIZE = SynchedEntityData.defineId(Slime.class, EntityDataSerializers.FLOAT);
     @Unique private static final EntityDataAccessor<Boolean> JUMP_ANTIC = SynchedEntityData.defineId(Slime.class, EntityDataSerializers.BOOLEAN);
-    @Unique private static final EntityDataAccessor<Boolean> DEATH_ANIM = SynchedEntityData.defineId(Slime.class, EntityDataSerializers.BOOLEAN);
 
     @Unique private static final int WOBBLE_ANIM_LENGTH = 10;
 
@@ -48,7 +47,6 @@ public class SlimeMixin implements SlimeInterface {
     @Unique public float currentSize = 0F;
     @Unique public boolean jumpAntic;
     @Unique public float prevTargetSquish;
-    @Unique public boolean deathAnim;
 
     @Inject(at = @At("TAIL"), method = "defineSynchedData")
     protected void defineSynchedData(CallbackInfo info) {
@@ -58,7 +56,6 @@ public class SlimeMixin implements SlimeInterface {
         slime.getEntityData().define(PREV_SIZE, 0F);
         slime.getEntityData().define(CURRENT_SIZE, 0F);
         slime.getEntityData().define(JUMP_ANTIC, false);
-        slime.getEntityData().define(DEATH_ANIM, false);
     }
 
     @Inject(at = @At("TAIL"), method = "addAdditionalSaveData")
@@ -72,7 +69,6 @@ public class SlimeMixin implements SlimeInterface {
         compoundTag.putBoolean("JumpAntic", this.jumpAntic);
         compoundTag.putInt("SlimeJumpDelay", this.jumpDelay);
         compoundTag.putIntArray("LandDelays", this.landDelays);
-        compoundTag.putBoolean("DeathAnim", this.deathAnim);
     }
 
     @Inject(at = @At("TAIL"), method = "readAdditionalSaveData")
@@ -86,7 +82,6 @@ public class SlimeMixin implements SlimeInterface {
         this.jumpAntic = compoundTag.getBoolean("JumpAntic");
         this.jumpDelay = compoundTag.getInt("SlimeJumpDelay");
         this.landDelays = IntArrayList.wrap(compoundTag.getIntArray("LandDelays"));
-        this.deathAnim = compoundTag.getBoolean("DeathAnim");
     }
 
     @Inject(at = @At("HEAD"), method = "push")
@@ -99,6 +94,17 @@ public class SlimeMixin implements SlimeInterface {
     @Inject(at = @At("HEAD"), method = "tick")
     public void tick(CallbackInfo info) {
         Slime slime = Slime.class.cast(this);
+        this.previousSquish = Slime.class.cast(this).squish;
+        slime.getEntityData().set(PREV_WOBBLE_ANIM_PROGRESS, slime.getEntityData().get(WOBBLE_ANIM_PROGRESS));
+        slime.getEntityData().set(PREV_SIZE, slime.getEntityData().get(CURRENT_SIZE));
+        this.prevWobbleAnim = slime.getEntityData().get(PREV_WOBBLE_ANIM_PROGRESS);
+        this.prevSize = slime.getEntityData().get(PREV_SIZE);
+
+        slime.getEntityData().set(WOBBLE_ANIM_PROGRESS, Math.max(0, slime.getEntityData().get(WOBBLE_ANIM_PROGRESS) - 1));
+        float sizeDiff = slime.getSize() - slime.getEntityData().get(CURRENT_SIZE);
+        slime.getEntityData().set(CURRENT_SIZE, slime.getEntityData().get(CURRENT_SIZE) + sizeDiff * 0.25F);
+        this.wobbleAnim = slime.getEntityData().get(WOBBLE_ANIM_PROGRESS);
+        this.currentSize = slime.getEntityData().get(CURRENT_SIZE);
 
         for (int index = 0; index < this.landDelays.size(); index++) {
             int array = this.landDelays.getInt(index);
@@ -114,23 +120,8 @@ public class SlimeMixin implements SlimeInterface {
 
         if (!slime.level.isClientSide) {
             slime.getEntityData().set(JUMP_ANTIC, this.jumpAntic);
-            slime.getEntityData().set(DEATH_ANIM, this.deathAnim);
         }
         this.jumpAntic = Slime.class.cast(this).getEntityData().get(JUMP_ANTIC);
-        this.deathAnim = Slime.class.cast(this).getEntityData().get(DEATH_ANIM);
-
-        boolean hasDeathAnim = ConfigValueGetter.deathAnim() && this.deathAnim;
-
-        this.previousSquish = Slime.class.cast(this).squish;
-        slime.getEntityData().set(PREV_WOBBLE_ANIM_PROGRESS, slime.getEntityData().get(WOBBLE_ANIM_PROGRESS));
-        this.prevWobbleAnim = slime.getEntityData().get(PREV_WOBBLE_ANIM_PROGRESS);
-        this.prevSize = slime.getEntityData().get(PREV_SIZE);
-
-        slime.getEntityData().set(WOBBLE_ANIM_PROGRESS, Math.max(0, slime.getEntityData().get(WOBBLE_ANIM_PROGRESS) - 1));
-        float sizeDiff = (hasDeathAnim ? 0 : slime.getSize()) - slime.getEntityData().get(CURRENT_SIZE);
-        slime.getEntityData().set(CURRENT_SIZE, slime.getEntityData().get(CURRENT_SIZE) + sizeDiff * 0.25F);
-        this.wobbleAnim = slime.getEntityData().get(WOBBLE_ANIM_PROGRESS);
-        this.currentSize = slime.getEntityData().get(CURRENT_SIZE);
 
         if (ConfigValueGetter.jumpAntic()) {
             if (this.jumpSquishes > 0) {
@@ -287,11 +278,6 @@ public class SlimeMixin implements SlimeInterface {
     @Override
     public void setJumpDelay(int i) {
         this.jumpDelay = i;
-    }
-
-    @Override
-    public void setDeathAnim(boolean bl) {
-        this.deathAnim = bl;
     }
 
 }
