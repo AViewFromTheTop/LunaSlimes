@@ -30,7 +30,7 @@ public class LivingEntityMixin {
     public void die(DamageSource damageSource, CallbackInfo info) {
         LivingEntity entity = LivingEntity.class.cast(this);
         if (entity instanceof Slime slime) {
-            if (damageSource != DamageSource.OUT_OF_WORLD && !slime.isTiny()  && ConfigValueGetter.useSplitting()) {
+            if (damageSource != DamageSource.OUT_OF_WORLD && !slime.isTiny() && ConfigValueGetter.useSplitting()) {
                 info.cancel();
             }
         }
@@ -41,6 +41,16 @@ public class LivingEntityMixin {
         LivingEntity thisEntity = LivingEntity.class.cast(this);
         if (thisEntity instanceof Slime && entity instanceof Slime slime2) {
             SlimeMethods.mergeSlimes(Slime.class.cast(this), slime2);
+        }
+    }
+
+    @Inject(at = @At("HEAD"), method = "knockback", cancellable = true)
+    public void knockback(double d, double e, double f, CallbackInfo info) {
+        LivingEntity entity = LivingEntity.class.cast(this);
+        if (entity instanceof Slime slime) {
+            if (slime.isTiny() && slime.isDeadOrDying() && ConfigValueGetter.deathAnim()) {
+                info.cancel();
+            }
         }
     }
 

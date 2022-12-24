@@ -20,6 +20,10 @@ public class ConfigValueGetter {
         return !LunaSlimesMain.HAS_CLOTH_CONFIG || ConfigValues.jumpAntic();
     }
 
+    public static boolean deathAnim() {
+        return !LunaSlimesMain.HAS_CLOTH_CONFIG || ConfigValues.deathAnim();
+    }
+
     public static boolean newShadows() {
         return !LunaSlimesMain.HAS_CLOTH_CONFIG || ConfigValues.newShadows();
     }
@@ -32,12 +36,20 @@ public class ConfigValueGetter {
         return !LunaSlimesMain.HAS_CLOTH_CONFIG || ConfigValues.scaleTextures();
     }
 
+    public static boolean mergeSounds() {
+        return !LunaSlimesMain.HAS_CLOTH_CONFIG || ConfigValues.mergeSounds();
+    }
+
+    public static boolean splitSounds() {
+        return !LunaSlimesMain.HAS_CLOTH_CONFIG || ConfigValues.splitSounds();
+    }
+
     public static int mergeCooldown() {
         return LunaSlimesMain.HAS_CLOTH_CONFIG ? ConfigValues.mergeCooldown() : 0;
     }
 
     public static int maxSize() {
-        return LunaSlimesMain.HAS_CLOTH_CONFIG ? ConfigValues.maxSize() : 7;
+        return LunaSlimesMain.HAS_CLOTH_CONFIG ? ConfigValues.maxSize() : 4;
     }
 
     public static int onSplitCooldown() {

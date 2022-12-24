@@ -22,7 +22,9 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.*;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -40,7 +42,6 @@ public class SlimeMixin implements SlimeInterface {
     @Unique public int jumpDelay;
     @Unique public int jumpSquishes;
     @Unique public IntArrayList landDelays = new IntArrayList();
-
     @Unique public float previousSquish;
     @Unique public int prevWobbleAnim;
     @Unique public int wobbleAnim;
@@ -48,6 +49,7 @@ public class SlimeMixin implements SlimeInterface {
     @Unique public float currentSize = 0F;
     @Unique public boolean jumpAntic;
     @Unique public float prevTargetSquish;
+    @Unique public int prevDeathTime;
 
     @Inject(at = @At("TAIL"), method = "defineSynchedData")
     protected void defineSynchedData(CallbackInfo info) {
@@ -106,6 +108,7 @@ public class SlimeMixin implements SlimeInterface {
         slime.getEntityData().set(CURRENT_SIZE, slime.getEntityData().get(CURRENT_SIZE) + sizeDiff * 0.25F);
         this.wobbleAnim = slime.getEntityData().get(WOBBLE_ANIM_PROGRESS);
         this.currentSize = slime.getEntityData().get(CURRENT_SIZE);
+        this.prevDeathTime = slime.deathTime;
 
         for (int index = 0; index < this.landDelays.size(); index++) {
             int array = this.landDelays.getInt(index);
@@ -124,15 +127,17 @@ public class SlimeMixin implements SlimeInterface {
         }
         this.jumpAntic = Slime.class.cast(this).getEntityData().get(JUMP_ANTIC);
 
-        if (this.jumpSquishes > 0) {
-            if (this.jumpSquishes == 3 && this.jumpAntic) {
-                slime.targetSquish = -0.05F;
-            } else if (this.jumpSquishes == 2 && this.jumpAntic) {
-                slime.targetSquish = -0.15F;
-            } else if (this.jumpSquishes == 1 && this.jumpAntic) {
-                slime.targetSquish = -0.3F;
+        if (ConfigValueGetter.jumpAntic()) {
+            if (this.jumpSquishes > 0) {
+                if (this.jumpSquishes == 3 && this.jumpAntic) {
+                    slime.targetSquish = -0.05F;
+                } else if (this.jumpSquishes == 2 && this.jumpAntic) {
+                    slime.targetSquish = -0.15F;
+                } else if (this.jumpSquishes == 1 && this.jumpAntic) {
+                    slime.targetSquish = -0.3F;
+                }
+                --this.jumpSquishes;
             }
-            --this.jumpSquishes;
         }
     }
 
@@ -158,7 +163,7 @@ public class SlimeMixin implements SlimeInterface {
     public void finalizeSpawn(ServerLevelAccessor serverLevelAccessor, DifficultyInstance difficultyInstance, MobSpawnType mobSpawnType, @Nullable SpawnGroupData spawnGroupData, @Nullable CompoundTag compoundTag, CallbackInfoReturnable<SpawnGroupData> info) {
         Slime slime = Slime.class.cast(this);
         ((SlimeInterface)slime).playWobbleAnim();
-        if (mobSpawnType == MobSpawnType.NATURAL || mobSpawnType == MobSpawnType.SPAWNER || mobSpawnType == MobSpawnType.CHUNK_GENERATION) {
+        if (mobSpawnType != MobSpawnType.SPAWN_EGG && mobSpawnType != MobSpawnType.MOB_SUMMONED && mobSpawnType != MobSpawnType.BUCKET && mobSpawnType != MobSpawnType.DISPENSER) {
             ((SlimeInterface)slime).setMergeCooldown(ConfigValueGetter.spawnedMergeCooldown());
         }
     }
@@ -171,7 +176,7 @@ public class SlimeMixin implements SlimeInterface {
 
     @Inject(at = @At("HEAD"), method = "decreaseSquish", cancellable = true)
     public void decreaseSquish(CallbackInfo info) {
-        if (this.jumpAntic) {
+        if (this.jumpAntic && ConfigValueGetter.jumpAntic()) {
             info.cancel();
         }
     }
@@ -257,6 +262,12 @@ public class SlimeMixin implements SlimeInterface {
 
     @Unique
     @Override
+    public boolean getJumpAntic() {
+        return this.jumpAntic;
+    }
+
+    @Unique
+    @Override
     public void setJumpAnticTicks(int i) {
         this.jumpSquishes = i;
     }
@@ -271,6 +282,12 @@ public class SlimeMixin implements SlimeInterface {
     @Override
     public void setJumpDelay(int i) {
         this.jumpDelay = i;
+    }
+
+    @Unique
+    @Override
+    public float getDeathProgress(float partialTick) {
+        return ConfigValueGetter.deathAnim() && Slime.class.cast(this).isDeadOrDying() ? ((20F - Mth.lerp(partialTick, this.prevDeathTime, (Slime.class.cast(this).deathTime))) / 20F) : 1F;
     }
 
 }

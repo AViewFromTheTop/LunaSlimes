@@ -11,21 +11,24 @@ import net.minecraft.resources.ResourceLocation;
 import static net.lunade.slime.config.LunaSlimesConfig.text;
 import static net.lunade.slime.config.LunaSlimesConfig.tooltip;
 
-@Config(name = "visuals")
-public final class VisualConfig implements ConfigData {
+@Config(name = "visuals_audio")
+public final class VisualsAudioConfig implements ConfigData {
 
     public boolean growAnim = true;
     public boolean wobbleAnim = true;
     public int squishMultiplier = 20;
     public boolean jumpAntic = true;
+    public boolean deathAnim = true;
     public boolean newShadows = true;
     public boolean particles = true;
     public boolean scaleTextures = true;
+    public boolean mergeSounds = true;
+    public boolean splitSounds = true;
 
     @Environment(EnvType.CLIENT)
     static void setupEntries(ConfigCategory category, ConfigEntryBuilder entryBuilder) {
-        var config = LunaSlimesConfig.get().visuals;
-        category.setBackground(new ResourceLocation("lunaslimes", "textures/config/visuals.png"));
+        var config = LunaSlimesConfig.get().visuals_audio;
+        category.setBackground(new ResourceLocation("lunaslimes", "textures/config/visuals_audio.png"));
 
         var growAnim = category.addEntry(entryBuilder.startBooleanToggle(text("grow_anim"), config.growAnim)
                 .setDefaultValue(true)
@@ -60,6 +63,14 @@ public final class VisualConfig implements ConfigData {
                 .build()
         );
 
+        var deathAnim = category.addEntry(entryBuilder.startBooleanToggle(text("death_anim"), config.deathAnim)
+                .setDefaultValue(true)
+                .setSaveConsumer(newValue -> config.deathAnim = newValue)
+                .setYesNoTextSupplier(bool -> text("death_anim." + bool))
+                .setTooltip(tooltip("death_anim"))
+                .build()
+        );
+
         var newShadows = category.addEntry(entryBuilder.startBooleanToggle(text("new_shadows"), config.newShadows)
                 .setDefaultValue(true)
                 .setSaveConsumer(newValue -> config.newShadows = newValue)
@@ -81,6 +92,22 @@ public final class VisualConfig implements ConfigData {
                 .setSaveConsumer(newValue -> config.scaleTextures = newValue)
                 .setYesNoTextSupplier(bool -> text("scale_textures." + bool))
                 .setTooltip(tooltip("scale_textures"))
+                .build()
+        );
+
+        var mergeSounds = category.addEntry(entryBuilder.startBooleanToggle(text("merge_sounds"), config.mergeSounds)
+                .setDefaultValue(true)
+                .setSaveConsumer(newValue -> config.mergeSounds = newValue)
+                .setYesNoTextSupplier(bool -> text("merge_sounds." + bool))
+                .setTooltip(tooltip("merge_sounds"))
+                .build()
+        );
+
+        var splitSounds = category.addEntry(entryBuilder.startBooleanToggle(text("split_sounds"), config.splitSounds)
+                .setDefaultValue(true)
+                .setSaveConsumer(newValue -> config.splitSounds = newValue)
+                .setYesNoTextSupplier(bool -> text("split_sounds." + bool))
+                .setTooltip(tooltip("split_sounds"))
                 .build()
         );
     }

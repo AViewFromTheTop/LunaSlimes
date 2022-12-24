@@ -1,40 +1,52 @@
 package net.lunade.slime.config.getter;
 
 import net.lunade.slime.config.GameplayConfig;
-import net.lunade.slime.config.VisualConfig;
 import net.lunade.slime.config.LunaSlimesConfig;
+import net.lunade.slime.config.VisualsAudioConfig;
 
 public class ConfigValues {
 
-    private static final VisualConfig VISUALS = LunaSlimesConfig.get().visuals;
+    private static final VisualsAudioConfig VISUALS_AUDIO = LunaSlimesConfig.get().visuals_audio;
     private static final GameplayConfig GAMEPLAY = LunaSlimesConfig.get().gameplay;
 
     public static boolean growAnim() {
-        return VISUALS.growAnim;
+        return VISUALS_AUDIO.growAnim;
     }
 
     public static boolean wobbleAnim() {
-        return VISUALS.wobbleAnim;
+        return VISUALS_AUDIO.wobbleAnim;
     }
 
     public static float squishMultiplier() {
-        return (float) VISUALS.squishMultiplier * 0.1F;
+        return (float) VISUALS_AUDIO.squishMultiplier * 0.1F;
     }
 
     public static boolean jumpAntic() {
-        return VISUALS.jumpAntic;
+        return VISUALS_AUDIO.jumpAntic;
+    }
+
+    public static boolean deathAnim() {
+        return VISUALS_AUDIO.deathAnim;
     }
 
     public static boolean newShadows() {
-        return VISUALS.newShadows;
+        return VISUALS_AUDIO.newShadows;
     }
 
     public static boolean particles() {
-        return VISUALS.particles;
+        return VISUALS_AUDIO.particles;
     }
 
     public static boolean scaleTextures() {
-        return VISUALS.scaleTextures;
+        return VISUALS_AUDIO.scaleTextures;
+    }
+
+    public static boolean mergeSounds() {
+        return VISUALS_AUDIO.mergeSounds;
+    }
+
+    public static boolean splitSounds() {
+        return VISUALS_AUDIO.splitSounds;
     }
 
     public static int maxSize() {

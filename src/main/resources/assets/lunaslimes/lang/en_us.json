@@ -1,7 +1,7 @@
 {
   "option.lunaslimes.component.title": "Luna Slimes Options",
 
-  "option.lunaslimes.visuals": "Visuals",
+  "option.lunaslimes.visuals_audio": "Visuals & Audio",
   "option.lunaslimes.grow_anim": "Growing Animation",
   "option.lunaslimes.grow_anim.false": "OFF",
   "option.lunaslimes.grow_anim.true": "ON",
@@ -16,6 +16,10 @@
   "option.lunaslimes.jump_antic.false": "OFF",
   "option.lunaslimes.jump_antic.true": "ON",
   "tooltip.lunaslimes.jump_antic": "Slimes will squish in anticipation of a jump.",
+  "option.lunaslimes.death_anim": "Death Animation",
+  "option.lunaslimes.death_anim.false": "OFF",
+  "option.lunaslimes.death_anim.true": "ON",
+  "tooltip.lunaslimes.death_anim": "Slimes will shrink after death.",
   "option.lunaslimes.new_shadows": "Shadow Scaling",
   "option.lunaslimes.new_shadows.false": "OFF",
   "option.lunaslimes.new_shadows.true": "ON",
@@ -28,6 +32,14 @@
   "option.lunaslimes.scale_textures.false": "OFF",
   "option.lunaslimes.scale_textures.true": "ON",
   "tooltip.lunaslimes.scale_textures": "Bigger Slimes will use higher resolution textures.",
+  "option.lunaslimes.merge_sounds": "Merging Sounds",
+  "option.lunaslimes.merge_sounds.false": "OFF",
+  "option.lunaslimes.merge_sounds.true": "ON",
+  "tooltip.lunaslimes.merge_sounds": "Slimes will play a sound when merging.",
+  "option.lunaslimes.split_sounds": "Splitting Sounds",
+  "option.lunaslimes.split_sounds.false": "OFF",
+  "option.lunaslimes.split_sounds.true": "ON",
+  "tooltip.lunaslimes.split_sounds": "Slimes will play a sound when splitting.",
 
   "option.lunaslimes.gameplay": "Gameplay",
   "option.lunaslimes.max_size": "Slime Merge Cap",
@@ -35,13 +47,16 @@
   "option.lunaslimes.merge_cooldown": "Slime Merge Cooldown",
   "tooltip.lunaslimes.merge_cooldown": "The time a Slime must wait before merging again.",
   "option.lunaslimes.on_split_cooldown": "Split Slime Merge Cooldown",
-  "tooltip.lunaslimes.on_split_cooldown": "The time a Slime that has been split must wait before being able to merge.",
+  "tooltip.lunaslimes.on_split_cooldown": "The time a Slime that has been split must wait before being able to merge.\nValues are measured in ticks.",
   "option.lunaslimes.split_cooldown": "Spawned Split Slime Merge Cooldown",
-  "tooltip.lunaslimes.split_cooldown": "The time a Slime spawned from splitting must wait until it can merge.",
+  "tooltip.lunaslimes.split_cooldown": "The time a Slime spawned from splitting must wait until it can merge.\nValues are measured in ticks.",
   "option.lunaslimes.spawned_merge_cooldown": "Spawned Slime Merge Cooldown",
-  "tooltip.lunaslimes.spawned_merge_cooldown": "The time a naturally spawned Slime must wait before merging.",
-  "option.lunaslimes.use_splitting": "Slime Splitting",
+  "tooltip.lunaslimes.spawned_merge_cooldown": "The time a naturally spawned Slime must wait before merging.\nValues are measured in ticks.",
+  "option.lunaslimes.use_splitting": "New Slime Splitting",
   "option.lunaslimes.use_splitting.false": "OFF",
   "option.lunaslimes.use_splitting.true": "ON",
-  "tooltip.lunaslimes.use_splitting": "Slimes will use a new splitting system."
+  "tooltip.lunaslimes.use_splitting": "Slimes will use a new splitting system.",
+
+  "subtitles.entity.slime.merge": "Slime merges",
+  "subtitles.entity.slime.split": "Slime splits"
 }

@@ -17,7 +17,7 @@ import java.util.List;
 public class SlimeMethods {
 
     public static void mergeSlimes(Slime slime1, Slime slime2) {
-        if (slime2.getType() == slime1.getType()) {
+        if (slime2.getType() == slime1.getType() && slime1.isAlive() && slime2.isAlive()) {
             int thisSize = slime1.getSize();
             int otherSize = slime2.getSize();
             if ((thisSize > otherSize || thisSize == otherSize) && thisSize <= ConfigValueGetter.maxSize() - 1 && ((SlimeInterface) slime1).getMergeCooldown() <= 0 && ((SlimeInterface) slime2).getMergeCooldown() <= 0) {
@@ -32,6 +32,9 @@ public class SlimeMethods {
                     slime1.setSize(thisSize + 1, true);
                     ((SlimeInterface) slime1).setMergeCooldown(ConfigValueGetter.mergeCooldown());
                     ((SlimeInterface) slime1).playWobbleAnim();
+                    if (ConfigValueGetter.mergeSounds()) {
+                        slime1.playSound(LunaSlimesMain.SLIME_MERGE, 1F, 1F + (slime1.getRandom().nextFloat() - slime1.getRandom().nextFloat()) * 0.4f);
+                    }
                     ((SlimeInterface) slime2).playWobbleAnim();
                     if (slime2.isPersistenceRequired()) {
                         slime1.setPersistenceRequired();
@@ -83,6 +86,9 @@ public class SlimeMethods {
                 ((SlimeInterface)slime).playWobbleAnim();
                 SlimeMethods.spawnSlimeParticles(origin);
                 origin.level.addFreshEntity(slime);
+                if (ConfigValueGetter.splitSounds()) {
+                    slime.playSound(LunaSlimesMain.SLIME_SPLIT, 1F, 1F + (slime.getRandom().nextFloat() - slime.getRandom().nextFloat()) * 0.4f);
+                }
             }
         }
         return splitOff;
@@ -96,12 +102,12 @@ public class SlimeMethods {
 
     public static void spawnSlimeLandParticles(Slime slime) {
         if (slime.level instanceof ServerLevel level) {
-            level.sendParticles(slime.getParticleType(), slime.getX(), slime.getY(), slime.getZ(), level.random.nextInt(slime.getSize() * 2, slime.getSize() * 4), slime.getBbWidth() / 4.0F, 0F, slime.getBbWidth() / 4.0F, 0.05D);
+            level.sendParticles(slime.getParticleType(), slime.getX(), slime.getY(), slime.getZ(), level.random.nextInt(slime.getSize() * 6, slime.getSize() * 8), slime.getBbWidth() / 3.5F, 0F, slime.getBbWidth() / 3.5F, 0.05D);
         }
     }
 
     public static float getSlimeScale(Slime slime, float partialTick) {
-        return ConfigValueGetter.growAnim() ? ((SlimeInterface) slime).getSizeScale(partialTick) : slime.getSize();
+        return (ConfigValueGetter.growAnim() ? ((SlimeInterface) slime).getSizeScale(partialTick) : slime.getSize()) * ((SlimeInterface)slime).getDeathProgress(partialTick);
     }
 
     public static float getSlimeWobbleAnimProgress(Slime slime, float partialTick) {
