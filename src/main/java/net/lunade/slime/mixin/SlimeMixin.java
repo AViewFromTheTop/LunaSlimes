@@ -19,9 +19,7 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -37,6 +35,7 @@ public class SlimeMixin implements SlimeInterface {
 
     @Unique public int mergeCooldown;
     @Unique public int jumpDelay;
+    @Unique public boolean hasLanded;
 
     @Unique public float previousSquish;
     @Unique public int prevWobbleAnim;
@@ -44,6 +43,7 @@ public class SlimeMixin implements SlimeInterface {
     @Unique public float prevSize = 0F;
     @Unique public float currentSize = 0F;
     @Unique public boolean jumpAntic;
+    @Unique float prevTargetSquish;
 
     @Inject(at = @At("TAIL"), method = "defineSynchedData")
     protected void defineSynchedData(CallbackInfo info) {
@@ -64,8 +64,10 @@ public class SlimeMixin implements SlimeInterface {
         compoundTag.putFloat("CurrentSize", slime.getEntityData().get(CURRENT_SIZE));
         compoundTag.putInt("MergeCooldown", this.getMergeCooldown());
         compoundTag.putFloat("TargetSquish", slime.getEntityData().get(TARGET_SQUISH));
+        compoundTag.putFloat("PrevTargetSquish", this.prevTargetSquish);
         compoundTag.putBoolean("JumpAntic", this.jumpAntic);
         compoundTag.putInt("SlimeJumpDelay", this.jumpDelay);
+        compoundTag.putBoolean("HasLanded", this.hasLanded);
     }
 
     @Inject(at = @At("TAIL"), method = "readAdditionalSaveData")
@@ -77,8 +79,10 @@ public class SlimeMixin implements SlimeInterface {
         slime.getEntityData().set(CURRENT_SIZE, compoundTag.getFloat("CurrentSize"));
         this.setMergeCooldown(compoundTag.getInt("MergeCooldown"));
         slime.getEntityData().set(TARGET_SQUISH, compoundTag.getFloat("TargetSquish"));
+        this.prevTargetSquish = compoundTag.getFloat("PrevTargetSquish");
         this.jumpAntic = compoundTag.getBoolean("JumpAntic");
         this.jumpDelay = compoundTag.getInt("SlimeJumpDelay");
+        this.hasLanded = compoundTag.getBoolean("HasLanded");
     }
 
     @Inject(at = @At("HEAD"), method = "push")
@@ -102,6 +106,24 @@ public class SlimeMixin implements SlimeInterface {
         slime.getEntityData().set(CURRENT_SIZE, slime.getEntityData().get(CURRENT_SIZE) + sizeDiff * 0.25F);
         this.wobbleAnim = slime.getEntityData().get(WOBBLE_ANIM_PROGRESS);
         this.currentSize = slime.getEntityData().get(CURRENT_SIZE);
+
+        if (this.hasLanded) {
+            this.hasLanded = false;
+            slime.targetSquish = -0.5F;
+        }
+    }
+
+    @Inject(at = @At(value = "FIELD", target = "Lnet/minecraft/world/entity/monster/Slime;targetSquish:F", ordinal = 0, shift = At.Shift.BEFORE), method = "tick")
+    public void captureSquish(CallbackInfo info) {
+        Slime slime = Slime.class.cast(this);
+        this.prevTargetSquish = slime.targetSquish;
+    }
+
+    @Inject(at = @At(value = "FIELD", target = "Lnet/minecraft/world/entity/monster/Slime;targetSquish:F", ordinal = 0, shift = At.Shift.AFTER), method = "tick")
+    public void delaySquish(CallbackInfo info) {
+        Slime slime = Slime.class.cast(this);
+        slime.targetSquish = this.prevTargetSquish;
+        this.hasLanded = true;
     }
 
     @Inject(at = @At("HEAD"), method = "tick")
