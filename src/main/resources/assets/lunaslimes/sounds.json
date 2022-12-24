@@ -1,0 +1,14 @@
+{
+  "entity.slime.split": {
+    "sounds": [
+      "lunaslimes:entity/slime/split1",
+      "lunaslimes:entity/slime/split2"
+    ]
+  },
+  "entity.slime.merge": {
+    "sounds": [
+      "lunaslimes:entity/slime/merge1",
+      "lunaslimes:entity/slime/merge2"
+    ]
+  }
+}
