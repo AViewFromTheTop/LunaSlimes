@@ -36,7 +36,7 @@ public class SlimeMethods {
                     ((SlimeInterface) slime1).setMergeCooldown(ConfigValueGetter.mergeCooldown());
                     ((SlimeInterface) slime1).playWobbleAnim();
                     if (ConfigValueGetter.mergeSounds()) {
-                        slime1.playSound(entityType == EntityType.MAGMA_CUBE ? LunaSlimesMain.MAGMA_MERGE : LunaSlimesMain.SLIME_MERGE, 1F, 1F + (slime1.getRandom().nextFloat() - slime1.getRandom().nextFloat()) * 0.4f);
+                        slime1.playSound(entityType == EntityType.MAGMA_CUBE ? LunaSlimesMain.MAGMA_MERGE : LunaSlimesMain.SLIME_MERGE, slime1.getSoundVolume(), 1F + (slime1.getRandom().nextFloat() - slime1.getRandom().nextFloat()) * 0.4f);
                     }
                     ((SlimeInterface) slime2).playWobbleAnim();
                     if (slime2.isPersistenceRequired()) {
@@ -87,7 +87,7 @@ public class SlimeMethods {
                 SlimeMethods.spawnSlimeParticles(origin);
                 origin.level.addFreshEntity(slime);
                 if (ConfigValueGetter.splitSounds()) {
-                    slime.playSound(entityType == EntityType.MAGMA_CUBE ? LunaSlimesMain.MAGMA_SPLIT : LunaSlimesMain.SLIME_SPLIT, 1F, 1F + (slime.getRandom().nextFloat() - slime.getRandom().nextFloat()) * 0.4f);
+                    slime.playSound(entityType == EntityType.MAGMA_CUBE ? LunaSlimesMain.MAGMA_SPLIT : LunaSlimesMain.SLIME_SPLIT, slime.getSoundVolume(), 1F + (slime.getRandom().nextFloat() - slime.getRandom().nextFloat()) * 0.4f);
                 }
             }
         }
