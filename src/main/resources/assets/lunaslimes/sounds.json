@@ -18,13 +18,13 @@
 			"lunaslimes:entity/magmacube/merge1",
 			"lunaslimes:entity/magmacube/merge2"
 		],
-		"subtitle": "subtitles.entity.magmacube.merge"
+		"subtitle": "subtitles.entity.magma_cube.merge"
 	},
 	"entity.magmacube.split": {
 		"sounds": [
 			"lunaslimes:entity/magmacube/split1",
 			"lunaslimes:entity/magmacube/split2"
 		],
-		"subtitle": "subtitles.entity.magmacube.split"
+		"subtitle": "subtitles.entity.magma_cube.split"
 	}
 }

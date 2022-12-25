@@ -1,6 +1,7 @@
 package net.lunade.slime.mixin.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.datafixers.util.Pair;
 import net.lunade.slime.SlimeMethods;
 import net.lunade.slime.config.getter.ConfigValueGetter;
 import net.lunade.slime.impl.RendererShadowInterface;
@@ -31,10 +32,9 @@ public class SlimeRendererMixin {
 
     @ModifyVariable(at = @At("STORE"), method = "scale*", ordinal = 3)
     public float anims(float original, Slime slime, PoseStack poseStack, float f) {
-        float wobbleAnimProgress = SlimeMethods.getSlimeWobbleAnimProgress(slime, f);
-        float wobbleValue = (float) (((wobbleAnimProgress + (0.0955F * Math.PI)) * Math.PI) * 5F);
-        float wobbleXZ = (float) ((Math.cos(wobbleValue) * 0.1F) + 1F);
-        float wobbleY = (float) (-(Math.cos(wobbleValue) * 0.025F) + 1F);
+        Pair<Float, Float> wobble = SlimeMethods.wobbleAnim(slime, f);
+        float wobbleXZ = wobble.getFirst();
+        float wobbleY = wobble.getSecond();
         poseStack.scale(wobbleXZ, wobbleY, wobbleXZ);
         poseStack.translate(0.0F, -(2.05F - (wobbleY * 2.05F)), 0.0F);
         float slimeSize = SlimeMethods.getSlimeScale(slime, f);
@@ -45,8 +45,8 @@ public class SlimeRendererMixin {
     public void newShadow(Slime slime, float f, float g, PoseStack poseStack, MultiBufferSource multiBufferSource, int i, CallbackInfo info) {
         if (ConfigValueGetter.newShadows()) {
             float slimeSize = SlimeMethods.getSlimeScale(slime, this.partialTick);
-            float wobbleAnimProgress = SlimeMethods.getSlimeWobbleAnimProgress(slime, this.partialTick);
-            float wobbleXZ = (float) ((Math.cos((float) (((wobbleAnimProgress + (0.0955F * Math.PI)) * Math.PI) * 5F)) * 0.1F) + 1F) * 2F;
+            Pair<Float, Float> wobble = SlimeMethods.wobbleAnim(slime, f);
+            float wobbleXZ = wobble.getFirst();
             float size = ((slimeSize * 0.999F) * 0.75F) * wobbleXZ;
             float squish = (Mth.lerp(this.partialTick, ((SlimeInterface) slime).prevSquish(), slime.squish) * ConfigValueGetter.squishMultiplier()) / (size * 0.5f + 1.0f);
             float j = (1.0F / (squish + 1.0F));

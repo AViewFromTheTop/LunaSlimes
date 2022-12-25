@@ -1,6 +1,7 @@
 package net.lunade.slime.mixin.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.datafixers.util.Pair;
 import net.lunade.slime.SlimeMethods;
 import net.lunade.slime.config.getter.ConfigValueGetter;
 import net.lunade.slime.impl.RendererShadowInterface;
@@ -27,18 +28,17 @@ public class MagmaCubeRendererMixin {
 
     @Inject(at = @At("HEAD"), method = "scale*")
     public void anims(MagmaCube slime, PoseStack poseStack, float f, CallbackInfo info) {
-        float splitAnimProgress = SlimeMethods.getSlimeWobbleAnimProgress(slime, f);
-        float splitValue = (float) (((splitAnimProgress + (0.0955F * Math.PI)) * Math.PI) * 5F);
-        float splitAnimXZ = (float) ((Math.cos(splitValue) * 0.1F) + 1F);
-        float splitAnimY = (float) (-(Math.cos(splitValue) * 0.025F) + 1F);
-        poseStack.scale(splitAnimXZ, splitAnimY, splitAnimXZ);
-        poseStack.translate(0.0F, -(2.05F - (splitAnimY * 2.05F)), 0F);
+        Pair<Float, Float> wobble = SlimeMethods.wobbleAnim(slime, f);
+        float wobbleXZ = wobble.getFirst();
+        float wobbleY = wobble.getSecond();
+        poseStack.scale(wobbleXZ, wobbleY, wobbleXZ);
+        poseStack.translate(0.0F, -(2.05F - (wobbleY * 2.05F)), 0F);
         float size = SlimeMethods.getSlimeScale(slime, f);
         float squishValue = Mth.lerp(f, ((SlimeInterface)slime).prevSquish(), slime.squish) * ConfigValueGetter.squishMultiplier();
 
         if (ConfigValueGetter.newShadows()) {
-            float splitAnimXZShadow = splitAnimXZ * 2F;
-            float shadowSize = ((size * 0.999F) * 0.75F) * splitAnimXZShadow;
+            float wobbleAnimXZShadow = wobbleXZ * 2F;
+            float shadowSize = ((size * 0.999F) * 0.75F) * wobbleAnimXZShadow;
             float squish = squishValue / (shadowSize * 0.5F + 1F);
             float j = (1F / (squish + 1F));
             ((RendererShadowInterface) this).setShadowRadius(0.25F * (j * shadowSize));

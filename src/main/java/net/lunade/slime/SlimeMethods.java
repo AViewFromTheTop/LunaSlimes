@@ -1,5 +1,6 @@
 package net.lunade.slime;
 
+import com.mojang.datafixers.util.Pair;
 import net.lunade.slime.config.getter.ConfigValueGetter;
 import net.lunade.slime.impl.SlimeInterface;
 import net.minecraft.network.chat.Component;
@@ -57,10 +58,6 @@ public class SlimeMethods {
         }
     }
 
-    public static EntityDimensions getDimensionsForSize(Slime slime, int size) {
-        return slime.getType().getDimensions().scale(0.255f * (float)size);
-    }
-
     public static int spawnSingleSlime(Slime origin) {
         int i = origin.getSize();
         int splitOff = 0;
@@ -115,6 +112,15 @@ public class SlimeMethods {
 
     public static float getSlimeWobbleAnimProgress(Slime slime, float partialTick) {
         return ConfigValueGetter.wobbleAnim() ? ((SlimeInterface)slime).wobbleAnimProgress(partialTick) : 0F;
+    }
+
+    public static Pair<Float, Float> wobbleAnim(Slime slime, float partialTick) {
+        float cosWobble = (float) Math.cos((((SlimeMethods.getSlimeWobbleAnimProgress(slime, partialTick) + (0.0955F * Math.PI)) * Math.PI) * 5F));
+        return Pair.of((cosWobble * 0.1F) + 1F, -(cosWobble * 0.025F) + 1F);
+    }
+
+    private static EntityDimensions getDimensionsForSize(Slime slime, int size) {
+        return slime.getType().getDimensions().scale(0.255f * (float)size);
     }
 
     private static Vec3 collideWithBox(Slime slime, Vec3 vec3, AABB aABB) {
