@@ -4,7 +4,9 @@ import it.unimi.dsi.fastutil.ints.IntArrayList;
 import net.lunade.slime.SlimeMethods;
 import net.lunade.slime.config.getter.ConfigValueGetter;
 import net.lunade.slime.impl.SlimeInterface;
+import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -19,6 +21,8 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Slime;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -205,6 +209,13 @@ public class SlimeMixin implements SlimeInterface {
         return par1.addFreshEntity(par2);
     }
 
+    @Inject(at = @At("HEAD"), method = "getParticleType", cancellable = true)
+    public void getParticleType(CallbackInfoReturnable<ParticleOptions> info) {
+        if (ConfigValueGetter.slimeBlockParticles()) {
+            info.setReturnValue(new BlockParticleOption(ParticleTypes.BLOCK, slimeState));
+        }
+    }
+
     @Unique
     @Override
     public float prevSquish() {
@@ -289,5 +300,7 @@ public class SlimeMixin implements SlimeInterface {
     public float getDeathProgress(float partialTick) {
         return ConfigValueGetter.deathAnim() && Slime.class.cast(this).isDeadOrDying() ? ((20F - Mth.lerp(partialTick, this.prevDeathTime, (Slime.class.cast(this).deathTime))) / 20F) : 1F;
     }
+
+    @Unique private static final BlockState slimeState = Blocks.SLIME_BLOCK.defaultBlockState();
 
 }

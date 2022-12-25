@@ -45,6 +45,10 @@ public class ConfigValues {
         return VISUALS_AUDIO.glowingMagma;
     }
 
+    public static boolean slimeBlockParticles() {
+        return VISUALS_AUDIO.slimeBlockParticles;
+    }
+
     public static boolean mergeSounds() {
         return VISUALS_AUDIO.mergeSounds;
     }
