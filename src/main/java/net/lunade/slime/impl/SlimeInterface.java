@@ -22,7 +22,7 @@ public interface SlimeInterface {
 
     void setJumpAnticTicks(int i);
 
-    int getJumpDelay();
+    int getSavedJumpDelay();
 
     void setJumpDelay(int i);
 

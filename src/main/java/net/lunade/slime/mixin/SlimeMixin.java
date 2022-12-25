@@ -274,7 +274,7 @@ public class SlimeMixin implements SlimeInterface {
 
     @Unique
     @Override
-    public int getJumpDelay() {
+    public int getSavedJumpDelay() {
         return this.jumpDelay;
     }
 
