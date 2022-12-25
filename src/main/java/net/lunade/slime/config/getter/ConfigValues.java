@@ -41,6 +41,10 @@ public class ConfigValues {
         return VISUALS_AUDIO.scaleTextures;
     }
 
+    public static boolean glowingMagma() {
+        return VISUALS_AUDIO.glowingMagma;
+    }
+
     public static boolean mergeSounds() {
         return VISUALS_AUDIO.mergeSounds;
     }

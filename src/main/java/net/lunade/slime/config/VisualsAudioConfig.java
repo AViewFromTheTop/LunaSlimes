@@ -22,6 +22,7 @@ public final class VisualsAudioConfig implements ConfigData {
     public boolean newShadows = true;
     public boolean particles = true;
     public boolean scaleTextures = true;
+    public boolean glowingMagma = true;
     public boolean mergeSounds = true;
     public boolean splitSounds = true;
 
@@ -92,6 +93,14 @@ public final class VisualsAudioConfig implements ConfigData {
                 .setSaveConsumer(newValue -> config.scaleTextures = newValue)
                 .setYesNoTextSupplier(bool -> text("scale_textures." + bool))
                 .setTooltip(tooltip("scale_textures"))
+                .build()
+        );
+
+        var glowingMagma = category.addEntry(entryBuilder.startBooleanToggle(text("glowing_magma"), config.glowingMagma)
+                .setDefaultValue(true)
+                .setSaveConsumer(newValue -> config.glowingMagma = newValue)
+                .setYesNoTextSupplier(bool -> text("glowing_magma." + bool))
+                .setTooltip(tooltip("glowing_magma"))
                 .build()
         );
 
