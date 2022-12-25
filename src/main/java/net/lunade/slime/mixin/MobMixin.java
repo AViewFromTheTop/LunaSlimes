@@ -1,5 +1,6 @@
 package net.lunade.slime.mixin;
 
+import net.lunade.slime.SlimeMethods;
 import net.lunade.slime.config.getter.ConfigValueGetter;
 import net.lunade.slime.impl.SlimeInterface;
 import net.minecraft.world.entity.Mob;
@@ -16,7 +17,7 @@ public class MobMixin {
     public void handleEntityEvent(byte b, CallbackInfo info) {
         Mob mob = Mob.class.cast(this);
         if (mob instanceof Slime slime && b == (byte) 61 && ConfigValueGetter.jumpAntic()) {
-            slime.targetSquish = -0.05F;
+            SlimeMethods.setSquish(slime, -0.05F);
             ((SlimeInterface)slime).setJumpAnticTicks(3);
         }
     }

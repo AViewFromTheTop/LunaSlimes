@@ -59,6 +59,6 @@
 
   "subtitles.entity.slime.merge": "Slime merges",
   "subtitles.entity.slime.split": "Slime splits",
-  "subtitles.entity.magmacube.merge": "Magma Cube merges",
-  "subtitles.entity.magmacube.split": "Magma Cube splits"
+  "subtitles.entity.magma_cube.merge": "Magma Cube merges",
+  "subtitles.entity.magma_cube.split": "Magma Cube splits"
 }
