@@ -45,7 +45,7 @@
   "option.lunaslimes.max_size": "Slime Merge Cap",
   "tooltip.lunaslimes.max_size": "The highest size a Slime can reach through merging.\nSetting to 1 will disable merging.",
   "option.lunaslimes.merge_cooldown": "Slime Merge Cooldown",
-  "tooltip.lunaslimes.merge_cooldown": "The time a Slime must wait before merging again.",
+  "tooltip.lunaslimes.merge_cooldown": "The time a Slime must wait before merging again.\nValues are measured in ticks",
   "option.lunaslimes.on_split_cooldown": "Split Slime Merge Cooldown",
   "tooltip.lunaslimes.on_split_cooldown": "The time a Slime that has been split must wait before being able to merge.\nValues are measured in ticks.",
   "option.lunaslimes.split_cooldown": "Spawned Split Slime Merge Cooldown",
