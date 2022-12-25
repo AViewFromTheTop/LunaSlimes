@@ -11,9 +11,9 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 @Mixin(LavaSlimeModel.class)
 public class LavaSlimeModelMixin<T extends Slime> {
 
-    @ModifyVariable(at = @At("STORE"), method = "prepareMobModel", ordinal = 3)
+    @ModifyVariable(at = @At("STORE"), method = "prepareMobModel*", ordinal = 3)
     public float prepareMobModel(float original, T slime, float f, float g, float h) {
-        return Mth.lerp(h, ((SlimeInterface)slime).prevSquish(), slime.squish);
+        return Math.max(Mth.lerp(h, ((SlimeInterface)slime).prevSquish(), slime.squish),0.0F);
     }
 
 }
