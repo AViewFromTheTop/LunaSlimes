@@ -119,6 +119,18 @@ public class SlimeMethods {
         return Pair.of((cosWobble * 0.1F) + 1F, -(cosWobble * 0.025F) + 1F);
     }
 
+    public static void setSquish(Slime slime, float squish) {
+        if (squish < slime.targetSquish) {
+            slime.targetSquish = squish;
+        }
+    }
+
+    public static void setStretch(Slime slime, float stretch) {
+        if (stretch > slime.targetSquish) {
+            slime.targetSquish = stretch;
+        }
+    }
+
     private static EntityDimensions getDimensionsForSize(Slime slime, int size) {
         return slime.getType().getDimensions().scale(0.255f * (float)size);
     }

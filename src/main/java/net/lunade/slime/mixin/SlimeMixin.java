@@ -130,11 +130,11 @@ public class SlimeMixin implements SlimeInterface {
         if (ConfigValueGetter.jumpAntic()) {
             if (this.jumpSquishes > 0) {
                 if (this.jumpSquishes == 3 && this.jumpAntic) {
-                    slime.targetSquish = -0.05F;
+                    SlimeMethods.setSquish(slime, -0.05F);
                 } else if (this.jumpSquishes == 2 && this.jumpAntic) {
-                    slime.targetSquish = -0.15F;
+                    SlimeMethods.setSquish(slime, -0.15F);
                 } else if (this.jumpSquishes == 1 && this.jumpAntic) {
-                    slime.targetSquish = -0.3F;
+                    SlimeMethods.setSquish(slime, -0.3F);
                 }
                 --this.jumpSquishes;
             }
