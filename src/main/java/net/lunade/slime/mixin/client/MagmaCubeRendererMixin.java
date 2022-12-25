@@ -9,7 +9,6 @@ import net.minecraft.client.renderer.entity.MagmaCubeRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.monster.MagmaCube;
-import net.minecraft.world.entity.monster.Slime;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -66,7 +65,7 @@ public class MagmaCubeRendererMixin {
     }
 
     @Inject(at = @At("HEAD"), method = "getTextureLocation", cancellable = true)
-    public void getTextureLocation(Slime slime, CallbackInfoReturnable<ResourceLocation> info) {
+    public void getTextureLocation(MagmaCube slime, CallbackInfoReturnable<ResourceLocation> info) {
         if (ConfigValueGetter.scaleTextures()) {
             int size = slime.getSize();
             info.setReturnValue(size == 1 ? MAGMACUBE_1 : size == 2 || size == 3 ? MAGMACUBE_2 : MAGMACUBE_4);
