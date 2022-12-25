@@ -81,7 +81,7 @@ public class MagmaCubeRendererMixin {
     @Inject(at = @At("HEAD"), method = "getBlockLightLevel*", cancellable = true)
     public void getBlockLightLevel(MagmaCube entity, BlockPos pos, CallbackInfoReturnable<Integer> info) {
         if (ConfigValueGetter.glowingMagma()) {
-            info.setReturnValue(entity.isOnFire() ? 15 : 8);
+            info.setReturnValue(entity.isOnFire() ? 15 : entity.level.getBrightness(LightLayer.BLOCK, pos));
         }
     }
 
