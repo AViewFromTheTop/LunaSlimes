@@ -7,9 +7,11 @@ import net.lunade.slime.config.getter.ConfigValueGetter;
 import net.lunade.slime.impl.RendererShadowInterface;
 import net.lunade.slime.impl.SlimeInterface;
 import net.minecraft.client.renderer.entity.MagmaCubeRenderer;
+import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.monster.MagmaCube;
+import net.minecraft.world.level.LightLayer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -66,6 +68,11 @@ public class MagmaCubeRendererMixin {
             int size = Math.min(slime.getSize(), 4);
             info.setReturnValue(new ResourceLocation("lunaslimes","textures/entity/slime/magmacube_" + size + ".png"));
         }
+    }
+
+    @Inject(at = @At("HEAD"), method = "getBlockLightLevel", cancellable = true)
+    public void getBlockLightLevel(MagmaCube entity, BlockPos pos, CallbackInfoReturnable<Integer> info) {
+        info.setReturnValue(entity.isOnFire() ? 15 : entity.level.getBrightness(LightLayer.BLOCK, pos));
     }
 
 }
