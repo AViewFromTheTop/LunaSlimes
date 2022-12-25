@@ -63,7 +63,7 @@ public class MagmaCubeRendererMixin {
     @Inject(at = @At("HEAD"), method = "getTextureLocation*", cancellable = true)
     public void getTextureLocation(MagmaCube slime, CallbackInfoReturnable<ResourceLocation> info) {
         if (ConfigValueGetter.scaleTextures()) {
-            int size = Math.min(slime.getSize(),4);
+            int size = Math.min(slime.getSize(), 4);
             info.setReturnValue(new ResourceLocation("lunaslimes","textures/entity/slime/magmacube_" + size + ".png"));
         }
     }
