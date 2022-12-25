@@ -6,18 +6,25 @@ import net.lunade.slime.config.getter.ConfigValueGetter;
 import net.lunade.slime.impl.RendererShadowInterface;
 import net.lunade.slime.impl.SlimeInterface;
 import net.minecraft.client.renderer.entity.MagmaCubeRenderer;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.monster.MagmaCube;
+import net.minecraft.world.entity.monster.Slime;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 @Mixin(MagmaCubeRenderer.class)
 public class MagmaCubeRendererMixin {
+
+    @Unique private static final ResourceLocation MAGMACUBE_1 = new ResourceLocation("lunaslimes", "textures/entity/slime/magmacube_1.png");
+    @Unique private static final ResourceLocation MAGMACUBE_2 = new ResourceLocation("lunaslimes", "textures/entity/slime/magmacube_2.png");
+    @Unique private static final ResourceLocation MAGMACUBE_4 = new ResourceLocation("lunaslimes", "textures/entity/slime/magmacube_4.png");
 
     @Unique float h;
     @Unique float i;
@@ -56,6 +63,14 @@ public class MagmaCubeRendererMixin {
         args.set(0, x);
         args.set(1, this.yStretch);
         args.set(2, x);
+    }
+
+    @Inject(at = @At("HEAD"), method = "getTextureLocation", cancellable = true)
+    public void getTextureLocation(Slime slime, CallbackInfoReturnable<ResourceLocation> info) {
+        if (ConfigValueGetter.scaleTextures()) {
+            int size = slime.getSize();
+            info.setReturnValue(size == 1 ? MAGMACUBE_1 : size == 2 || size == 3 ? MAGMACUBE_2 : MAGMACUBE_4);
+        }
     }
 
 }

@@ -58,5 +58,7 @@
   "tooltip.lunaslimes.use_splitting": "Slimes will use a new splitting system.",
 
   "subtitles.entity.slime.merge": "Slime merges",
-  "subtitles.entity.slime.split": "Slime splits"
+  "subtitles.entity.slime.split": "Slime splits",
+  "subtitles.entity.magmacube.merge": "Magma Cube merges",
+  "subtitles.entity.magmacube.split": "Magma Cube splits"
 }
