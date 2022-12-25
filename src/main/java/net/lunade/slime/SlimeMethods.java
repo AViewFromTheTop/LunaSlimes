@@ -7,6 +7,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Slime;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -17,7 +18,8 @@ import java.util.List;
 public class SlimeMethods {
 
     public static void mergeSlimes(Slime slime1, Slime slime2) {
-        if (slime2.getType() == slime1.getType() && slime1.isAlive() && slime2.isAlive()) {
+        EntityType<? extends Slime> entityType = slime1.getType();
+        if (slime2.getType() == entityType && slime1.isAlive() && slime2.isAlive()) {
             int thisSize = slime1.getSize();
             int otherSize = slime2.getSize();
             if ((thisSize > otherSize || thisSize == otherSize) && thisSize <= ConfigValueGetter.maxSize() - 1 && ((SlimeInterface) slime1).getMergeCooldown() <= 0 && ((SlimeInterface) slime2).getMergeCooldown() <= 0) {
@@ -33,7 +35,7 @@ public class SlimeMethods {
                     ((SlimeInterface) slime1).setMergeCooldown(ConfigValueGetter.mergeCooldown());
                     ((SlimeInterface) slime1).playWobbleAnim();
                     if (ConfigValueGetter.mergeSounds()) {
-                        slime1.playSound(LunaSlimesMain.SLIME_MERGE, 1F, 1F + (slime1.getRandom().nextFloat() - slime1.getRandom().nextFloat()) * 0.4f);
+                        slime1.playSound(entityType == EntityType.MAGMA_CUBE ? LunaSlimesMain.MAGMA_MERGE : LunaSlimesMain.SLIME_MERGE, 1F, 1F + (slime1.getRandom().nextFloat() - slime1.getRandom().nextFloat()) * 0.4f);
                     }
                     ((SlimeInterface) slime2).playWobbleAnim();
                     if (slime2.isPersistenceRequired()) {
@@ -69,7 +71,8 @@ public class SlimeMethods {
             int l = (int) ((2 + origin.getRandom().nextInt(3)) * origin.getRandom().nextDouble());
             float g = ((float)(l % 2) - 0.5f) * f;
             float h = ((float)(l / 2) - 0.5f) * f;
-            Slime slime = origin.getType().create(origin.level);
+            EntityType<? extends Slime> entityType = origin.getType();
+            Slime slime = entityType.create(origin.level);
             if (slime != null) {
                 if (origin.isPersistenceRequired()) {
                     slime.setPersistenceRequired();
@@ -87,7 +90,7 @@ public class SlimeMethods {
                 SlimeMethods.spawnSlimeParticles(origin);
                 origin.level.addFreshEntity(slime);
                 if (ConfigValueGetter.splitSounds()) {
-                    slime.playSound(LunaSlimesMain.SLIME_SPLIT, 1F, 1F + (slime.getRandom().nextFloat() - slime.getRandom().nextFloat()) * 0.4f);
+                    slime.playSound(entityType == EntityType.MAGMA_CUBE ? LunaSlimesMain.MAGMA_SPLIT : LunaSlimesMain.SLIME_SPLIT, 1F, 1F + (slime.getRandom().nextFloat() - slime.getRandom().nextFloat()) * 0.4f);
                 }
             }
         }
