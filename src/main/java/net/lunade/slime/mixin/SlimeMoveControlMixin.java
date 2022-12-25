@@ -21,7 +21,7 @@ public class SlimeMoveControlMixin {
     @Inject(at = @At("TAIL"), method = "<init>")
     public void init(Slime slime, CallbackInfo info) {
         if (!this.wasInit) {
-            this.jumpDelay = ((SlimeInterface) slime).getJumpDelay();
+            this.jumpDelay = ((SlimeInterface) slime).getSavedJumpDelay();
             this.wasInit = true;
         }
     }
