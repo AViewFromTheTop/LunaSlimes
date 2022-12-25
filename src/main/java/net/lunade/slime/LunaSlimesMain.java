@@ -21,7 +21,7 @@ public class LunaSlimesMain implements ModInitializer {
 		Registry.register(Registry.SOUND_EVENT, new ResourceLocation("lunaslimes", "entity.slime.merge"), SLIME_MERGE);
 		Registry.register(Registry.SOUND_EVENT, new ResourceLocation("lunaslimes", "entity.slime.split"), SLIME_SPLIT);
 		Registry.register(Registry.SOUND_EVENT, new ResourceLocation("lunaslimes", "entity.magmacube.merge"), MAGMA_MERGE);
-		Registry.register(Registry.SOUND_EVENT, new ResourceLocation("lunaslimes", "entity.magmacube.split"), MAGMA_MERGE);
+		Registry.register(Registry.SOUND_EVENT, new ResourceLocation("lunaslimes", "entity.magmacube.split"), MAGMA_SPLIT);
 	}
 
 }
