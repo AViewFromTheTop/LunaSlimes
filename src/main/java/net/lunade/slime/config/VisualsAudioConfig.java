@@ -23,7 +23,7 @@ public final class VisualsAudioConfig implements ConfigData {
     public boolean particles = true;
     public boolean scaleTextures = true;
     public boolean glowingMagma = true;
-    public boolean slimeBlockParticles;
+    public boolean slimeBlockParticles = true;
     public boolean mergeSounds = true;
     public boolean splitSounds = true;
 
