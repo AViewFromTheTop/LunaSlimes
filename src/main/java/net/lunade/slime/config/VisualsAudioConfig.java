@@ -23,6 +23,7 @@ public final class VisualsAudioConfig implements ConfigData {
     public boolean particles = true;
     public boolean scaleTextures = true;
     public boolean glowingMagma = true;
+    public boolean slimeBlockParticles;
     public boolean mergeSounds = true;
     public boolean splitSounds = true;
 
@@ -101,6 +102,14 @@ public final class VisualsAudioConfig implements ConfigData {
                 .setSaveConsumer(newValue -> config.glowingMagma = newValue)
                 .setYesNoTextSupplier(bool -> text("glowing_magma." + bool))
                 .setTooltip(tooltip("glowing_magma"))
+                .build()
+        );
+
+        var slimeBlockParticles = category.addEntry(entryBuilder.startBooleanToggle(text("slime_block_particles"), config.slimeBlockParticles)
+                .setDefaultValue(true)
+                .setSaveConsumer(newValue -> config.slimeBlockParticles = newValue)
+                .setYesNoTextSupplier(bool -> text("slime_block_particles." + bool))
+                .setTooltip(tooltip("slime_block_particles"))
                 .build()
         );
 
