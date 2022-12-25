@@ -47,6 +47,8 @@ public class SlimeMethods {
                     }
                     slime1.setInvulnerable(slime2.isInvulnerable());
                     slime1.setSilent(slime2.isSilent());
+                    slime1.setRemainingFireTicks((int) Math.max(slime1.getRemainingFireTicks(), slime2.getRemainingFireTicks() * 0.5));
+                    slime1.setTicksFrozen((int) Math.max(slime1.getTicksFrozen(), slime2.getTicksFrozen() * 0.5));
                     slime1.setPos(newPos);
                     if (otherSize - 1 <= 0) {
                         slime2.discard();
@@ -85,6 +87,9 @@ public class SlimeMethods {
                 ((SlimeInterface)origin).playWobbleAnim();
                 ((SlimeInterface)slime).playWobbleAnim();
                 SlimeMethods.spawnSlimeParticles(origin);
+                slime.setRemainingFireTicks(origin.getRemainingFireTicks());
+                slime.setTicksFrozen(origin.getTicksFrozen());
+                slime.setDeltaMovement(origin.getDeltaMovement());
                 origin.level.addFreshEntity(slime);
                 if (ConfigValueGetter.splitSounds()) {
                     slime.playSound(entityType == EntityType.MAGMA_CUBE ? LunaSlimesMain.MAGMA_SPLIT : LunaSlimesMain.SLIME_SPLIT, slime.getSoundVolume(), 1F + (slime.getRandom().nextFloat() - slime.getRandom().nextFloat()) * 0.4f);
