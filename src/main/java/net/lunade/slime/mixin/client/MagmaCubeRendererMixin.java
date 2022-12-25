@@ -21,15 +21,11 @@ import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 @Mixin(MagmaCubeRenderer.class)
 public class MagmaCubeRendererMixin {
 
-    @Unique private static final ResourceLocation MAGMACUBE_1 = new ResourceLocation("lunaslimes", "textures/entity/slime/magmacube_1.png");
-    @Unique private static final ResourceLocation MAGMACUBE_2 = new ResourceLocation("lunaslimes", "textures/entity/slime/magmacube_2.png");
-    @Unique private static final ResourceLocation MAGMACUBE_4 = new ResourceLocation("lunaslimes", "textures/entity/slime/magmacube_4.png");
-
     @Unique float h;
     @Unique float i;
     @Unique float yStretch;
 
-    @Inject(at = @At("HEAD"), method = "scale")
+    @Inject(at = @At("HEAD"), method = "scale*")
     public void anims(MagmaCube slime, PoseStack poseStack, float f, CallbackInfo info) {
         float splitAnimProgress = SlimeMethods.getSlimeWobbleAnimProgress(slime, f);
         float splitValue = (float) (((splitAnimProgress + (0.0955F * Math.PI)) * Math.PI) * 5F);
@@ -56,7 +52,7 @@ public class MagmaCubeRendererMixin {
         this.yStretch = 1F / this.h * size;
     }
 
-    @ModifyArgs(at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;scale(FFF)V"), method = "scale")
+    @ModifyArgs(at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;scale(FFF)V"), method = "scale*")
     public void setScaleArgs(Args args) {
         float x = this.h * this.i;
         args.set(0, x);
@@ -64,11 +60,11 @@ public class MagmaCubeRendererMixin {
         args.set(2, x);
     }
 
-    @Inject(at = @At("HEAD"), method = "getTextureLocation", cancellable = true)
+    @Inject(at = @At("HEAD"), method = "getTextureLocation*", cancellable = true)
     public void getTextureLocation(MagmaCube slime, CallbackInfoReturnable<ResourceLocation> info) {
         if (ConfigValueGetter.scaleTextures()) {
-            int size = slime.getSize();
-            info.setReturnValue(size == 1 ? MAGMACUBE_1 : size == 2 || size == 3 ? MAGMACUBE_2 : MAGMACUBE_4);
+            int size = Math.min(slime.getSize(),4);
+            info.setReturnValue(new ResourceLocation("lunaslimes","textures/entity/slime/magmacube_" + size + ".png"));
         }
     }
 
