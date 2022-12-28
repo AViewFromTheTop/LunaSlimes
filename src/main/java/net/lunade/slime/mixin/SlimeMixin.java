@@ -22,15 +22,16 @@ import net.minecraft.world.entity.monster.Slime;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 @Mixin(Slime.class)
 public class SlimeMixin implements SlimeInterface {
@@ -39,8 +40,8 @@ public class SlimeMixin implements SlimeInterface {
     @Unique private static final EntityDataAccessor<Float> PREV_SIZE = SynchedEntityData.defineId(Slime.class, EntityDataSerializers.FLOAT);
     @Unique private static final EntityDataAccessor<Float> CURRENT_SIZE = SynchedEntityData.defineId(Slime.class, EntityDataSerializers.FLOAT);
     @Unique private static final EntityDataAccessor<Boolean> JUMP_ANTIC = SynchedEntityData.defineId(Slime.class, EntityDataSerializers.BOOLEAN);
-
     @Unique private static final int WOBBLE_ANIM_LENGTH = 10;
+    @Unique private static final BlockParticleOption NEW_SLIME_PARTICLES = new BlockParticleOption(ParticleTypes.BLOCK, Blocks.SLIME_BLOCK.defaultBlockState());
 
     @Unique public int mergeCooldown;
     @Unique public int jumpDelay;
@@ -54,6 +55,8 @@ public class SlimeMixin implements SlimeInterface {
     @Unique public boolean jumpAntic;
     @Unique public float prevTargetSquish;
     @Unique public int prevDeathTime;
+
+    @Unique private boolean canSquish;
 
     @Inject(at = @At("TAIL"), method = "defineSynchedData")
     protected void defineSynchedData(CallbackInfo info) {
@@ -101,6 +104,7 @@ public class SlimeMixin implements SlimeInterface {
     @Inject(at = @At("HEAD"), method = "tick")
     public void tick(CallbackInfo info) {
         Slime slime = Slime.class.cast(this);
+        this.setMergeCooldown(this.getMergeCooldown() - 1);
         this.previousSquish = Slime.class.cast(this).squish;
         slime.getEntityData().set(PREV_WOBBLE_ANIM_PROGRESS, slime.getEntityData().get(WOBBLE_ANIM_PROGRESS));
         slime.getEntityData().set(PREV_SIZE, slime.getEntityData().get(CURRENT_SIZE));
@@ -119,12 +123,14 @@ public class SlimeMixin implements SlimeInterface {
             array -= 1;
             this.landDelays.set(index, array);
             if (array <= 0) {
-                SlimeMethods.spawnSlimeLandParticles(slime);
-                slime.playSound(slime.getSquishSound(), slime.getSoundVolume(), ((slime.getRandom().nextFloat() - slime.getRandom().nextFloat()) * 0.2F + 1.0F) / 0.8F);
+                if (array <= -1) {
+                    SlimeMethods.spawnSlimeLandParticles(slime);
+                    slime.playSound(slime.getSquishSound(), slime.getSoundVolume(), ((slime.getRandom().nextFloat() - slime.getRandom().nextFloat()) * 0.2F + 1.0F) / 0.8F);
+                }
                 slime.targetSquish = -0.5F;
             }
         }
-        this.landDelays.removeIf((integer -> integer <= 0));
+        this.landDelays.removeIf((integer -> integer <= -1));
 
         if (!slime.level.isClientSide) {
             slime.getEntityData().set(JUMP_ANTIC, this.jumpAntic);
@@ -153,14 +159,9 @@ public class SlimeMixin implements SlimeInterface {
     }
 
     @Inject(at = @At(value = "FIELD", target = "Lnet/minecraft/world/entity/monster/Slime;targetSquish:F", ordinal = 1, shift = At.Shift.AFTER), method = "tick")
-    public void afterField(CallbackInfo info) {
+    public void undoSquish(CallbackInfo info) {
         Slime slime = Slime.class.cast(this);
         slime.targetSquish = this.prevTargetSquish;
-    }
-
-    @Inject(at = @At("HEAD"), method = "tick")
-    public void mergeCooldownTick(CallbackInfo info) {
-        this.setMergeCooldown(this.getMergeCooldown() - 1);
     }
 
     @Inject(at = @At("HEAD"), method = "finalizeSpawn")
@@ -180,24 +181,33 @@ public class SlimeMixin implements SlimeInterface {
 
     @Inject(at = @At("HEAD"), method = "decreaseSquish", cancellable = true)
     public void decreaseSquish(CallbackInfo info) {
-        if (this.jumpAntic && ConfigValueGetter.jumpAntic()) {
+        if ((this.jumpAntic && ConfigValueGetter.jumpAntic()) || !this.canSquish()) {
             info.cancel();
         }
     }
 
     @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Mob;tick()V", shift = At.Shift.BEFORE), method = "tick")
     public void moveDecreaseSquish(CallbackInfo info) {
+        this.canSquish = true;
         Slime.class.cast(this).decreaseSquish();
     }
 
-    @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/monster/Slime;decreaseSquish()V"), method = "tick")
-    public void stopDecreaseSquish(Slime slime) { }
+    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/monster/Slime;decreaseSquish()V", shift = At.Shift.BEFORE), method = "tick")
+    public void stopDecreaseSquish(CallbackInfo info) {
+        this.canSquish = false;
+    }
 
-    @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;addParticle(Lnet/minecraft/core/particles/ParticleOptions;DDDDDD)V"), method = "tick")
-    public void stopParticles(Level level, ParticleOptions options, double d, double e, double f, double g, double h, double i) { }
+    @ModifyArgs(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;addParticle(Lnet/minecraft/core/particles/ParticleOptions;DDDDDD)V"), method = "tick")
+    public void stopParticles(Args args) {
+        args.set(1, 0);
+        args.set(2, -512);
+        args.set(3, 0);
+    }
 
-    @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/monster/Slime;playSound(Lnet/minecraft/sounds/SoundEvent;FF)V"), method = "tick")
-    public void stopSound(Slime slime, SoundEvent event, float f, float g) { }
+    @ModifyArgs(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/monster/Slime;playSound(Lnet/minecraft/sounds/SoundEvent;FF)V"), method = "tick")
+    public void stopSound(Args args) {
+        args.set(1, 0F);
+    }
 
     @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;addFreshEntity(Lnet/minecraft/world/entity/Entity;)Z"), method = "remove")
     public boolean beforeSpawnNewSlime(Level par1, Entity par2) {
@@ -212,7 +222,7 @@ public class SlimeMixin implements SlimeInterface {
     @Inject(at = @At("HEAD"), method = "getParticleType", cancellable = true)
     public void getParticleType(CallbackInfoReturnable<ParticleOptions> info) {
         if (ConfigValueGetter.slimeBlockParticles()) {
-            info.setReturnValue(new BlockParticleOption(ParticleTypes.BLOCK, slimeState));
+            info.setReturnValue(NEW_SLIME_PARTICLES);
         }
     }
 
@@ -301,6 +311,10 @@ public class SlimeMixin implements SlimeInterface {
         return ConfigValueGetter.deathAnim() && Slime.class.cast(this).isDeadOrDying() ? ((20F - Mth.lerp(partialTick, this.prevDeathTime, (Slime.class.cast(this).deathTime))) / 20F) : 1F;
     }
 
-    @Unique private static final BlockState slimeState = Blocks.SLIME_BLOCK.defaultBlockState();
+    @Unique
+    @Override
+    public boolean canSquish() {
+        return this.canSquish;
+    }
 
 }

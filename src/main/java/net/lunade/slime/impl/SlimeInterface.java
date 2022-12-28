@@ -28,4 +28,6 @@ public interface SlimeInterface {
 
     float getDeathProgress(float f);
 
+    boolean canSquish();
+
 }
