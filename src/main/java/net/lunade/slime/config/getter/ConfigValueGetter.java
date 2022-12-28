@@ -32,6 +32,14 @@ public class ConfigValueGetter {
         return !LunaSlimesMain.HAS_CLOTH_CONFIG || ConfigValues.particles();
     }
 
+    public static boolean glowingMagma() {
+        return !LunaSlimesMain.HAS_CLOTH_CONFIG || ConfigValues.glowingMagma();
+    }
+
+    public static boolean slimeBlockParticles() {
+        return !LunaSlimesMain.HAS_CLOTH_CONFIG || ConfigValues.slimeBlockParticles();
+    }
+
     public static boolean scaleTextures() {
         return !LunaSlimesMain.HAS_CLOTH_CONFIG || ConfigValues.scaleTextures();
     }

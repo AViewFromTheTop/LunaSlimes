@@ -6,10 +6,14 @@ import net.lunade.slime.SlimeMethods;
 import net.lunade.slime.config.getter.ConfigValueGetter;
 import net.lunade.slime.impl.RendererShadowInterface;
 import net.lunade.slime.impl.SlimeInterface;
+import net.lunade.slime.render.MagmaCubeLayer;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MagmaCubeRenderer;
+import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.monster.MagmaCube;
+import net.minecraft.world.level.LightLayer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -25,6 +29,12 @@ public class MagmaCubeRendererMixin {
     @Unique float h;
     @Unique float i;
     @Unique float yStretch;
+
+    @Inject(at = @At("TAIL"), method = "<init>")
+    public void init(EntityRendererProvider.Context context, CallbackInfo info) {
+        MagmaCubeRenderer renderer = MagmaCubeRenderer.class.cast(this);
+        renderer.addLayer(new MagmaCubeLayer<>(renderer));
+    }
 
     @Inject(at = @At("HEAD"), method = "scale*")
     public void anims(MagmaCube slime, PoseStack poseStack, float f, CallbackInfo info) {
@@ -65,6 +75,13 @@ public class MagmaCubeRendererMixin {
         if (ConfigValueGetter.scaleTextures()) {
             int size = Math.min(slime.getSize(), 4);
             info.setReturnValue(new ResourceLocation("lunaslimes","textures/entity/slime/magmacube_" + size + ".png"));
+        }
+    }
+
+    @Inject(at = @At("HEAD"), method = "getBlockLightLevel*", cancellable = true)
+    public void getBlockLightLevel(MagmaCube entity, BlockPos pos, CallbackInfoReturnable<Integer> info) {
+        if (ConfigValueGetter.glowingMagma()) {
+            info.setReturnValue(entity.isOnFire() ? 15 : entity.level.getBrightness(LightLayer.BLOCK, pos));
         }
     }
 

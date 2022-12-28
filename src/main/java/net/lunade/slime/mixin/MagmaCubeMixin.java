@@ -14,7 +14,8 @@ public class MagmaCubeMixin {
 
     @Inject(at = @At("HEAD"), method = "decreaseSquish", cancellable = true)
     public void decreaseSquish(CallbackInfo info) {
-        if (((SlimeInterface)Slime.class.cast(this)).getJumpAntic() && ConfigValueGetter.jumpAntic()) {
+        Slime slime = Slime.class.cast(this);
+        if ((((SlimeInterface)slime).getJumpAntic() && ConfigValueGetter.jumpAntic()) || !((SlimeInterface)slime).canSquish()) {
             info.cancel();
         }
     }
