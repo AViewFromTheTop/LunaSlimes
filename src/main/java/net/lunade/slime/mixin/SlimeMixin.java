@@ -219,7 +219,20 @@ public class SlimeMixin implements SlimeInterface {
 
     @ModifyArgs(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/monster/Slime;playSound(Lnet/minecraft/sounds/SoundEvent;FF)V"), method = "tick")
     public void stopSound(Args args) {
-        args.set(1, (float) 0);
+        int index = 0;
+        if (!(args.get(index) instanceof Float)) {
+            index += 1;
+            if (!(args.get(index) instanceof Float)) {
+                index += 1;
+            }
+            if (!(args.get(index) instanceof Float)) {
+                index += 1;
+            }
+            if (!(args.get(index) instanceof Float)) {
+                index += 1;
+            }
+        }
+        args.set(index, (float) 0);
     }
 
     @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;addFreshEntity(Lnet/minecraft/world/entity/Entity;)Z"), method = "remove")
