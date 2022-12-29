@@ -11,7 +11,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.Entity;
@@ -126,8 +125,9 @@ public class SlimeMixin implements SlimeInterface {
                 if (array <= -1) {
                     SlimeMethods.spawnSlimeLandParticles(slime);
                     slime.playSound(slime.getSquishSound(), slime.getSoundVolume(), ((slime.getRandom().nextFloat() - slime.getRandom().nextFloat()) * 0.2F + 1.0F) / 0.8F);
+                } else {
+                    slime.targetSquish = -0.5F;
                 }
-                slime.targetSquish = -0.5F;
             }
         }
         this.landDelays.removeIf((integer -> integer <= -1));
@@ -199,14 +199,14 @@ public class SlimeMixin implements SlimeInterface {
 
     @ModifyArgs(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;addParticle(Lnet/minecraft/core/particles/ParticleOptions;DDDDDD)V"), method = "tick")
     public void stopParticles(Args args) {
-        args.set(1, 0D);
-        args.set(2, -512D);
-        args.set(3, 0D);
+        args.set(1, (double) 0);
+        args.set(2, (double) -512);
+        args.set(3, (double) 0);
     }
 
     @ModifyArgs(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/monster/Slime;playSound(Lnet/minecraft/sounds/SoundEvent;FF)V"), method = "tick")
     public void stopSound(Args args) {
-        args.set(1, 0F);
+        args.set(1, (float) 0);
     }
 
     @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;addFreshEntity(Lnet/minecraft/world/entity/Entity;)Z"), method = "remove")
