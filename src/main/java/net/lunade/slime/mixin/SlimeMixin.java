@@ -199,9 +199,22 @@ public class SlimeMixin implements SlimeInterface {
 
     @ModifyArgs(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;addParticle(Lnet/minecraft/core/particles/ParticleOptions;DDDDDD)V"), method = "tick")
     public void stopParticles(Args args) {
-        args.set(1, (double) 0);
-        args.set(2, (double) -512);
-        args.set(3, (double) 0);
+        int index = 0;
+        if (!(args.get(index) instanceof Double)) {
+            index += 1;
+            if (!(args.get(index) instanceof Double)) {
+                index += 1;
+            }
+            if (!(args.get(index) instanceof Double)) {
+                index += 1;
+            }
+            if (!(args.get(index) instanceof Double)) {
+                index += 1;
+            }
+        }
+        args.set(index, (double) 0);
+        args.set(index + 1, (double) -512);
+        args.set(index + 2, (double) 0);
     }
 
     @ModifyArgs(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/monster/Slime;playSound(Lnet/minecraft/sounds/SoundEvent;FF)V"), method = "tick")
