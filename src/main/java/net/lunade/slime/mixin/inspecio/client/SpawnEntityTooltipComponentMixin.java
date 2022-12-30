@@ -13,9 +13,9 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 public class SpawnEntityTooltipComponentMixin {
 
     @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;load(Lnet/minecraft/nbt/CompoundTag;)V"), method = "of")
-    public void fixSlimesInOf(Entity par1, CompoundTag par2) {
+    private static void fixSlimesInOf(Entity par1, CompoundTag par2) {
         if (par1 instanceof Slime) {
-            ((SlimeInterface) par2).cheatSize(1F);
+            ((SlimeInterface) par1).cheatSize(1F);
         }
         par1.load(par2);
     }
