@@ -115,6 +115,9 @@ dependencies {
 		exclude(group: "net.fabricmc.fabric-api")
 		exclude(group: "com.terraformersmc")
 	}
+
+	// Inspecio
+	modImplementation("maven.modrinth:inspecio:1.6.0+1.19")
 }
 
 processResources {
