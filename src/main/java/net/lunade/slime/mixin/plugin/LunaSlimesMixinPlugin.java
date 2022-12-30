@@ -25,7 +25,7 @@ public class LunaSlimesMixinPlugin implements IMixinConfigPlugin {
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
         if (mixinClassName.contains(MIXIN_PATH) && mixinClassName.contains("inspecio")) {
             if (FabricLoader.getInstance().getModContainer("inspecio").isPresent()) {
-                return false;
+                return true;
             }
         }
         return mixinClassName.contains(MIXIN_PATH);
