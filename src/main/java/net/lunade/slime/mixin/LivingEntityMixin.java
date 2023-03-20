@@ -30,7 +30,7 @@ public class LivingEntityMixin {
     public void die(DamageSource damageSource, CallbackInfo info) {
         LivingEntity entity = LivingEntity.class.cast(this);
         if (entity instanceof Slime slime) {
-            if (damageSource != DamageSource.OUT_OF_WORLD && !slime.isTiny() && ConfigValueGetter.useSplitting()) {
+            if (damageSource != slime.damageSources().outOfWorld() && !slime.isTiny() && ConfigValueGetter.useSplitting()) {
                 info.cancel();
             }
         }

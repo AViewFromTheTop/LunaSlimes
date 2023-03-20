@@ -144,11 +144,11 @@ public class SlimeMethods {
         List<VoxelShape> list = slime.level.getEntityCollisions(slime, aABB.expandTowards(vec3));
         Vec3 vec32 = vec3.lengthSqr() == 0.0 ? vec3 : Entity.collideBoundingBox(slime, vec3, aABB, slime.level, list);
         boolean bool = slime.isOnGround() || vec3.y != vec32.y && vec3.y < 0.0;
-        if (slime.maxUpStep > 0.0f && bool && (vec3.x != vec32.x || vec3.z != vec32.z)) {
+        if (slime.maxUpStep() > 0.0f && bool && (vec3.x != vec32.x || vec3.z != vec32.z)) {
             Vec3 vec35;
-            Vec3 vec33 = Entity.collideBoundingBox(slime, new Vec3(vec3.x, slime.maxUpStep, vec3.z), aABB, slime.level, list);
-            Vec3 vec34 = Entity.collideBoundingBox(slime, new Vec3(0.0, slime.maxUpStep, 0.0), aABB.expandTowards(vec3.x, 0.0, vec3.z), slime.level, list);
-            if (vec34.y < (double)slime.maxUpStep && (vec35 = Entity.collideBoundingBox(slime, new Vec3(vec3.x, 0.0, vec3.z), aABB.move(vec34), slime.level, list).add(vec34)).horizontalDistanceSqr() > vec33.horizontalDistanceSqr()) {
+            Vec3 vec33 = Entity.collideBoundingBox(slime, new Vec3(vec3.x, slime.maxUpStep(), vec3.z), aABB, slime.level, list);
+            Vec3 vec34 = Entity.collideBoundingBox(slime, new Vec3(0.0, slime.maxUpStep(), 0.0), aABB.expandTowards(vec3.x, 0.0, vec3.z), slime.level, list);
+            if (vec34.y < (double)slime.maxUpStep() && (vec35 = Entity.collideBoundingBox(slime, new Vec3(vec3.x, 0.0, vec3.z), aABB.move(vec34), slime.level, list).add(vec34)).horizontalDistanceSqr() > vec33.horizontalDistanceSqr()) {
                 vec33 = vec35;
             }
             if (vec33.horizontalDistanceSqr() > vec32.horizontalDistanceSqr()) {
