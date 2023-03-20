@@ -3,6 +3,7 @@ package net.lunade.slime.mixin;
 import net.lunade.slime.SlimeMethods;
 import net.lunade.slime.config.getter.ConfigValueGetter;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Slime;
@@ -30,7 +31,7 @@ public class LivingEntityMixin {
     public void die(DamageSource damageSource, CallbackInfo info) {
         LivingEntity entity = LivingEntity.class.cast(this);
         if (entity instanceof Slime slime) {
-            if (damageSource != DamageSource.OUT_OF_WORLD && !slime.isTiny() && ConfigValueGetter.useSplitting()) {
+            if (damageSource.typeHolder().unwrapKey().get() != DamageTypes.OUT_OF_WORLD && !slime.isTiny() && ConfigValueGetter.useSplitting()) {
                 info.cancel();
             }
         }
