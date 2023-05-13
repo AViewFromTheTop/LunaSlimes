@@ -83,14 +83,30 @@ public class SlimeMixin implements SlimeInterface {
     @Inject(at = @At("TAIL"), method = "readAdditionalSaveData")
     public void readAdditionalSaveData(CompoundTag compoundTag, CallbackInfo info) {
         Slime slime = Slime.class.cast(this);
-        slime.getEntityData().set(PREV_WOBBLE_ANIM_PROGRESS, compoundTag.getInt("PrevWobbleAnimProgress"));
-        slime.getEntityData().set(WOBBLE_ANIM_PROGRESS, compoundTag.getInt("WobbleAnimProgress"));
-        slime.getEntityData().set(PREV_SIZE, compoundTag.getFloat("PrevSize"));
-        slime.getEntityData().set(CURRENT_SIZE, compoundTag.getFloat("CurrentSize"));
-        this.setMergeCooldown(compoundTag.getInt("MergeCooldown"));
-        this.jumpAntic = compoundTag.getBoolean("JumpAntic");
-        this.jumpDelay = compoundTag.getInt("SlimeJumpDelay");
-        this.landDelays = IntArrayList.wrap(compoundTag.getIntArray("LandDelays"));
+        if (compoundTag.contains("PrevWobbleAnimProgress")) {
+            slime.getEntityData().set(PREV_WOBBLE_ANIM_PROGRESS, compoundTag.getInt("PrevWobbleAnimProgress"));
+        }
+        if (compoundTag.contains("WobbleAnimProgress")) {
+            slime.getEntityData().set(WOBBLE_ANIM_PROGRESS, compoundTag.getInt("WobbleAnimProgress"));
+        }
+        if (compoundTag.contains("PrevSize")) {
+            slime.getEntityData().set(PREV_SIZE, compoundTag.getFloat("PrevSize"));
+        }
+        if (compoundTag.contains("CurrentSize")) {
+            slime.getEntityData().set(CURRENT_SIZE, compoundTag.getFloat("CurrentSize"));
+        }
+        if (compoundTag.contains("MergeCooldown")) {
+            this.setMergeCooldown(compoundTag.getInt("MergeCooldown"));
+        }
+        if (compoundTag.contains("JumpAntic")) {
+            this.jumpAntic = compoundTag.getBoolean("JumpAntic");
+        }
+        if (compoundTag.contains("SlimeJumpDelay")) {
+            this.jumpDelay = compoundTag.getInt("SlimeJumpDelay");
+        }
+        if (compoundTag.contains("LandDelays")) {
+            this.landDelays = IntArrayList.wrap(compoundTag.getIntArray("LandDelays"));
+        }
     }
 
     @Inject(at = @At("HEAD"), method = "push")
