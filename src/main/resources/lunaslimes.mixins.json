@@ -3,13 +3,11 @@
   "minVersion": "0.8.5",
   "package": "net.lunade.slime.mixin",
   "compatibilityLevel": "JAVA_17",
-  "plugin": "net.lunade.slime.mixin.plugin.LunaSlimesMixinPlugin",
   "client": [
     "client.EntityRendererMixin",
     "client.LavaSlimeModelMixin",
     "client.MagmaCubeRendererMixin",
     "client.SlimeRendererMixin",
-    "inspecio.client.SpawnEntityTooltipComponentMixin"
   ],
   "mixins": [
     "BaseSpawnerMixin",
