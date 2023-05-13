@@ -2,7 +2,9 @@ package net.lunade.slime.mixin;
 
 import net.lunade.slime.SlimeMethods;
 import net.lunade.slime.config.getter.ConfigValueGetter;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -12,6 +14,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import java.util.Optional;
 
 @Mixin(LivingEntity.class)
 public class LivingEntityMixin {
@@ -31,7 +35,8 @@ public class LivingEntityMixin {
     public void die(DamageSource damageSource, CallbackInfo info) {
         LivingEntity entity = LivingEntity.class.cast(this);
         if (entity instanceof Slime slime) {
-            if (damageSource.typeHolder().unwrapKey().get() != DamageTypes.OUT_OF_WORLD && !slime.isTiny() && ConfigValueGetter.useSplitting()) {
+            Optional<ResourceKey<DamageType>> damageType = damageSource.typeHolder().unwrapKey();
+            if (damageType.isPresent() && damageType.get() != DamageTypes.GENERIC_KILL && !slime.isTiny() && ConfigValueGetter.useSplitting()) {
                 info.cancel();
             }
         }

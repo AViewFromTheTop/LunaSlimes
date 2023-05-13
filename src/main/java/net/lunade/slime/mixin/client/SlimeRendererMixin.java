@@ -48,8 +48,8 @@ public class SlimeRendererMixin {
             Pair<Float, Float> wobble = SlimeMethods.wobbleAnim(slime, f);
             float wobbleXZ = wobble.getFirst() * 2F;
             float size = ((slimeSize * 0.999F) * 0.75F) * wobbleXZ;
-            float squish = (Mth.lerp(this.partialTick, ((SlimeInterface) slime).prevSquish(), slime.squish) * ConfigValueGetter.squishMultiplier()) / (size * 0.5f + 1.0f);
-            float j = (1.0F / (squish + 1.0F));
+            float squish = (Mth.lerp(this.partialTick, ((SlimeInterface) slime).prevSquish(), slime.squish) * ConfigValueGetter.squishMultiplier()) / (size * 0.5F + 1F);
+            float j = (1.0F / (squish + 1F));
             ((RendererShadowInterface) this).setShadowRadius(0.25F * (j * size));
         }
     }

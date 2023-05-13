@@ -148,7 +148,7 @@ public class SlimeMixin implements SlimeInterface {
         }
         this.landDelays.removeIf((integer -> integer <= -1));
 
-        if (!slime.level.isClientSide) {
+        if (!slime.level().isClientSide) {
             slime.getEntityData().set(JUMP_ANTIC, this.jumpAntic);
         }
         this.jumpAntic = Slime.class.cast(this).getEntityData().get(JUMP_ANTIC);

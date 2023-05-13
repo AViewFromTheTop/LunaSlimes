@@ -30,9 +30,9 @@ public class SlimeMoveControlMixin {
     public void tick(CallbackInfo info) {
         ((SlimeInterface)this.slime).setJumpDelay(this.jumpDelay);
         if (ConfigValueGetter.jumpAntic()) {
-            boolean antic = this.slime.isOnGround() && !this.slime.isInWater();
+            boolean antic = this.slime.onGround() && !this.slime.isInWater();
             if (this.jumpDelay == 3 && antic) {
-                slime.level.broadcastEntityEvent(slime, (byte)61);
+                slime.level().broadcastEntityEvent(slime, (byte)61);
                 this.slime.targetSquish = -0.05F;
                 ((SlimeInterface)this.slime).setJumpAntic(true);
             } else if (this.jumpDelay == 2 && antic) {
