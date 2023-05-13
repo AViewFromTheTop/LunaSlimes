@@ -7,7 +7,7 @@
     "client.EntityRendererMixin",
     "client.LavaSlimeModelMixin",
     "client.MagmaCubeRendererMixin",
-    "client.SlimeRendererMixin",
+    "client.SlimeRendererMixin"
   ],
   "mixins": [
     "BaseSpawnerMixin",
