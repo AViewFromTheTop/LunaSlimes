@@ -14,44 +14,49 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(Slime.SlimeMoveControl.class)
 public class SlimeMoveControlMixin {
 
-    @Shadow private int jumpDelay;
-    @Shadow @Final private Slime slime;
-    @Unique boolean wasInit;
+    @Unique
+    boolean lunaSlimes$wasInit;
+    @Shadow
+    private int jumpDelay;
+    @Shadow
+    @Final
+    private Slime slime;
 
     @Inject(at = @At("TAIL"), method = "<init>")
-    public void init(Slime slime, CallbackInfo info) {
-        if (!this.wasInit) {
-            this.jumpDelay = ((SlimeInterface) slime).getSavedJumpDelay();
-            this.wasInit = true;
+    public void lunaSlimes$init(Slime slime, CallbackInfo info) {
+        if (!this.lunaSlimes$wasInit) {
+            this.jumpDelay = ((SlimeInterface) slime).lunaSlimes$getSavedJumpDelay();
+            this.lunaSlimes$wasInit = true;
         }
     }
 
     @Inject(at = @At("HEAD"), method = "tick")
-    public void tick(CallbackInfo info) {
-        ((SlimeInterface)this.slime).setJumpDelay(this.jumpDelay);
+    public void lunaSlimes$tick(CallbackInfo info) {
+        SlimeInterface slimeInterface = (SlimeInterface) this.slime;
+        slimeInterface.lunaSlimes$setJumpDelay(this.jumpDelay);
         if (ConfigValueGetter.jumpAntic()) {
             boolean antic = this.slime.onGround() && !this.slime.isInWater();
             if (this.jumpDelay == 3 && antic) {
-                slime.level().broadcastEntityEvent(slime, (byte)61);
+                slime.level().broadcastEntityEvent(slime, (byte) 61);
                 this.slime.targetSquish = -0.05F;
-                ((SlimeInterface)this.slime).setJumpAntic(true);
+                slimeInterface.lunaSlimes$setJumpAntic(true);
             } else if (this.jumpDelay == 2 && antic) {
                 this.slime.targetSquish = -0.15F;
-                ((SlimeInterface)this.slime).setJumpAntic(true);
+                slimeInterface.lunaSlimes$setJumpAntic(true);
             } else if (this.jumpDelay == 1 && antic) {
                 this.slime.targetSquish = -0.3F;
-                ((SlimeInterface)this.slime).setJumpAntic(true);
+                slimeInterface.lunaSlimes$setJumpAntic(true);
             } else {
-                ((SlimeInterface)this.slime).setJumpAntic(false);
+                slimeInterface.lunaSlimes$setJumpAntic(false);
             }
         } else {
-            ((SlimeInterface)this.slime).setJumpAntic(false);
+            slimeInterface.lunaSlimes$setJumpAntic(false);
         }
     }
 
     @Inject(at = @At("TAIL"), method = "tick")
-    public void tickTail(CallbackInfo info) {
-        ((SlimeInterface)this.slime).setJumpDelay(this.jumpDelay);
+    public void lunaSlimes$tickTail(CallbackInfo info) {
+        ((SlimeInterface) this.slime).lunaSlimes$setJumpDelay(this.jumpDelay);
     }
 
 }

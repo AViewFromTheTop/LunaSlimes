@@ -1,9 +1,10 @@
 accessWidener    v2    named
-accessible    method    net/minecraft/world/entity/Entity    collide    (Lnet/minecraft/world/phys/Vec3;)Lnet/minecraft/world/phys/Vec3;
-accessible    method    net/minecraft/world/entity/monster/Slime    getParticleType    ()Lnet/minecraft/core/particles/ParticleOptions;
-accessible    method    net/minecraft/world/entity/monster/Slime    decreaseSquish    ()V
-accessible    method    net/minecraft/world/entity/monster/Slime    getSoundVolume    ()F
-accessible    method    net/minecraft/world/entity/monster/Slime    getSquishSound    ()Lnet/minecraft/sounds/SoundEvent;
-accessible    class    net/minecraft/world/entity/monster/Slime$SlimeMoveControl
-accessible    method    net/minecraft/client/renderer/entity/LivingEntityRenderer    addLayer    (Lnet/minecraft/client/renderer/entity/layers/RenderLayer;)Z
-accessible    field    net/minecraft/world/entity/Entity   maxUpStep    F
+accessible method net/minecraft/world/entity/Entity collide (Lnet/minecraft/world/phys/Vec3;)Lnet/minecraft/world/phys/Vec3;
+accessible method net/minecraft/world/entity/monster/Slime getParticleType ()Lnet/minecraft/core/particles/ParticleOptions;
+accessible method net/minecraft/world/entity/monster/Slime decreaseSquish ()V
+accessible method net/minecraft/world/entity/monster/Slime getSoundVolume ()F
+accessible method net/minecraft/world/entity/monster/Slime getSquishSound ()Lnet/minecraft/sounds/SoundEvent;
+accessible class net/minecraft/world/entity/monster/Slime$SlimeMoveControl
+accessible method net/minecraft/client/renderer/entity/LivingEntityRenderer addLayer (Lnet/minecraft/client/renderer/entity/layers/RenderLayer;)Z
+accessible field net/minecraft/world/entity/Entity maxUpStep F
+accessible field net/minecraft/client/renderer/entity/EntityRenderer shadowRadius F

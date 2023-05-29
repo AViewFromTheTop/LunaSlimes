@@ -16,7 +16,7 @@ import net.minecraft.world.entity.monster.MagmaCube;
 
 @Environment(EnvType.CLIENT)
 public class MagmaCubeLayer<T extends MagmaCube> extends EyesLayer<T, LavaSlimeModel<T>> {
-    private static final RenderType UNSCALED_OVERLAY = RenderType.eyes(new ResourceLocation("lunaslimes","textures/entity/slime/magmacube_overlay_" + 1 + ".png"));
+    private static final RenderType UNSCALED_OVERLAY = RenderType.eyes(new ResourceLocation("lunaslimes", "textures/entity/slime/magmacube_overlay_" + 1 + ".png"));
 
     public MagmaCubeLayer(RenderLayerParent<T, LavaSlimeModel<T>> renderLayerParent) {
         super(renderLayerParent);
@@ -37,7 +37,7 @@ public class MagmaCubeLayer<T extends MagmaCube> extends EyesLayer<T, LavaSlimeM
 
     public RenderType newRenderType(MagmaCube cube) {
         if (ConfigValueGetter.scaleTextures()) {
-            return RenderType.eyes(new ResourceLocation("lunaslimes","textures/entity/slime/magmacube_overlay_" + cube.getSize() + ".png"));
+            return RenderType.eyes(new ResourceLocation("lunaslimes", "textures/entity/slime/magmacube_overlay_" + cube.getSize() + ".png"));
         } else {
             return UNSCALED_OVERLAY;
         }

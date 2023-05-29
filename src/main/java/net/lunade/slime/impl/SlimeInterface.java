@@ -2,32 +2,32 @@ package net.lunade.slime.impl;
 
 public interface SlimeInterface {
 
-    float prevSquish();
+    float lunaSlimes$prevSquish();
 
-    int getMergeCooldown();
+    int lunaSlimes$getMergeCooldown();
 
-    void setMergeCooldown(int i);
+    void lunaSlimes$setMergeCooldown(int i);
 
-    float wobbleAnimProgress(float tickDelta);
+    float lunaSlimes$wobbleAnimProgress(float tickDelta);
 
-    void playWobbleAnim();
+    void lunaSlimes$playWobbleAnim();
 
-    float getSizeScale(float tickDelta);
+    float lunaSlimes$getSizeScale(float tickDelta);
 
-    void cheatSize(float f);
+    void lunaSlimes$cheatSize(float f);
 
-    void setJumpAntic(boolean bl);
+    void lunaSlimes$setJumpAntic(boolean bl);
 
-    boolean getJumpAntic();
+    boolean lunaSlimes$getJumpAntic();
 
-    void setJumpAnticTicks(int i);
+    void lunaSlimes$setJumpAnticTicks(int i);
 
-    int getSavedJumpDelay();
+    int lunaSlimes$getSavedJumpDelay();
 
-    void setJumpDelay(int i);
+    void lunaSlimes$setJumpDelay(int i);
 
-    float getDeathProgress(float f);
+    float lunaSlimes$getDeathProgress(float f);
 
-    boolean canSquish();
+    boolean lunaSlimes$canSquish();
 
 }

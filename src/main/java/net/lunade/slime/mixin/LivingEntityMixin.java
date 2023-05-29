@@ -21,7 +21,7 @@ import java.util.Optional;
 public class LivingEntityMixin {
 
     @Inject(at = @At("RETURN"), method = "hurt")
-    public void hurt(DamageSource damageSource, float f, CallbackInfoReturnable<Boolean> infoReturnable) {
+    public void lunaSlimes$hurt(DamageSource damageSource, float f, CallbackInfoReturnable<Boolean> infoReturnable) {
         if (infoReturnable.getReturnValue() && LivingEntity.class.cast(this) instanceof Slime slime) {
             if (!slime.isTiny() && slime.isDeadOrDying() && ConfigValueGetter.useSplitting()) {
                 int split = SlimeMethods.spawnSingleSlime(slime);
@@ -32,7 +32,7 @@ public class LivingEntityMixin {
     }
 
     @Inject(at = @At("HEAD"), method = "die", cancellable = true)
-    public void die(DamageSource damageSource, CallbackInfo info) {
+    public void lunaSlimes$die(DamageSource damageSource, CallbackInfo info) {
         LivingEntity entity = LivingEntity.class.cast(this);
         if (entity instanceof Slime slime) {
             Optional<ResourceKey<DamageType>> damageType = damageSource.typeHolder().unwrapKey();
@@ -43,7 +43,7 @@ public class LivingEntityMixin {
     }
 
     @Inject(at = @At("HEAD"), method = "doPush")
-    public void doPush(Entity entity, CallbackInfo info) {
+    public void lunaSlimes$doPush(Entity entity, CallbackInfo info) {
         LivingEntity thisEntity = LivingEntity.class.cast(this);
         if (thisEntity instanceof Slime && entity instanceof Slime slime2) {
             SlimeMethods.mergeSlimes(Slime.class.cast(this), slime2);
@@ -51,7 +51,7 @@ public class LivingEntityMixin {
     }
 
     @Inject(at = @At("HEAD"), method = "knockback", cancellable = true)
-    public void knockback(double d, double e, double f, CallbackInfo info) {
+    public void lunaSlimes$knockback(double d, double e, double f, CallbackInfo info) {
         LivingEntity entity = LivingEntity.class.cast(this);
         if (entity instanceof Slime slime) {
             if (slime.isTiny() && slime.isDeadOrDying() && ConfigValueGetter.deathAnim()) {

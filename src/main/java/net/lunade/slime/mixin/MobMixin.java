@@ -14,11 +14,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class MobMixin {
 
     @Inject(at = @At("HEAD"), method = "handleEntityEvent")
-    public void handleEntityEvent(byte b, CallbackInfo info) {
+    public void lunaSlimes$handleEntityEvent(byte b, CallbackInfo info) {
         Mob mob = Mob.class.cast(this);
         if (mob instanceof Slime slime && b == (byte) 61 && ConfigValueGetter.jumpAntic()) {
             SlimeMethods.setSquish(slime, -0.05F);
-            ((SlimeInterface)slime).setJumpAnticTicks(3);
+            ((SlimeInterface) slime).lunaSlimes$setJumpAnticTicks(3);
         }
     }
 

@@ -1,6 +1,5 @@
 {
   "option.lunaslimes.component.title": "Luna Slimes Options",
-
   "option.lunaslimes.visuals_audio": "Visuals & Audio",
   "option.lunaslimes.grow_anim": "Growing Animation",
   "option.lunaslimes.grow_anim.false": "OFF",
@@ -48,7 +47,6 @@
   "option.lunaslimes.split_sounds.false": "OFF",
   "option.lunaslimes.split_sounds.true": "ON",
   "tooltip.lunaslimes.split_sounds": "Slimes will play a sound when splitting.",
-
   "option.lunaslimes.gameplay": "Gameplay",
   "option.lunaslimes.max_size": "Slime Merge Cap",
   "tooltip.lunaslimes.max_size": "The highest size a Slime can reach through merging.\nSetting to 1 will disable merging.",
@@ -64,7 +62,6 @@
   "option.lunaslimes.use_splitting.false": "OFF",
   "option.lunaslimes.use_splitting.true": "ON",
   "tooltip.lunaslimes.use_splitting": "Slimes will use a new splitting system.",
-
   "subtitles.entity.slime.merge": "Slime merges",
   "subtitles.entity.slime.split": "Slime splits",
   "subtitles.entity.magma_cube.merge": "Magma Cube merges",

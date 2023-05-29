@@ -1,44 +1,44 @@
 {
-	"entity.magma_cube.death": {
-		"replace": "true",
-		"sounds": [
-			"mob/magmacube/big1",
-			"mob/magmacube/big2",
-			"mob/magmacube/big3",
-			"mob/magmacube/big4"
-		],
-		"subtitle": "subtitles.entity.magma_cube.death"
-	},
-	"entity.magma_cube.death_small": {
-		"replace": "true",
-		"sounds": [
-			"mob/magmacube/small1",
-			"mob/magmacube/small2",
-			"mob/magmacube/small3",
-			"mob/magmacube/small4",
-			"mob/magmacube/small5"
-		],
-		"subtitle": "subtitles.entity.magma_cube.death"
-	},
-	"entity.magma_cube.hurt": {
-		"replace": "true",
-		"sounds": [
-			"mob/magmacube/big1",
-			"mob/magmacube/big2",
-			"mob/magmacube/big3",
-			"mob/magmacube/big4"
-		],
-		"subtitle": "subtitles.entity.magma_cube.hurt"
-	},
-	"entity.magma_cube.hurt_small": {
-		"replace": "true",
-		"sounds": [
-			"mob/magmacube/small1",
-			"mob/magmacube/small2",
-			"mob/magmacube/small3",
-			"mob/magmacube/small4",
-			"mob/magmacube/small5"
-		],
-		"subtitle": "subtitles.entity.magma_cube.hurt"
-	}
+  "entity.magma_cube.death": {
+    "replace": "true",
+    "sounds": [
+      "mob/magmacube/big1",
+      "mob/magmacube/big2",
+      "mob/magmacube/big3",
+      "mob/magmacube/big4"
+    ],
+    "subtitle": "subtitles.entity.magma_cube.death"
+  },
+  "entity.magma_cube.death_small": {
+    "replace": "true",
+    "sounds": [
+      "mob/magmacube/small1",
+      "mob/magmacube/small2",
+      "mob/magmacube/small3",
+      "mob/magmacube/small4",
+      "mob/magmacube/small5"
+    ],
+    "subtitle": "subtitles.entity.magma_cube.death"
+  },
+  "entity.magma_cube.hurt": {
+    "replace": "true",
+    "sounds": [
+      "mob/magmacube/big1",
+      "mob/magmacube/big2",
+      "mob/magmacube/big3",
+      "mob/magmacube/big4"
+    ],
+    "subtitle": "subtitles.entity.magma_cube.hurt"
+  },
+  "entity.magma_cube.hurt_small": {
+    "replace": "true",
+    "sounds": [
+      "mob/magmacube/small1",
+      "mob/magmacube/small2",
+      "mob/magmacube/small3",
+      "mob/magmacube/small4",
+      "mob/magmacube/small5"
+    ],
+    "subtitle": "subtitles.entity.magma_cube.hurt"
+  }
 }

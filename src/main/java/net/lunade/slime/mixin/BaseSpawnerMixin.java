@@ -21,7 +21,7 @@ public class BaseSpawnerMixin {
     @Inject(at = @At("HEAD"), method = "clientTick")
     public void clientTick(Level level, BlockPos blockPos, CallbackInfo info) {
         if (this.displayEntity instanceof Slime) {
-            ((SlimeInterface)this.displayEntity).cheatSize(1F);
+            ((SlimeInterface)this.displayEntity).lunaSlimes$cheatSize(1F);
         }
     }
 

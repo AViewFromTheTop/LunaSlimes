@@ -13,9 +13,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class MagmaCubeMixin {
 
     @Inject(at = @At("HEAD"), method = "decreaseSquish", cancellable = true)
-    public void decreaseSquish(CallbackInfo info) {
+    public void lunaSlimes$decreaseSquish(CallbackInfo info) {
         Slime slime = Slime.class.cast(this);
-        if ((((SlimeInterface)slime).getJumpAntic() && ConfigValueGetter.jumpAntic()) || !((SlimeInterface)slime).canSquish()) {
+        if ((((SlimeInterface) slime).lunaSlimes$getJumpAntic() && ConfigValueGetter.jumpAntic()) || !((SlimeInterface) slime).lunaSlimes$canSquish()) {
             info.cancel();
         }
     }

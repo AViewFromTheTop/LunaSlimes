@@ -2,23 +2,17 @@
   "schemaVersion": 1,
   "id": "lunaslimes",
   "version": "${version}",
-
   "name": "Luna Slimes",
   "description": "Improves Slimes and makes them configurable.",
   "authors": [
     "Luna"
   ],
-
   "license": "MIT",
   "icon": "assets/lunaslimes/textures/lunaslimes.png",
-
   "environment": "*",
   "entrypoints": {
     "main": [
       "net.lunade.slime.LunaSlimesMain"
-    ],
-    "client": [
-      "net.lunade.slime.LunaSlimesClient"
     ],
     "modmenu": [
       "net.lunade.slime.LunaSlimesModMenu"
@@ -27,9 +21,7 @@
   "mixins": [
     "lunaslimes.mixins.json"
   ],
-
   "accessWidener": "lunaslimes.accesswidener",
-
   "depends": {
     "fabricloader": ">=0.14.6",
     "fabric-api": ">=0.80.3",

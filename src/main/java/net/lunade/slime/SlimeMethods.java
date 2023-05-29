@@ -23,7 +23,7 @@ public class SlimeMethods {
         if (slime2.getType() == entityType && slime1.isAlive() && slime2.isAlive()) {
             int thisSize = slime1.getSize();
             int otherSize = slime2.getSize();
-            if ((thisSize > otherSize || thisSize == otherSize) && thisSize <= ConfigValueGetter.maxSize() - 1 && ((SlimeInterface) slime1).getMergeCooldown() <= 0 && ((SlimeInterface) slime2).getMergeCooldown() <= 0) {
+            if ((thisSize > otherSize || thisSize == otherSize) && thisSize <= ConfigValueGetter.maxSize() - 1 && ((SlimeInterface) slime1).lunaSlimes$getMergeCooldown() <= 0 && ((SlimeInterface) slime2).lunaSlimes$getMergeCooldown() <= 0) {
                 EntityDimensions oldDimensions = getDimensionsForSize(slime1, thisSize);
                 EntityDimensions inflated = getDimensionsForSize(slime1, thisSize + 1);
                 Vec3 newPos = slime1.position().add(0F, (inflated.height - oldDimensions.height) * 0.5F, 0F);
@@ -33,12 +33,12 @@ public class SlimeMethods {
                 boolean verticalCollision = vec3.y != vec32.y;
                 if (!horizontalCollision && !verticalCollision) {
                     slime1.setSize(thisSize + 1, true);
-                    ((SlimeInterface) slime1).setMergeCooldown(ConfigValueGetter.mergeCooldown());
-                    ((SlimeInterface) slime1).playWobbleAnim();
+                    ((SlimeInterface) slime1).lunaSlimes$setMergeCooldown(ConfigValueGetter.mergeCooldown());
+                    ((SlimeInterface) slime1).lunaSlimes$playWobbleAnim();
                     if (ConfigValueGetter.mergeSounds()) {
                         slime1.playSound(entityType == EntityType.MAGMA_CUBE ? LunaSlimesMain.MAGMA_MERGE : LunaSlimesMain.SLIME_MERGE, slime1.getSoundVolume(), 1F + (slime1.getRandom().nextFloat() - slime1.getRandom().nextFloat()) * 0.4f);
                     }
-                    ((SlimeInterface) slime2).playWobbleAnim();
+                    ((SlimeInterface) slime2).lunaSlimes$playWobbleAnim();
                     if (slime2.isPersistenceRequired()) {
                         slime1.setPersistenceRequired();
                     }
@@ -66,10 +66,10 @@ public class SlimeMethods {
         if (!origin.level().isClientSide && i > 1) {
             Component component = origin.getCustomName();
             boolean bl = origin.isNoAi();
-            float f = (float)i / 4.0f;
+            float f = (float) i / 4.0f;
             int l = (int) ((2 + origin.getRandom().nextInt(3)) * origin.getRandom().nextDouble());
-            float g = ((float)(l % 2) - 0.5f) * f;
-            float h = ((float)(l / 2) - 0.5f) * f;
+            float g = ((float) (l % 2) - 0.5f) * f;
+            float h = ((float) (l / 2) - 0.5f) * f;
             EntityType<? extends Slime> entityType = origin.getType();
             Slime slime = entityType.create(origin.level());
             if (slime != null) {
@@ -82,10 +82,10 @@ public class SlimeMethods {
                 slime.setSilent(origin.isSilent());
                 slime.setSize(splitOff = i % 2 == 0 ? (int) (i * 0.5) : 1, true);
                 slime.moveTo(origin.getX() + (double) g, origin.getY() + 0.5, origin.getZ() + (double) h, origin.getRandom().nextFloat() * 360.0f, 0.0f);
-                ((SlimeInterface)origin).setMergeCooldown(ConfigValueGetter.onSplitCooldown());
-                ((SlimeInterface)slime).setMergeCooldown(ConfigValueGetter.splitCooldown());
-                ((SlimeInterface)origin).playWobbleAnim();
-                ((SlimeInterface)slime).playWobbleAnim();
+                ((SlimeInterface) origin).lunaSlimes$setMergeCooldown(ConfigValueGetter.onSplitCooldown());
+                ((SlimeInterface) slime).lunaSlimes$setMergeCooldown(ConfigValueGetter.splitCooldown());
+                ((SlimeInterface) origin).lunaSlimes$playWobbleAnim();
+                ((SlimeInterface) slime).lunaSlimes$playWobbleAnim();
                 SlimeMethods.spawnSlimeParticles(origin);
                 slime.setRemainingFireTicks(origin.getRemainingFireTicks());
                 slime.setTicksFrozen(origin.getTicksFrozen());
@@ -112,11 +112,11 @@ public class SlimeMethods {
     }
 
     public static float getSlimeScale(Slime slime, float partialTick) {
-        return (ConfigValueGetter.growAnim() ? ((SlimeInterface) slime).getSizeScale(partialTick) : slime.getSize()) * ((SlimeInterface)slime).getDeathProgress(partialTick);
+        return (ConfigValueGetter.growAnim() ? ((SlimeInterface) slime).lunaSlimes$getSizeScale(partialTick) : slime.getSize()) * ((SlimeInterface) slime).lunaSlimes$getDeathProgress(partialTick);
     }
 
     public static float getSlimeWobbleAnimProgress(Slime slime, float partialTick) {
-        return ConfigValueGetter.wobbleAnim() ? ((SlimeInterface)slime).wobbleAnimProgress(partialTick) : 0F;
+        return ConfigValueGetter.wobbleAnim() ? ((SlimeInterface) slime).lunaSlimes$wobbleAnimProgress(partialTick) : 0F;
     }
 
     public static Pair<Float, Float> wobbleAnim(Slime slime, float partialTick) {
@@ -137,7 +137,7 @@ public class SlimeMethods {
     }
 
     private static EntityDimensions getDimensionsForSize(Slime slime, int size) {
-        return slime.getType().getDimensions().scale(0.255f * (float)size);
+        return slime.getType().getDimensions().scale(0.255f * (float) size);
     }
 
     private static Vec3 collideWithBox(Slime slime, Vec3 vec3, AABB aABB) {
@@ -148,7 +148,7 @@ public class SlimeMethods {
             Vec3 vec35;
             Vec3 vec33 = Entity.collideBoundingBox(slime, new Vec3(vec3.x, slime.maxUpStep, vec3.z), aABB, slime.level(), list);
             Vec3 vec34 = Entity.collideBoundingBox(slime, new Vec3(0.0, slime.maxUpStep, 0.0), aABB.expandTowards(vec3.x, 0.0, vec3.z), slime.level(), list);
-            if (vec34.y < (double)slime.maxUpStep && (vec35 = Entity.collideBoundingBox(slime, new Vec3(vec3.x, 0.0, vec3.z), aABB.move(vec34), slime.level(), list).add(vec34)).horizontalDistanceSqr() > vec33.horizontalDistanceSqr()) {
+            if (vec34.y < (double) slime.maxUpStep && (vec35 = Entity.collideBoundingBox(slime, new Vec3(vec3.x, 0.0, vec3.z), aABB.move(vec34), slime.level(), list).add(vec34)).horizontalDistanceSqr() > vec33.horizontalDistanceSqr()) {
                 vec33 = vec35;
             }
             if (vec33.horizontalDistanceSqr() > vec32.horizontalDistanceSqr()) {
