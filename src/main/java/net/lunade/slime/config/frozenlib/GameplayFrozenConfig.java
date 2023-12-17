@@ -13,7 +13,7 @@ public final class GameplayFrozenConfig {
 		new JsonConfig<>(
 			"lunaslimes",
 			GameplayFrozenConfig.class,
-			LunaSlimesMain.configPath("gameplay", true),
+			LunaSlimesMain.configPath("gameplay", false),
 			JsonType.JSON,
 			null,
 			null

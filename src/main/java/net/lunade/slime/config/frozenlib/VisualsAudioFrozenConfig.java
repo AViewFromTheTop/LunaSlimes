@@ -14,7 +14,7 @@ public final class VisualsAudioFrozenConfig {
 		new JsonConfig<>(
 			"lunaslimes",
 			VisualsAudioFrozenConfig.class,
-			LunaSlimesMain.configPath("visuals_audio", true),
+			LunaSlimesMain.configPath("visuals_audio", false),
 			JsonType.JSON,
 			null,
 			null
