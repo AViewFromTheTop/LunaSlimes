@@ -18,7 +18,6 @@ public class SlimeTextures {
 
     public static void setup(int max) {
         for (int i = 1; i < max + 1; i++) {
-            System.out.println(i);
             addEveryTexture(i);
         }
     }
