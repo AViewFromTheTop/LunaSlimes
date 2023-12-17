@@ -1,7 +1,6 @@
 package net.lunade.slime;
 
 import net.fabricmc.api.ModInitializer;
-import net.lunade.slime.render.SlimeTextures;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -25,7 +24,6 @@ public class LunaSlimesMain implements ModInitializer {
         Registry.register(BuiltInRegistries.SOUND_EVENT, new ResourceLocation("lunaslimes", "entity.slime.split"), SLIME_SPLIT);
         Registry.register(BuiltInRegistries.SOUND_EVENT, new ResourceLocation("lunaslimes", "entity.magmacube.merge"), MAGMA_MERGE);
         Registry.register(BuiltInRegistries.SOUND_EVENT, new ResourceLocation("lunaslimes", "entity.magmacube.split"), MAGMA_SPLIT);
-        SlimeTextures.setup(4);
     }
 
     @Contract(pure = true)

@@ -5,6 +5,8 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Pair;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.lunade.slime.SlimeMethods;
 import net.lunade.slime.config.getter.ConfigValueGetter;
 import net.lunade.slime.impl.SlimeInterface;
@@ -22,6 +24,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+@Environment(EnvType.CLIENT)
 @Mixin(SlimeRenderer.class)
 public abstract class SlimeRendererMixin extends MobRenderer<Slime, SlimeModel<Slime>> {
 
