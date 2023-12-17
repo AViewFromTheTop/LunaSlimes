@@ -2,12 +2,15 @@ package net.lunade.slime.mixin.client;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.lunade.slime.impl.SlimeInterface;
 import net.minecraft.client.model.LavaSlimeModel;
 import net.minecraft.world.entity.monster.Slime;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
+@Environment(EnvType.CLIENT)
 @Mixin(LavaSlimeModel.class)
 public class LavaSlimeModelMixin<T extends Slime> {
 
