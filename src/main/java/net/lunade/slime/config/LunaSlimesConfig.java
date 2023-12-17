@@ -12,6 +12,8 @@ import net.fabricmc.api.Environment;
 import net.lunade.slime.LunaSlimesMain;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 @Config(name = "lunaslimes")
 public class LunaSlimesConfig extends PartitioningSerializer.GlobalData {
@@ -47,10 +49,14 @@ public class LunaSlimesConfig extends PartitioningSerializer.GlobalData {
         return AutoConfig.getConfigHolder(LunaSlimesConfig.class).getConfig();
     }
 
+    @NotNull
+    @Contract(value = "_ -> new", pure = true)
     public static Component text(String key) {
         return Component.translatable("option." + "lunaslimes" + "." + key);
     }
 
+    @NotNull
+    @Contract(value = "_ -> new", pure = true)
     public static Component tooltip(String key) {
         return Component.translatable("tooltip." + "lunaslimes" + "." + key);
     }

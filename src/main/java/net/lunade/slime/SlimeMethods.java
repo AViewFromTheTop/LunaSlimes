@@ -13,12 +13,13 @@ import net.minecraft.world.entity.monster.Slime;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 public class SlimeMethods {
 
-    public static void mergeSlimes(Slime slime1, Slime slime2) {
+    public static void mergeSlimes(@NotNull Slime slime1, @NotNull Slime slime2) {
         EntityType<? extends Slime> entityType = slime1.getType();
         if (slime2.getType() == entityType && slime1.isAlive() && slime2.isAlive()) {
             int thisSize = slime1.getSize();
@@ -60,7 +61,7 @@ public class SlimeMethods {
         }
     }
 
-    public static int spawnSingleSlime(Slime origin) {
+    public static int spawnSingleSlime(@NotNull Slime origin) {
         int i = origin.getSize();
         int splitOff = 0;
         if (!origin.level().isClientSide && i > 1) {
@@ -99,13 +100,13 @@ public class SlimeMethods {
         return splitOff;
     }
 
-    public static void spawnSlimeParticles(Slime slime) {
+    public static void spawnSlimeParticles(@NotNull Slime slime) {
         if (slime.level() instanceof ServerLevel level && ConfigValueGetter.particles()) {
             level.sendParticles(slime.getParticleType(), slime.getX(), slime.getY(0.6666666666666666D), slime.getZ(), level.random.nextInt(slime.getSize() * 6, slime.getSize() * 12), slime.getBbWidth() / 4.0F, slime.getBbHeight() / 4.0F, slime.getBbWidth() / 4.0F, 0.05D);
         }
     }
 
-    public static void spawnSlimeLandParticles(Slime slime) {
+    public static void spawnSlimeLandParticles(@NotNull Slime slime) {
         if (slime.level() instanceof ServerLevel level) {
             level.sendParticles(slime.getParticleType(), slime.getX(), slime.getY(), slime.getZ(), level.random.nextInt(slime.getSize() * 6, slime.getSize() * 8), slime.getBbWidth() / 3.5F, 0F, slime.getBbWidth() / 3.5F, 0.05D);
         }
@@ -119,28 +120,29 @@ public class SlimeMethods {
         return ConfigValueGetter.wobbleAnim() ? ((SlimeInterface) slime).lunaSlimes$wobbleAnimProgress(partialTick) : 0F;
     }
 
+    @NotNull
     public static Pair<Float, Float> wobbleAnim(Slime slime, float partialTick) {
         float cosWobble = (float) Math.cos((((SlimeMethods.getSlimeWobbleAnimProgress(slime, partialTick) + (0.0955F * Math.PI)) * Math.PI) * 5F));
         return Pair.of((cosWobble * 0.1F) + 1F, -(cosWobble * 0.025F) + 1F);
     }
 
-    public static void setSquish(Slime slime, float squish) {
+    public static void setSquish(@NotNull Slime slime, float squish) {
         if (squish < slime.targetSquish) {
             slime.targetSquish = squish;
         }
     }
 
-    public static void setStretch(Slime slime, float stretch) {
+    public static void setStretch(@NotNull Slime slime, float stretch) {
         if (stretch > slime.targetSquish) {
             slime.targetSquish = stretch;
         }
     }
 
-    private static EntityDimensions getDimensionsForSize(Slime slime, int size) {
+    private static EntityDimensions getDimensionsForSize(@NotNull Slime slime, int size) {
         return slime.getType().getDimensions().scale(0.255f * (float) size);
     }
 
-    private static Vec3 collideWithBox(Slime slime, Vec3 vec3, AABB aABB) {
+    private static Vec3 collideWithBox(@NotNull Slime slime, Vec3 vec3, @NotNull AABB aABB) {
         List<VoxelShape> list = slime.level().getEntityCollisions(slime, aABB.expandTowards(vec3));
         Vec3 vec32 = vec3.lengthSqr() == 0.0 ? vec3 : Entity.collideBoundingBox(slime, vec3, aABB, slime.level(), list);
         boolean bool = slime.onGround() || vec3.y != vec32.y && vec3.y < 0.0;

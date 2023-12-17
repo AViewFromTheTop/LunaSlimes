@@ -1,79 +1,132 @@
 package net.lunade.slime.config.getter;
 
-import net.lunade.slime.LunaSlimesMain;
+import net.lunade.slime.LunaSlimesSharedConstants;
+import net.lunade.slime.config.frozenlib.GameplayFrozenConfig;
+import net.lunade.slime.config.frozenlib.VisualsAudioFrozenConfig;
 
 public class ConfigValueGetter {
 
     public static boolean growAnim() {
-        return !LunaSlimesMain.HAS_CLOTH_CONFIG || ConfigValues.growAnim();
+        return !LunaSlimesSharedConstants.HAS_CLOTH_CONFIG || ConfigValues.growAnim();
     }
 
     public static boolean wobbleAnim() {
-        return !LunaSlimesMain.HAS_CLOTH_CONFIG || ConfigValues.wobbleAnim();
+        if (LunaSlimesSharedConstants.HAS_FROZENLIB) {
+            return VisualsAudioFrozenConfig.get().wobbleAnim;
+        }
+        return !LunaSlimesSharedConstants.HAS_CLOTH_CONFIG || ConfigValues.wobbleAnim();
     }
 
     public static float squishMultiplier() {
-        return LunaSlimesMain.HAS_CLOTH_CONFIG ? ConfigValues.squishMultiplier() : 2F;
+        if (LunaSlimesSharedConstants.HAS_FROZENLIB) {
+            return VisualsAudioFrozenConfig.get().squishMultiplier * 0.1F;
+        }
+        return LunaSlimesSharedConstants.HAS_CLOTH_CONFIG ? ConfigValues.squishMultiplier() : 2F;
     }
 
     public static boolean jumpAntic() {
-        return !LunaSlimesMain.HAS_CLOTH_CONFIG || ConfigValues.jumpAntic();
+        if (LunaSlimesSharedConstants.HAS_FROZENLIB) {
+            return VisualsAudioFrozenConfig.get().jumpAntic;
+        }
+        return !LunaSlimesSharedConstants.HAS_CLOTH_CONFIG || ConfigValues.jumpAntic();
     }
 
     public static boolean deathAnim() {
-        return !LunaSlimesMain.HAS_CLOTH_CONFIG || ConfigValues.deathAnim();
+        if (LunaSlimesSharedConstants.HAS_FROZENLIB) {
+            return VisualsAudioFrozenConfig.get().deathAnim;
+        }
+        return !LunaSlimesSharedConstants.HAS_CLOTH_CONFIG || ConfigValues.deathAnim();
     }
 
     public static boolean newShadows() {
-        return !LunaSlimesMain.HAS_CLOTH_CONFIG || ConfigValues.newShadows();
+        if (LunaSlimesSharedConstants.HAS_FROZENLIB) {
+            return VisualsAudioFrozenConfig.get().newShadows;
+        }
+        return !LunaSlimesSharedConstants.HAS_CLOTH_CONFIG || ConfigValues.newShadows();
     }
 
     public static boolean particles() {
-        return !LunaSlimesMain.HAS_CLOTH_CONFIG || ConfigValues.particles();
+        if (LunaSlimesSharedConstants.HAS_FROZENLIB) {
+            return VisualsAudioFrozenConfig.get().particles;
+        }
+        return !LunaSlimesSharedConstants.HAS_CLOTH_CONFIG || ConfigValues.particles();
     }
 
     public static boolean glowingMagma() {
-        return !LunaSlimesMain.HAS_CLOTH_CONFIG || ConfigValues.glowingMagma();
+        if (LunaSlimesSharedConstants.HAS_FROZENLIB) {
+            return VisualsAudioFrozenConfig.get().glowingMagma;
+        }
+        return !LunaSlimesSharedConstants.HAS_CLOTH_CONFIG || ConfigValues.glowingMagma();
     }
 
     public static boolean slimeBlockParticles() {
-        return !LunaSlimesMain.HAS_CLOTH_CONFIG || ConfigValues.slimeBlockParticles();
+        if (LunaSlimesSharedConstants.HAS_FROZENLIB) {
+            return VisualsAudioFrozenConfig.get().slimeBlockParticles;
+        }
+        return !LunaSlimesSharedConstants.HAS_CLOTH_CONFIG || ConfigValues.slimeBlockParticles();
     }
 
     public static boolean scaleTextures() {
-        return !LunaSlimesMain.HAS_CLOTH_CONFIG || ConfigValues.scaleTextures();
+        if (LunaSlimesSharedConstants.HAS_FROZENLIB) {
+            return VisualsAudioFrozenConfig.get().scaleTextures;
+        }
+        return !LunaSlimesSharedConstants.HAS_CLOTH_CONFIG || ConfigValues.scaleTextures();
     }
 
     public static boolean mergeSounds() {
-        return !LunaSlimesMain.HAS_CLOTH_CONFIG || ConfigValues.mergeSounds();
+        if (LunaSlimesSharedConstants.HAS_FROZENLIB) {
+            return VisualsAudioFrozenConfig.get().mergeSounds;
+        }
+        return !LunaSlimesSharedConstants.HAS_CLOTH_CONFIG || ConfigValues.mergeSounds();
     }
 
     public static boolean splitSounds() {
-        return !LunaSlimesMain.HAS_CLOTH_CONFIG || ConfigValues.splitSounds();
+        if (LunaSlimesSharedConstants.HAS_FROZENLIB) {
+            return VisualsAudioFrozenConfig.get().splitSounds;
+        }
+        return !LunaSlimesSharedConstants.HAS_CLOTH_CONFIG || ConfigValues.splitSounds();
     }
 
     public static int mergeCooldown() {
-        return LunaSlimesMain.HAS_CLOTH_CONFIG ? ConfigValues.mergeCooldown() : 0;
+        if (LunaSlimesSharedConstants.HAS_FROZENLIB) {
+            return GameplayFrozenConfig.get().mergeCooldown;
+        }
+        return LunaSlimesSharedConstants.HAS_CLOTH_CONFIG ? ConfigValues.mergeCooldown() : 0;
     }
 
     public static int maxSize() {
-        return LunaSlimesMain.HAS_CLOTH_CONFIG ? ConfigValues.maxSize() : 4;
+        if (LunaSlimesSharedConstants.HAS_FROZENLIB) {
+            return GameplayFrozenConfig.get().maxSize;
+        }
+        return LunaSlimesSharedConstants.HAS_CLOTH_CONFIG ? ConfigValues.maxSize() : 4;
     }
 
     public static int onSplitCooldown() {
-        return LunaSlimesMain.HAS_CLOTH_CONFIG ? ConfigValues.onSplitCooldown() : 100;
+        if (LunaSlimesSharedConstants.HAS_FROZENLIB) {
+            return GameplayFrozenConfig.get().onSplitCooldown;
+        }
+        return LunaSlimesSharedConstants.HAS_CLOTH_CONFIG ? ConfigValues.onSplitCooldown() : 100;
     }
 
     public static int splitCooldown() {
-        return LunaSlimesMain.HAS_CLOTH_CONFIG ? ConfigValues.splitCooldown() : 0;
+        if (LunaSlimesSharedConstants.HAS_FROZENLIB) {
+            return GameplayFrozenConfig.get().splitCooldown;
+        }
+        return LunaSlimesSharedConstants.HAS_CLOTH_CONFIG ? ConfigValues.splitCooldown() : 0;
     }
 
     public static int spawnedMergeCooldown() {
-        return LunaSlimesMain.HAS_CLOTH_CONFIG ? ConfigValues.spawnedMergeCooldown() : 0;
+        if (LunaSlimesSharedConstants.HAS_FROZENLIB) {
+            return GameplayFrozenConfig.get().spawnedMergeCooldown;
+        }
+        return LunaSlimesSharedConstants.HAS_CLOTH_CONFIG ? ConfigValues.spawnedMergeCooldown() : 0;
     }
 
     public static boolean useSplitting() {
-        return !LunaSlimesMain.HAS_CLOTH_CONFIG || ConfigValues.useSplitting();
+        if (LunaSlimesSharedConstants.HAS_FROZENLIB) {
+            return GameplayFrozenConfig.get().useSplitting;
+        }
+        return !LunaSlimesSharedConstants.HAS_CLOTH_CONFIG || ConfigValues.useSplitting();
     }
 
 }

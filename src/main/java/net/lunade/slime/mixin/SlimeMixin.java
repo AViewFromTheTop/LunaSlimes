@@ -1,5 +1,9 @@
 package net.lunade.slime.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import com.llamalad7.mixinextras.injector.WrapWithCondition;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import net.lunade.slime.SlimeMethods;
 import net.lunade.slime.config.getter.ConfigValueGetter;
@@ -11,6 +15,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.Entity;
@@ -23,14 +28,12 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyArgs;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 @Mixin(Slime.class)
 public class SlimeMixin implements SlimeInterface {
@@ -64,26 +67,28 @@ public class SlimeMixin implements SlimeInterface {
     @Unique
     public int lunaSlimes$wobbleAnim;
     @Unique
-    public float lunaSlimes$prevSize = 0F;
+    public float lunaSlimes$prevSize = 1F;
     @Unique
-    public float lunaSlimes$currentSize = 0F;
+    public float lunaSlimes$currentSize = 1F;
     @Unique
     public boolean lunaSlimes$jumpAntic;
     @Unique
     public float lunaSlimes$prevTargetSquish;
     @Unique
     public int lunaSlimes$prevDeathTime;
-
     @Unique
-    private boolean canSquish;
+    private boolean lunaSlimes$canSquish;
+
+    @Shadow
+    public float targetSquish;
 
     @Inject(at = @At("TAIL"), method = "defineSynchedData")
     protected void lunaSlimes$defineSynchedData(CallbackInfo info) {
         Slime slime = Slime.class.cast(this);
         slime.getEntityData().define(LUNASLIMES$PREV_WOBBLE_ANIM_PROGRESS, 0);
         slime.getEntityData().define(LUNASLIMES$WOBBLE_ANIM_PROGRESS, 0);
-        slime.getEntityData().define(LUNASLIMES$PREV_SIZE, 0F);
-        slime.getEntityData().define(LUNASLIMES$CURRENT_SIZE, 0F);
+        slime.getEntityData().define(LUNASLIMES$PREV_SIZE, 1F);
+        slime.getEntityData().define(LUNASLIMES$CURRENT_SIZE, 1F);
         slime.getEntityData().define(LUNASLIMES$JUMP_ANTIC, false);
     }
 
@@ -191,24 +196,32 @@ public class SlimeMixin implements SlimeInterface {
 
     @Inject(at = @At(value = "FIELD", target = "Lnet/minecraft/world/entity/monster/Slime;targetSquish:F", ordinal = 1, shift = At.Shift.BEFORE), method = "tick")
     public void lunaSlimes$captureSquish(CallbackInfo info) {
-        Slime slime = Slime.class.cast(this);
-        this.lunaSlimes$prevTargetSquish = slime.targetSquish;
+        this.lunaSlimes$prevTargetSquish = this.targetSquish;
         this.lunaSlimes$landDelays.add(1);
     }
 
     @Inject(at = @At(value = "FIELD", target = "Lnet/minecraft/world/entity/monster/Slime;targetSquish:F", ordinal = 1, shift = At.Shift.AFTER), method = "tick")
     public void lunaSlimes$undoSquish(CallbackInfo info) {
-        Slime slime = Slime.class.cast(this);
-        slime.targetSquish = this.lunaSlimes$prevTargetSquish;
+        this.targetSquish = this.lunaSlimes$prevTargetSquish;
     }
 
     @Inject(at = @At("HEAD"), method = "finalizeSpawn")
-    public void lunaSlimes$finalizeSpawn(ServerLevelAccessor serverLevelAccessor, DifficultyInstance difficultyInstance, MobSpawnType mobSpawnType, @Nullable SpawnGroupData spawnGroupData, @Nullable CompoundTag compoundTag, CallbackInfoReturnable<SpawnGroupData> info) {
-        Slime slime = Slime.class.cast(this);
-        ((SlimeInterface) slime).lunaSlimes$playWobbleAnim();
+    public void lunaSlimes$finalizeSpawn(
+            ServerLevelAccessor serverLevelAccessor,
+            DifficultyInstance difficultyInstance,
+            MobSpawnType mobSpawnType,
+            @Nullable SpawnGroupData spawnGroupData,
+            @Nullable CompoundTag compoundTag,
+            CallbackInfoReturnable<SpawnGroupData> info
+    ) {
+        this.lunaSlimes$playWobbleAnim();
         if (mobSpawnType != MobSpawnType.SPAWN_EGG && mobSpawnType != MobSpawnType.MOB_SUMMONED && mobSpawnType != MobSpawnType.BUCKET && mobSpawnType != MobSpawnType.DISPENSER) {
-            ((SlimeInterface) slime).lunaSlimes$setMergeCooldown(ConfigValueGetter.spawnedMergeCooldown());
+            this.lunaSlimes$setMergeCooldown(ConfigValueGetter.spawnedMergeCooldown());
         }
+        Slime slime = Slime.class.cast(this);
+        SynchedEntityData entityData = slime.getEntityData();
+        entityData.set(LUNASLIMES$PREV_SIZE, 0F);
+        entityData.set(LUNASLIMES$CURRENT_SIZE, 0F);
     }
 
     @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/ai/attributes/AttributeInstance;setBaseValue(D)V", ordinal = 0, shift = At.Shift.AFTER), method = "setSize")
@@ -226,55 +239,27 @@ public class SlimeMixin implements SlimeInterface {
 
     @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Mob;tick()V", shift = At.Shift.BEFORE), method = "tick")
     public void lunaSlimes$moveDecreaseSquish(CallbackInfo info) {
-        this.canSquish = true;
-        Slime.class.cast(this).decreaseSquish();
+        this.lunaSlimes$canSquish = true;
+        this.decreaseSquish();
     }
 
     @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/monster/Slime;decreaseSquish()V", shift = At.Shift.BEFORE), method = "tick")
     public void lunaSlimes$stopDecreaseSquish(CallbackInfo info) {
-        this.canSquish = false;
+        this.lunaSlimes$canSquish = false;
     }
 
-    @ModifyArgs(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;addParticle(Lnet/minecraft/core/particles/ParticleOptions;DDDDDD)V"), method = "tick")
-    public void lunaSlimes$stopParticles(Args args) {
-        int index = 0;
-        if (!(args.get(index) instanceof Double)) {
-            index += 1;
-            if (!(args.get(index) instanceof Double)) {
-                index += 1;
-            }
-            if (!(args.get(index) instanceof Double)) {
-                index += 1;
-            }
-            if (!(args.get(index) instanceof Double)) {
-                index += 1;
-            }
-        }
-        args.set(index, (double) 0);
-        args.set(index + 1, (double) -512);
-        args.set(index + 2, (double) 0);
+    @WrapWithCondition(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;addParticle(Lnet/minecraft/core/particles/ParticleOptions;DDDDDD)V"), method = "tick")
+    public boolean lunaSlimes$stopParticles(Level level, ParticleOptions particleOptions, double a, double b, double c, double e, double f, double g) {
+        return false;
     }
 
-    @ModifyArgs(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/monster/Slime;playSound(Lnet/minecraft/sounds/SoundEvent;FF)V"), method = "tick")
-    public void lunaSlimes$stopSound(Args args) {
-        int index = 0;
-        if (!(args.get(index) instanceof Float)) {
-            index += 1;
-            if (!(args.get(index) instanceof Float)) {
-                index += 1;
-            }
-            if (!(args.get(index) instanceof Float)) {
-                index += 1;
-            }
-            if (!(args.get(index) instanceof Float)) {
-                index += 1;
-            }
-        }
-        args.set(index, (float) 0);
+    @WrapWithCondition(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/monster/Slime;playSound(Lnet/minecraft/sounds/SoundEvent;FF)V"), method = "tick")
+    public boolean lunaSlimes$stopSound(Slime slime, SoundEvent soundEvent, float a, float b) {
+        return false;
     }
 
-    @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;addFreshEntity(Lnet/minecraft/world/entity/Entity;)Z"), method = "remove")
-    public boolean lunaSlimes$beforeSpawnNewSlime(Level par1, Entity par2) {
+    @WrapOperation(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;addFreshEntity(Lnet/minecraft/world/entity/Entity;)Z"), method = "remove")
+    public boolean lunaSlimes$beforeSpawnNewSlime(Level par1, Entity par2, Operation<Boolean> operation) {
         if (par2 instanceof Slime) {
             ((SlimeInterface) par2).lunaSlimes$setMergeCooldown(Math.max(ConfigValueGetter.onSplitCooldown(), ConfigValueGetter.splitCooldown()) * 2);
         }
@@ -283,11 +268,9 @@ public class SlimeMixin implements SlimeInterface {
         return par1.addFreshEntity(par2);
     }
 
-    @Inject(at = @At("HEAD"), method = "getParticleType", cancellable = true)
-    public void lunaSlimes$getParticleType(CallbackInfoReturnable<ParticleOptions> info) {
-        if (ConfigValueGetter.slimeBlockParticles()) {
-            info.setReturnValue(LUNASLIMES$NEW_SLIME_PARTICLES);
-        }
+    @ModifyReturnValue(at = @At("RETURN"), method = "getParticleType")
+    public ParticleOptions lunaSlimes$getParticleType(ParticleOptions original) {
+        return ConfigValueGetter.slimeBlockParticles() ? LUNASLIMES$NEW_SLIME_PARTICLES : original;
     }
 
     @Unique
@@ -378,7 +361,11 @@ public class SlimeMixin implements SlimeInterface {
     @Unique
     @Override
     public boolean lunaSlimes$canSquish() {
-        return this.canSquish;
+        return this.lunaSlimes$canSquish;
+    }
+
+    @Shadow
+    public void decreaseSquish() {
     }
 
 }

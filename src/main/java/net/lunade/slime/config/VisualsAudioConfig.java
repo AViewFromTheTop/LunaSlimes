@@ -7,6 +7,7 @@ import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
 
 import static net.lunade.slime.config.LunaSlimesConfig.text;
 import static net.lunade.slime.config.LunaSlimesConfig.tooltip;
@@ -28,7 +29,7 @@ public final class VisualsAudioConfig implements ConfigData {
     public boolean splitSounds = true;
 
     @Environment(EnvType.CLIENT)
-    static void setupEntries(ConfigCategory category, ConfigEntryBuilder entryBuilder) {
+    static void setupEntries(@NotNull ConfigCategory category, @NotNull ConfigEntryBuilder entryBuilder) {
         var config = LunaSlimesConfig.get().visuals_audio;
         category.setBackground(new ResourceLocation("lunaslimes", "textures/config/visuals_audio.png"));
 
