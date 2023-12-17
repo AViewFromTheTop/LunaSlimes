@@ -47,6 +47,7 @@ public class SlimeTextures {
         addSlimeTexture(i);
         addMagmaCubeTexture(i);
         addMagmaCubeOverlayTexture(i);
+        addMagmaCubeOverlayRenderType(i);
     }
 
     private static void addSlimeTexture(int i) {
