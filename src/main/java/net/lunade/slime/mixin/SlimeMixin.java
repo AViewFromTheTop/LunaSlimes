@@ -69,9 +69,9 @@ public class SlimeMixin implements SlimeInterface {
     @Unique
     public int lunaSlimes$wobbleAnim;
     @Unique
-    public float lunaSlimes$prevSize = 1F;
+    public float lunaSlimes$prevSize = 0F;
     @Unique
-    public float lunaSlimes$currentSize = 1F;
+    public float lunaSlimes$currentSize = 0F;
     @Unique
     public boolean lunaSlimes$jumpAntic;
     @Unique
@@ -80,6 +80,8 @@ public class SlimeMixin implements SlimeInterface {
     public int lunaSlimes$prevDeathTime;
     @Unique
     private boolean lunaSlimes$canSquish;
+    @Unique
+    private boolean lunaSlimes$inWorld;
 
     @Shadow
     public float targetSquish;
@@ -89,8 +91,8 @@ public class SlimeMixin implements SlimeInterface {
         Slime slime = Slime.class.cast(this);
         slime.getEntityData().define(LUNASLIMES$PREV_WOBBLE_ANIM_PROGRESS, 0);
         slime.getEntityData().define(LUNASLIMES$WOBBLE_ANIM_PROGRESS, 0);
-        slime.getEntityData().define(LUNASLIMES$PREV_SIZE, 1F);
-        slime.getEntityData().define(LUNASLIMES$CURRENT_SIZE, 1F);
+        slime.getEntityData().define(LUNASLIMES$PREV_SIZE, 0F);
+        slime.getEntityData().define(LUNASLIMES$CURRENT_SIZE, 0F);
         slime.getEntityData().define(LUNASLIMES$JUMP_ANTIC, false);
     }
 
@@ -220,10 +222,6 @@ public class SlimeMixin implements SlimeInterface {
         if (mobSpawnType != MobSpawnType.SPAWN_EGG && mobSpawnType != MobSpawnType.MOB_SUMMONED && mobSpawnType != MobSpawnType.BUCKET && mobSpawnType != MobSpawnType.DISPENSER) {
             this.lunaSlimes$setMergeCooldown(ConfigValueGetter.spawnedMergeCooldown());
         }
-        Slime slime = Slime.class.cast(this);
-        SynchedEntityData entityData = slime.getEntityData();
-        entityData.set(LUNASLIMES$PREV_SIZE, 0F);
-        entityData.set(LUNASLIMES$CURRENT_SIZE, 0F);
     }
 
     @WrapOperation(
@@ -374,6 +372,18 @@ public class SlimeMixin implements SlimeInterface {
     @Override
     public boolean lunaSlimes$canSquish() {
         return this.lunaSlimes$canSquish;
+    }
+
+    @Unique
+    @Override
+    public void lunaSlimes$setInWorld(boolean bl) {
+        this.lunaSlimes$inWorld = bl;
+    }
+
+    @Unique
+    @Override
+    public boolean lunaSlimes$isInWorld() {
+        return this.lunaSlimes$inWorld;
     }
 
     @Shadow

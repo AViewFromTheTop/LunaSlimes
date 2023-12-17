@@ -31,18 +31,22 @@ public abstract class SlimeRendererMixin extends MobRenderer<Slime, SlimeModel<S
 
     @WrapOperation(method = "scale*", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;scale(FFF)V", ordinal = 1))
     public void lunaSlimes$newScaling(PoseStack poseStack, float a, float b, float c, Operation<Void> operation, Slime slime, PoseStack poseStackThing, float f) {
-        float h = SlimeMethods.getSlimeScale(slime, f);
+        if (((SlimeInterface) slime).lunaSlimes$isInWorld()) {
+            float h = SlimeMethods.getSlimeScale(slime, f);
 
-        Pair<Float, Float> wobble = SlimeMethods.wobbleAnim(slime, f);
-        float wobbleXZ = wobble.getFirst();
-        float wobbleY = wobble.getSecond();
-        poseStack.scale(wobbleXZ, wobbleY, wobbleXZ);
-        poseStack.translate(0.0F, -(2.05F - (wobbleY * 2.05F)), 0.0F);
-        float slimeSize = SlimeMethods.getSlimeScale(slime, f);
-        float i = (Mth.lerp(f, ((SlimeInterface) slime).lunaSlimes$prevSquish(), slime.squish) * ConfigValueGetter.squishMultiplier()) / ((slimeSize) * 0.5f + 1.0f);
+            Pair<Float, Float> wobble = SlimeMethods.wobbleAnim(slime, f);
+            float wobbleXZ = wobble.getFirst();
+            float wobbleY = wobble.getSecond();
+            poseStack.scale(wobbleXZ, wobbleY, wobbleXZ);
+            poseStack.translate(0.0F, -(2.05F - (wobbleY * 2.05F)), 0.0F);
+            float slimeSize = SlimeMethods.getSlimeScale(slime, f);
+            float i = (Mth.lerp(f, ((SlimeInterface) slime).lunaSlimes$prevSquish(), slime.squish) * ConfigValueGetter.squishMultiplier()) / ((slimeSize) * 0.5f + 1.0f);
 
-        float j = 1.0F / (i + 1.0F);
-        operation.call(poseStack, j * h, 1.0F / j * h, j * h);
+            float j = 1.0F / (i + 1.0F);
+            operation.call(poseStack, j * h, 1.0F / j * h, j * h);
+        } else {
+            operation.call(poseStack, a, b, c);
+        }
     }
 
     @Inject(method = "render*", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/MobRenderer;render(Lnet/minecraft/world/entity/Mob;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", shift = At.Shift.AFTER))
