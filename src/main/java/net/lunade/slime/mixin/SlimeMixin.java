@@ -1,7 +1,7 @@
 package net.lunade.slime.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import com.llamalad7.mixinextras.injector.WrapWithCondition;
+import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
@@ -21,17 +21,18 @@ import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.SpawnGroupData;
-import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.monster.Slime;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.Blocks;
-import org.jetbrains.annotations.Nullable;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -67,9 +68,9 @@ public class SlimeMixin implements SlimeInterface {
     @Unique
     public int lunaSlimes$wobbleAnim;
     @Unique
-    public float lunaSlimes$prevSize = 1F;
+    public float lunaSlimes$prevSize = 0F;
     @Unique
-    public float lunaSlimes$currentSize = 1F;
+    public float lunaSlimes$currentSize = 0F;
     @Unique
     public boolean lunaSlimes$jumpAntic;
     @Unique
@@ -78,27 +79,28 @@ public class SlimeMixin implements SlimeInterface {
     public int lunaSlimes$prevDeathTime;
     @Unique
     private boolean lunaSlimes$canSquish;
+    @Unique
+    private boolean lunaSlimes$inWorld;
 
     @Shadow
     public float targetSquish;
 
     @Inject(at = @At("TAIL"), method = "defineSynchedData")
-    protected void lunaSlimes$defineSynchedData(CallbackInfo info) {
-        Slime slime = Slime.class.cast(this);
-        slime.getEntityData().define(LUNASLIMES$PREV_WOBBLE_ANIM_PROGRESS, 0);
-        slime.getEntityData().define(LUNASLIMES$WOBBLE_ANIM_PROGRESS, 0);
-        slime.getEntityData().define(LUNASLIMES$PREV_SIZE, 1F);
-        slime.getEntityData().define(LUNASLIMES$CURRENT_SIZE, 1F);
-        slime.getEntityData().define(LUNASLIMES$JUMP_ANTIC, false);
+    protected void lunaSlimes$defineSynchedData(SynchedEntityData.Builder builder, CallbackInfo info) {
+        builder.define(LUNASLIMES$PREV_WOBBLE_ANIM_PROGRESS, 0);
+        builder.define(LUNASLIMES$WOBBLE_ANIM_PROGRESS, 0);
+        builder.define(LUNASLIMES$PREV_SIZE, 0F);
+        builder.define(LUNASLIMES$CURRENT_SIZE, 0F);
+        builder.define(LUNASLIMES$JUMP_ANTIC, false);
     }
 
     @Inject(at = @At("TAIL"), method = "addAdditionalSaveData")
     public void lunaSlimes$addAdditionalSaveData(CompoundTag compoundTag, CallbackInfo info) {
-        Slime slime = Slime.class.cast(this);
-        compoundTag.putInt("PrevWobbleAnimProgress", slime.getEntityData().get(LUNASLIMES$PREV_WOBBLE_ANIM_PROGRESS));
-        compoundTag.putInt("WobbleAnimProgress", slime.getEntityData().get(LUNASLIMES$WOBBLE_ANIM_PROGRESS));
-        compoundTag.putFloat("PrevSize", slime.getEntityData().get(LUNASLIMES$PREV_SIZE));
-        compoundTag.putFloat("CurrentSize", slime.getEntityData().get(LUNASLIMES$CURRENT_SIZE));
+        SynchedEntityData entityData = Slime.class.cast(this).getEntityData();
+        compoundTag.putInt("PrevWobbleAnimProgress", entityData.get(LUNASLIMES$PREV_WOBBLE_ANIM_PROGRESS));
+        compoundTag.putInt("WobbleAnimProgress", entityData.get(LUNASLIMES$WOBBLE_ANIM_PROGRESS));
+        compoundTag.putFloat("PrevSize", entityData.get(LUNASLIMES$PREV_SIZE));
+        compoundTag.putFloat("CurrentSize", entityData.get(LUNASLIMES$CURRENT_SIZE));
         compoundTag.putInt("MergeCooldown", this.lunaSlimes$getMergeCooldown());
         compoundTag.putBoolean("JumpAntic", this.lunaSlimes$jumpAntic);
         compoundTag.putInt("SlimeJumpDelay", this.lunaSlimes$jumpDelay);
@@ -207,27 +209,28 @@ public class SlimeMixin implements SlimeInterface {
 
     @Inject(at = @At("HEAD"), method = "finalizeSpawn")
     public void lunaSlimes$finalizeSpawn(
-            ServerLevelAccessor serverLevelAccessor,
-            DifficultyInstance difficultyInstance,
-            MobSpawnType mobSpawnType,
-            @Nullable SpawnGroupData spawnGroupData,
-            @Nullable CompoundTag compoundTag,
-            CallbackInfoReturnable<SpawnGroupData> info
+            ServerLevelAccessor world, DifficultyInstance difficulty, MobSpawnType mobSpawnType, SpawnGroupData spawnGroupData, CallbackInfoReturnable<SpawnGroupData> info
     ) {
         this.lunaSlimes$playWobbleAnim();
         if (mobSpawnType != MobSpawnType.SPAWN_EGG && mobSpawnType != MobSpawnType.MOB_SUMMONED && mobSpawnType != MobSpawnType.BUCKET && mobSpawnType != MobSpawnType.DISPENSER) {
             this.lunaSlimes$setMergeCooldown(ConfigValueGetter.spawnedMergeCooldown());
         }
-        Slime slime = Slime.class.cast(this);
-        SynchedEntityData entityData = slime.getEntityData();
-        entityData.set(LUNASLIMES$PREV_SIZE, 0F);
-        entityData.set(LUNASLIMES$CURRENT_SIZE, 0F);
     }
 
-    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/ai/attributes/AttributeInstance;setBaseValue(D)V", ordinal = 0, shift = At.Shift.AFTER), method = "setSize")
-    public void lunaSlimes$oddHealth(int i, boolean bl, CallbackInfo info) {
-        int clampedSize = Mth.clamp(i, 1, 127);
-        Slime.class.cast(this).getAttribute(Attributes.MAX_HEALTH).setBaseValue(clampedSize % 2 == 0 ? clampedSize * clampedSize : clampedSize);
+    @WrapOperation(
+            method = "setSize",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/ai/attributes/AttributeInstance;setBaseValue(D)V", ordinal = 0),
+            slice = @Slice(
+                    from = @At(
+                            value = "FIELD",
+                            target = "Lnet/minecraft/world/entity/ai/attributes/Attributes;MAX_HEALTH:Lnet/minecraft/core/Holder;",
+                            opcode = Opcodes.GETSTATIC
+                    )
+            )
+    )
+    public void lunaSlimes$oddHealth(AttributeInstance attributeInstance, double value, Operation<Void> operation) {
+        int sqrt = (int) Math.sqrt(value);
+        operation.call(attributeInstance, sqrt % 2 == 0 ? value : sqrt);
     }
 
     @Inject(at = @At("HEAD"), method = "decreaseSquish", cancellable = true)
@@ -300,9 +303,9 @@ public class SlimeMixin implements SlimeInterface {
     @Unique
     @Override
     public void lunaSlimes$playWobbleAnim() {
-        Slime slime = Slime.class.cast(this);
-        if (slime.getEntityData().get(LUNASLIMES$WOBBLE_ANIM_PROGRESS) == 0) {
-            slime.getEntityData().set(LUNASLIMES$WOBBLE_ANIM_PROGRESS, LUNASLIMES$WOBBLE_ANIM_LENGTH);
+        SynchedEntityData entityData = Slime.class.cast(this).getEntityData();
+        if (entityData.get(LUNASLIMES$WOBBLE_ANIM_PROGRESS) == 0) {
+            entityData.set(LUNASLIMES$WOBBLE_ANIM_PROGRESS, LUNASLIMES$WOBBLE_ANIM_LENGTH);
         }
     }
 
@@ -315,9 +318,9 @@ public class SlimeMixin implements SlimeInterface {
     @Unique
     @Override
     public void lunaSlimes$cheatSize(float f) {
-        Slime slime = Slime.class.cast(this);
-        slime.getEntityData().set(LUNASLIMES$PREV_SIZE, f);
-        slime.getEntityData().set(LUNASLIMES$CURRENT_SIZE, f);
+        SynchedEntityData entityData = Slime.class.cast(this).getEntityData();
+        entityData.set(LUNASLIMES$PREV_SIZE, f);
+        entityData.set(LUNASLIMES$CURRENT_SIZE, f);
         this.lunaSlimes$prevSize = f;
         this.lunaSlimes$currentSize = f;
     }
@@ -364,8 +367,19 @@ public class SlimeMixin implements SlimeInterface {
         return this.lunaSlimes$canSquish;
     }
 
-    @Shadow
-    public void decreaseSquish() {
+    @Unique
+    @Override
+    public void lunaSlimes$setInWorld(boolean bl) {
+        this.lunaSlimes$inWorld = bl;
     }
+
+    @Unique
+    @Override
+    public boolean lunaSlimes$isInWorld() {
+        return this.lunaSlimes$inWorld;
+    }
+
+    @Shadow
+    public void decreaseSquish() {}
 
 }

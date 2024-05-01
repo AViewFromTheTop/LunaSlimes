@@ -30,4 +30,7 @@ public interface SlimeInterface {
 
     boolean lunaSlimes$canSquish();
 
+    void lunaSlimes$setInWorld(boolean bl);
+
+    boolean lunaSlimes$isInWorld();
 }

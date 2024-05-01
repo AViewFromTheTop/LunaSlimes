@@ -24,15 +24,15 @@ public class MagmaCubeLayer<T extends MagmaCube> extends EyesLayer<T, LavaSlimeM
     }
 
     @Override
-    public void render(PoseStack poseStack, MultiBufferSource multiBufferSource, int i, T entity, float f, float g, float h, float j, float k, float l) {
+    public void render(@NotNull PoseStack poseStack, @NotNull MultiBufferSource multiBufferSource, int i, @NotNull T entity, float f, float g, float h, float j, float k, float l) {
         if (ConfigValueGetter.glowingMagma()) {
             VertexConsumer vertexConsumer = multiBufferSource.getBuffer(this.newRenderType(entity));
-            this.getParentModel().renderToBuffer(poseStack, vertexConsumer, 15728640, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
+            this.getParentModel().renderToBuffer(poseStack, vertexConsumer, 15728640, OverlayTexture.NO_OVERLAY, 1F, 1F, 1F, 1F);
         }
     }
 
     @Override
-    public RenderType renderType() {
+    public @NotNull RenderType renderType() {
         return UNSCALED_OVERLAY;
     }
 

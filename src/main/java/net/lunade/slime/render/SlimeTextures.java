@@ -15,6 +15,7 @@ public class SlimeTextures {
     private static final Map<Integer, ResourceLocation> MAGMA_CUBE_TEXTURES = new Int2ObjectArrayMap<>();
     private static final Map<Integer, ResourceLocation> MAGMA_CUBE_OVERLAY_TEXTURES = new Int2ObjectArrayMap<>();
     private static final Map<Integer, RenderType> MAGMA_CUBE_OVERLAY_RENDER_TYPES = new Int2ObjectArrayMap<>();
+    private static int max = 1;
 
     public static void setup(int max) {
         for (int i = 1; i < max + 1; i++) {
@@ -24,22 +25,22 @@ public class SlimeTextures {
     }
 
     public static ResourceLocation getSlimeTexture(int size, ResourceLocation backUp) {
-        if (ConfigValueGetter.scaleTextures()) return SLIME_TEXTURES.computeIfAbsent(size, (integer) -> backUp);
+        if (ConfigValueGetter.scaleTextures()) return SLIME_TEXTURES.computeIfAbsent(Math.min(size, max), (integer) -> backUp);
         return backUp;
     }
 
     public static ResourceLocation getMamaCubeTexture(int size, ResourceLocation backUp) {
-        if (ConfigValueGetter.scaleTextures()) return MAGMA_CUBE_TEXTURES.computeIfAbsent(size, (integer) -> backUp);
+        if (ConfigValueGetter.scaleTextures()) return MAGMA_CUBE_TEXTURES.computeIfAbsent(Math.min(size, max), (integer) -> backUp);
         return backUp;
     }
 
     public static ResourceLocation getMagmaCubeOverlayTexture(int size, ResourceLocation backUp) {
-        if (ConfigValueGetter.scaleTextures()) return MAGMA_CUBE_OVERLAY_TEXTURES.computeIfAbsent(size, (integer) -> backUp);
+        if (ConfigValueGetter.scaleTextures()) return MAGMA_CUBE_OVERLAY_TEXTURES.computeIfAbsent(Math.min(size, max), (integer) -> backUp);
         return backUp;
     }
 
     public static RenderType getMagmaCubeOverlayRenderType(int size, RenderType backUp) {
-        if (ConfigValueGetter.scaleTextures()) return MAGMA_CUBE_OVERLAY_RENDER_TYPES.computeIfAbsent(size, (integer) -> backUp);
+        if (ConfigValueGetter.scaleTextures()) return MAGMA_CUBE_OVERLAY_RENDER_TYPES.computeIfAbsent(Math.min(size, max), (integer) -> backUp);
         return backUp;
     }
 
@@ -47,6 +48,7 @@ public class SlimeTextures {
         addSlimeTexture(i);
         addMagmaCubeTexture(i);
         addMagmaCubeOverlayTexture(i);
+        max = Math.max(i, max);
     }
 
     private static void addSlimeTexture(int i) {

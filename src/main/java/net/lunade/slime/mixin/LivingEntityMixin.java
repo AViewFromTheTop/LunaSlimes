@@ -3,6 +3,8 @@ package net.lunade.slime.mixin;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.lunade.slime.SlimeMethods;
 import net.lunade.slime.config.getter.ConfigValueGetter;
+import net.lunade.slime.impl.SlimeInterface;
+import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
@@ -19,6 +21,13 @@ import java.util.Optional;
 
 @Mixin(LivingEntity.class)
 public class LivingEntityMixin {
+
+    @Inject(method = "recreateFromPacket", at = @At("TAIL"))
+    public void luneSlimes$recreateFromPacket(ClientboundAddEntityPacket clientboundAddEntityPacket, CallbackInfo info) {
+        if (Entity.class.cast(this) instanceof Slime slime) {
+            ((SlimeInterface)slime).lunaSlimes$setInWorld(true);
+        }
+    }
 
     @ModifyReturnValue(at = @At("RETURN"), method = "hurt")
     public boolean lunaSlimes$hurt(boolean original) {

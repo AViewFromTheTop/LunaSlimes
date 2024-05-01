@@ -66,7 +66,7 @@ public abstract class MagmaCubeRendererMixin extends MobRenderer<MagmaCube, Lava
         this.lunaSlimes$yStretch = 1F / this.lunaSlimes$h * size;
     }
 
-    @Inject(method = "render*", at = @At(value = "FIELD", target = "Lnet/minecraft/client/renderer/entity/MagmaCubeRenderer;shadowRadius:F", opcode = Opcodes.PUTFIELD, shift = At.Shift.AFTER))
+    @Inject(method = "render", at = @At(value = "FIELD", target = "Lnet/minecraft/client/renderer/entity/MagmaCubeRenderer;shadowRadius:F", opcode = Opcodes.PUTFIELD, shift = At.Shift.AFTER))
     public void lunaSlimes$newShadows(MagmaCube magmaCube, float f, float partialTick, PoseStack poseStack, MultiBufferSource multiBufferSource, int i, CallbackInfo info) {
         if (ConfigValueGetter.newShadows()) {
             float slimeSize = SlimeMethods.getSlimeScale(magmaCube, partialTick);
@@ -79,10 +79,14 @@ public abstract class MagmaCubeRendererMixin extends MobRenderer<MagmaCube, Lava
         }
     }
 
-    @WrapOperation(method = "scale*", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;scale(FFF)V"))
-    public void lunaSlimes$setScaleArgs(PoseStack poseStack, float a, float b, float c, Operation<Void> operation) {
-        float x = this.lunaSlimes$h * this.lunaSlimes$i;
-        operation.call(poseStack, x, this.lunaSlimes$yStretch, x);
+    @WrapOperation(method = "scale", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;scale(FFF)V"))
+    public void lunaSlimes$setScaleArgs(PoseStack poseStack, float a, float b, float c, Operation<Void> operation, MagmaCube magmaCube) {
+        if (((SlimeInterface) magmaCube).lunaSlimes$isInWorld()) {
+            float x = this.lunaSlimes$h * this.lunaSlimes$i;
+            operation.call(poseStack, x, this.lunaSlimes$yStretch, x);
+        } else {
+            operation.call(poseStack, a, b, c);
+        }
     }
 
     @ModifyReturnValue(at = @At("RETURN"), method = "getTextureLocation")
