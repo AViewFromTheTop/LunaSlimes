@@ -24,7 +24,7 @@ public final class GameplayFrozenConfigGui {
 		Config<?> configInstance = GameplayFrozenConfig.INSTANCE;
 		var defaultConfig = GameplayFrozenConfig.INSTANCE.defaultInstance();
 
-		category.setBackground(new ResourceLocation("lunaslimes", "textures/config/gameplay.png"));
+		category.setBackground(ResourceLocation.tryBuild("lunaslimes", "textures/config/gameplay.png"));
 
 		var maxSize = category.addEntry(
 				FrozenClothConfig.syncedEntry(

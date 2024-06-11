@@ -149,7 +149,7 @@ dependencies {
     modImplementation("net.fabricmc.fabric-api:fabric-api:$fabric_api_version")
 
     // Mod Menu
-    modImplementation("com.terraformersmc:modmenu:$modmenu_version")
+    modCompileOnly("com.terraformersmc:modmenu:$modmenu_version")
 
     // FrozenLib
     if (local_frozenlib)
@@ -158,7 +158,7 @@ dependencies {
         modApi("maven.modrinth:frozenlib:$frozenlib_version")
 
     // Cloth Config
-    modImplementation("me.shedaniel.cloth:cloth-config-fabric:$cloth_config_version") {
+    modCompileOnly("me.shedaniel.cloth:cloth-config-fabric:$cloth_config_version") {
         exclude(group = "net.fabricmc.fabric-api")
         exclude(group = "com.terraformersmc")
     }

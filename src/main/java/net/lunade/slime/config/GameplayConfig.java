@@ -25,7 +25,7 @@ public final class GameplayConfig implements ConfigData {
     @Environment(EnvType.CLIENT)
     static void setupEntries(@NotNull ConfigCategory category, @NotNull ConfigEntryBuilder entryBuilder) {
         var config = LunaSlimesConfig.get().gameplay;
-        category.setBackground(new ResourceLocation("lunaslimes", "textures/config/gameplay.png"));
+        category.setBackground(ResourceLocation.tryBuild("lunaslimes", "textures/config/gameplay.png"));
 
         var maxSize = category.addEntry(entryBuilder.startIntSlider(text("max_size"), config.maxSize, 1, 127)
                 .setDefaultValue(4)

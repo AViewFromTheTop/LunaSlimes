@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 
 @Environment(EnvType.CLIENT)
 public class MagmaCubeLayer<T extends MagmaCube> extends EyesLayer<T, LavaSlimeModel<T>> {
-    private static final RenderType UNSCALED_OVERLAY = RenderType.eyes(new ResourceLocation("lunaslimes", "textures/entity/slime/magmacube_overlay_" + 1 + ".png"));
+    private static final RenderType UNSCALED_OVERLAY = RenderType.eyes(ResourceLocation.tryBuild("lunaslimes", "textures/entity/slime/magmacube_overlay_" + 1 + ".png"));
 
     public MagmaCubeLayer(RenderLayerParent<T, LavaSlimeModel<T>> renderLayerParent) {
         super(renderLayerParent);
@@ -27,7 +27,7 @@ public class MagmaCubeLayer<T extends MagmaCube> extends EyesLayer<T, LavaSlimeM
     public void render(@NotNull PoseStack poseStack, @NotNull MultiBufferSource multiBufferSource, int i, @NotNull T entity, float f, float g, float h, float j, float k, float l) {
         if (ConfigValueGetter.glowingMagma()) {
             VertexConsumer vertexConsumer = multiBufferSource.getBuffer(this.newRenderType(entity));
-            this.getParentModel().renderToBuffer(poseStack, vertexConsumer, 15728640, OverlayTexture.NO_OVERLAY, 1F, 1F, 1F, 1F);
+            this.getParentModel().renderToBuffer(poseStack, vertexConsumer, 15728640, OverlayTexture.NO_OVERLAY);
         }
     }
 

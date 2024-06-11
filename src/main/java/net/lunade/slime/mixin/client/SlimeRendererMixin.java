@@ -32,7 +32,14 @@ public abstract class SlimeRendererMixin extends MobRenderer<Slime, SlimeModel<S
         super(context, entityModel, f);
     }
 
-    @WrapOperation(method = "scale", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;scale(FFF)V", ordinal = 1))
+    @WrapOperation(
+		method = "scale",
+		at = @At(
+			value = "INVOKE",
+			target = "Lcom/mojang/blaze3d/vertex/PoseStack;scale(FFF)V",
+			ordinal = 1
+		)
+	)
     public void lunaSlimes$newScaling(PoseStack poseStack, float a, float b, float c, Operation<Void> operation, Slime slime, PoseStack poseStackThing, float f) {
         if (((SlimeInterface) slime).lunaSlimes$isInWorld()) {
             float h = SlimeMethods.getSlimeScale(slime, f);
@@ -52,7 +59,14 @@ public abstract class SlimeRendererMixin extends MobRenderer<Slime, SlimeModel<S
         }
     }
 
-    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/MobRenderer;render(Lnet/minecraft/world/entity/Mob;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", shift = At.Shift.AFTER))
+    @Inject(
+		method = "render",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/client/renderer/entity/MobRenderer;render(Lnet/minecraft/world/entity/LivingEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
+			shift = At.Shift.BEFORE
+		)
+	)
     public void lunaSlimes$newShadow(Slime slime, float f, float partialTick, PoseStack poseStack, MultiBufferSource multiBufferSource, int i, CallbackInfo info) {
         if (ConfigValueGetter.newShadows()) {
             float slimeSize = SlimeMethods.getSlimeScale(slime, partialTick);

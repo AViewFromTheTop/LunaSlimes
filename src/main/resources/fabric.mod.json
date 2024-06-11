@@ -32,7 +32,7 @@
   "accessWidener": "lunaslimes.accesswidener",
   "depends": {
     "fabric-api": "${fabric_api_version}",
-    "minecraft": "${minecraft_version}",
+    "minecraft": "*",
     "java": ">=21"
   },
   "suggests": {

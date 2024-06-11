@@ -31,7 +31,7 @@ public final class VisualsAudioConfig implements ConfigData {
     @Environment(EnvType.CLIENT)
     static void setupEntries(@NotNull ConfigCategory category, @NotNull ConfigEntryBuilder entryBuilder) {
         var config = LunaSlimesConfig.get().visuals_audio;
-        category.setBackground(new ResourceLocation("lunaslimes", "textures/config/visuals_audio.png"));
+        category.setBackground(ResourceLocation.tryBuild("lunaslimes", "textures/config/visuals_audio.png"));
 
         var growAnim = category.addEntry(entryBuilder.startBooleanToggle(text("grow_anim"), config.growAnim)
                 .setDefaultValue(true)

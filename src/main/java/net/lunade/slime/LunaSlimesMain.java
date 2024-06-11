@@ -12,18 +12,18 @@ import java.nio.file.Path;
 
 public class LunaSlimesMain implements ModInitializer {
 
-    public static final SoundEvent SLIME_MERGE = SoundEvent.createVariableRangeEvent(new ResourceLocation("lunaslimes", "entity.slime.merge"));
-    public static final SoundEvent SLIME_SPLIT = SoundEvent.createVariableRangeEvent(new ResourceLocation("lunaslimes", "entity.slime.split"));
-    public static final SoundEvent MAGMA_MERGE = SoundEvent.createVariableRangeEvent(new ResourceLocation("lunaslimes", "entity.magmacube.merge"));
-    public static final SoundEvent MAGMA_SPLIT = SoundEvent.createVariableRangeEvent(new ResourceLocation("lunaslimes", "entity.magmacube.split"));
+    public static final SoundEvent SLIME_MERGE = SoundEvent.createVariableRangeEvent(ResourceLocation.tryBuild("lunaslimes", "entity.slime.merge"));
+    public static final SoundEvent SLIME_SPLIT = SoundEvent.createVariableRangeEvent(ResourceLocation.tryBuild("lunaslimes", "entity.slime.split"));
+    public static final SoundEvent MAGMA_MERGE = SoundEvent.createVariableRangeEvent(ResourceLocation.tryBuild("lunaslimes", "entity.magmacube.merge"));
+    public static final SoundEvent MAGMA_SPLIT = SoundEvent.createVariableRangeEvent(ResourceLocation.tryBuild("lunaslimes", "entity.magmacube.split"));
     public static boolean areConfigsInit;
 
     @Override
     public void onInitialize() {
-        Registry.register(BuiltInRegistries.SOUND_EVENT, new ResourceLocation("lunaslimes", "entity.slime.merge"), SLIME_MERGE);
-        Registry.register(BuiltInRegistries.SOUND_EVENT, new ResourceLocation("lunaslimes", "entity.slime.split"), SLIME_SPLIT);
-        Registry.register(BuiltInRegistries.SOUND_EVENT, new ResourceLocation("lunaslimes", "entity.magmacube.merge"), MAGMA_MERGE);
-        Registry.register(BuiltInRegistries.SOUND_EVENT, new ResourceLocation("lunaslimes", "entity.magmacube.split"), MAGMA_SPLIT);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, ResourceLocation.tryBuild("lunaslimes", "entity.slime.merge"), SLIME_MERGE);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, ResourceLocation.tryBuild("lunaslimes", "entity.slime.split"), SLIME_SPLIT);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, ResourceLocation.tryBuild("lunaslimes", "entity.magmacube.merge"), MAGMA_MERGE);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, ResourceLocation.tryBuild("lunaslimes", "entity.magmacube.split"), MAGMA_SPLIT);
     }
 
     @Contract(pure = true)

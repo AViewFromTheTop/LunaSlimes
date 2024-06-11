@@ -14,7 +14,15 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(LavaSlimeModel.class)
 public class LavaSlimeModelMixin<T extends Slime> {
 
-    @WrapOperation(method = "prepareMobModel*", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;lerp(FFF)F", ordinal = 0), require = 0)
+    @WrapOperation(
+		method = "prepareMobModel",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/util/Mth;lerp(FFF)F",
+			ordinal = 0
+		),
+		require = 0
+	)
     public float lunaSlimes$prepareMobModel(float delta, float prev, float current, Operation<Float> operation, T slime) {
         return Math.max(operation.call(delta, ((SlimeInterface) slime).lunaSlimes$prevSquish(), current), 0F);
     }

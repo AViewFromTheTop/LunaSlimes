@@ -52,19 +52,19 @@ public class SlimeTextures {
     }
 
     private static void addSlimeTexture(int i) {
-        SLIME_TEXTURES.put(i, new ResourceLocation("lunaslimes", "textures/entity/slime/slime_" + i + ".png"));
+        SLIME_TEXTURES.put(i, ResourceLocation.tryBuild("lunaslimes", "textures/entity/slime/slime_" + i + ".png"));
     }
 
     private static void addMagmaCubeTexture(int i) {
-        MAGMA_CUBE_TEXTURES.put(i, new ResourceLocation("lunaslimes", "textures/entity/slime/magmacube_" + i + ".png"));
+        MAGMA_CUBE_TEXTURES.put(i, ResourceLocation.tryBuild("lunaslimes", "textures/entity/slime/magmacube_" + i + ".png"));
     }
 
     private static void addMagmaCubeOverlayTexture(int i) {
-        MAGMA_CUBE_OVERLAY_TEXTURES.put(i, new ResourceLocation("lunaslimes", "textures/entity/slime/magmacube_overlay_" + i + ".png"));
+        MAGMA_CUBE_OVERLAY_TEXTURES.put(i, ResourceLocation.tryBuild("lunaslimes", "textures/entity/slime/magmacube_overlay_" + i + ".png"));
     }
 
     private static void addMagmaCubeOverlayRenderType(int i) {
-        MAGMA_CUBE_OVERLAY_RENDER_TYPES.put(i, RenderType.eyes(new ResourceLocation("lunaslimes", "textures/entity/slime/magmacube_overlay_" + i + ".png")));
+        MAGMA_CUBE_OVERLAY_RENDER_TYPES.put(i, RenderType.eyes(ResourceLocation.tryBuild("lunaslimes", "textures/entity/slime/magmacube_overlay_" + i + ".png")));
     }
 
 }

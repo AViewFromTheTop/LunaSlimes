@@ -26,7 +26,7 @@ public final class VisualsAudioFrozenConfigGui {
 		Config<?> configInstance = VisualsAudioFrozenConfig.INSTANCE;
 		var defaultConfig = VisualsAudioFrozenConfig.INSTANCE.defaultInstance();
 
-		category.setBackground(new ResourceLocation("lunaslimes", "textures/config/visuals_audio.png"));
+		category.setBackground(ResourceLocation.tryBuild("lunaslimes", "textures/config/visuals_audio.png"));
 
 		var growAnim = category.addEntry(
 				FrozenClothConfig.syncedEntry(
