@@ -169,7 +169,7 @@ tasks {
         val properties = mapOf(
             "mod_id" to mod_id,
             "version" to version,
-            "minecraft_version" to minecraft_version,
+            "minecraft_version" to ">=$minecraft_version",
 
             "fabric_api_version" to ">=$fabric_api_version",
             "frozenlib_version" to ">=${frozenlib_version.split('-').firstOrNull()}-"
