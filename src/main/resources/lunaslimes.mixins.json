@@ -12,6 +12,7 @@
     "LivingEntityMixin",
     "MagmaCubeMixin",
     "MobMixin",
+    "OozingMobEffectMixin",
     "SlimeMixin",
     "SlimeMoveControlMixin"
   ],
