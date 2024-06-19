@@ -6,12 +6,11 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.clothconfig.FrozenClothConfig;
+import static net.lunade.slime.config.LunaSlimesConfig.text;
+import static net.lunade.slime.config.LunaSlimesConfig.tooltip;
 import net.lunade.slime.config.frozenlib.VisualsAudioFrozenConfig;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
-
-import static net.lunade.slime.config.LunaSlimesConfig.text;
-import static net.lunade.slime.config.LunaSlimesConfig.tooltip;
 
 @Environment(EnvType.CLIENT)
 public final class VisualsAudioFrozenConfigGui {

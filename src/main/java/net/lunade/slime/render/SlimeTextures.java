@@ -1,13 +1,12 @@
 package net.lunade.slime.render;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
+import java.util.Map;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.lunade.slime.config.getter.ConfigValueGetter;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
-
-import java.util.Map;
 
 @Environment(EnvType.CLIENT)
 public class SlimeTextures {

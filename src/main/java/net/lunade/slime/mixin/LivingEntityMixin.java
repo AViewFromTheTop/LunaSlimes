@@ -1,6 +1,7 @@
 package net.lunade.slime.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import java.util.Optional;
 import net.lunade.slime.SlimeMethods;
 import net.lunade.slime.config.getter.ConfigValueGetter;
 import net.lunade.slime.impl.SlimeInterface;
@@ -16,8 +17,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import java.util.Optional;
 
 @Mixin(LivingEntity.class)
 public class LivingEntityMixin {

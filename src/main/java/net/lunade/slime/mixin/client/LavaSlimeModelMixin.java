@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.At;
 public class LavaSlimeModelMixin<T extends Slime> {
 
     @WrapOperation(
-		method = "prepareMobModel",
+		method = "prepareMobModel*",
 		at = @At(
 			value = "INVOKE",
 			target = "Lnet/minecraft/util/Mth;lerp(FFF)F",

@@ -18,8 +18,34 @@ public final class VisualsAudioFrozenConfig {
 			JsonType.JSON,
 			null,
 			null
-		)
+		) {
+			@Override
+			public void onSave() throws Exception {
+				super.onSave();
+				this.onSync(null);
+			}
+
+			@Override
+			public void onSync(VisualsAudioFrozenConfig syncInstance) {
+				var config = this.config();
+				GROW_ANIM = config.growAnim;
+				WOBBLE_ANIM = config.wobbleAnim;
+				SQUISH_MULTIPLIER = config.squishMultiplier;
+				DEATH_ANIM = config.deathAnim;
+				NEW_SHADOWS = config.newShadows;
+				SCALE_TEXTURES = config.scaleTextures;
+				GLOWING_MAGMA_CUBE = config.glowingMagma;
+			}
+		}
 	);
+
+	public static boolean GROW_ANIM;
+	public static boolean WOBBLE_ANIM;
+	public static int SQUISH_MULTIPLIER;
+	public static boolean DEATH_ANIM;
+	public static boolean NEW_SHADOWS;
+	public static boolean SCALE_TEXTURES;
+	public static boolean GLOWING_MAGMA_CUBE;
 
 	@EntrySyncData(value = "growAnim", behavior = SyncBehavior.UNSYNCABLE)
 	public boolean growAnim = true;

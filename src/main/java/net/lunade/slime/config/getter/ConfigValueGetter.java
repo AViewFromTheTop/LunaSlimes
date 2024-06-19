@@ -7,19 +7,22 @@ import net.lunade.slime.config.frozenlib.VisualsAudioFrozenConfig;
 public class ConfigValueGetter {
 
     public static boolean growAnim() {
+		if (LunaSlimesSharedConstants.HAS_FROZENLIB) {
+			return VisualsAudioFrozenConfig.GROW_ANIM;
+		}
         return !LunaSlimesSharedConstants.HAS_CLOTH_CONFIG || ConfigValues.growAnim();
     }
 
     public static boolean wobbleAnim() {
         if (LunaSlimesSharedConstants.HAS_FROZENLIB) {
-            return VisualsAudioFrozenConfig.get().wobbleAnim;
+            return VisualsAudioFrozenConfig.WOBBLE_ANIM;
         }
         return !LunaSlimesSharedConstants.HAS_CLOTH_CONFIG || ConfigValues.wobbleAnim();
     }
 
     public static float squishMultiplier() {
         if (LunaSlimesSharedConstants.HAS_FROZENLIB) {
-            return VisualsAudioFrozenConfig.get().squishMultiplier * 0.1F;
+            return VisualsAudioFrozenConfig.SQUISH_MULTIPLIER * 0.1F;
         }
         return LunaSlimesSharedConstants.HAS_CLOTH_CONFIG ? ConfigValues.squishMultiplier() : 2F;
     }
@@ -33,14 +36,14 @@ public class ConfigValueGetter {
 
     public static boolean deathAnim() {
         if (LunaSlimesSharedConstants.HAS_FROZENLIB) {
-            return VisualsAudioFrozenConfig.get().deathAnim;
+            return VisualsAudioFrozenConfig.DEATH_ANIM;
         }
         return !LunaSlimesSharedConstants.HAS_CLOTH_CONFIG || ConfigValues.deathAnim();
     }
 
     public static boolean newShadows() {
         if (LunaSlimesSharedConstants.HAS_FROZENLIB) {
-            return VisualsAudioFrozenConfig.get().newShadows;
+            return VisualsAudioFrozenConfig.NEW_SHADOWS;
         }
         return !LunaSlimesSharedConstants.HAS_CLOTH_CONFIG || ConfigValues.newShadows();
     }
@@ -54,7 +57,7 @@ public class ConfigValueGetter {
 
     public static boolean glowingMagma() {
         if (LunaSlimesSharedConstants.HAS_FROZENLIB) {
-            return VisualsAudioFrozenConfig.get().glowingMagma;
+            return VisualsAudioFrozenConfig.GLOWING_MAGMA_CUBE;
         }
         return !LunaSlimesSharedConstants.HAS_CLOTH_CONFIG || ConfigValues.glowingMagma();
     }
@@ -68,7 +71,7 @@ public class ConfigValueGetter {
 
     public static boolean scaleTextures() {
         if (LunaSlimesSharedConstants.HAS_FROZENLIB) {
-            return VisualsAudioFrozenConfig.get().scaleTextures;
+            return VisualsAudioFrozenConfig.SCALE_TEXTURES;
         }
         return !LunaSlimesSharedConstants.HAS_CLOTH_CONFIG || ConfigValues.scaleTextures();
     }

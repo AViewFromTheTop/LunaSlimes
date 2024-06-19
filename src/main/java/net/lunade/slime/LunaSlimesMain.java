@@ -1,5 +1,6 @@
 package net.lunade.slime;
 
+import java.nio.file.Path;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -7,8 +8,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-
-import java.nio.file.Path;
 
 public class LunaSlimesMain implements ModInitializer {
 

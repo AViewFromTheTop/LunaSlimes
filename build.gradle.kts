@@ -34,7 +34,6 @@ val licenseChecks: Boolean = githubActions
 
 val minecraft_version: String by project
 val quilt_mappings: String by project
-val parchment_mappings: String by project
 val loader_version: String by project
 
 val mod_id: String by project
@@ -48,8 +47,6 @@ val fabric_api_version: String by project
 val frozenlib_version: String by project
 val cloth_config_version: String by project
 val modmenu_version: String by project
-
-val local_frozenlib = findProject(":FrozenLib") != null
 
 base {
     archivesName = archives_base_name
@@ -140,7 +137,6 @@ dependencies {
     mappings(loom.layered {
         // please annoy treetrain if this doesnt work
         mappings("org.quiltmc:quilt-mappings:$quilt_mappings:intermediary-v2")
-        parchment("org.parchmentmc.data:parchment-$parchment_mappings@zip")
         officialMojangMappings {
             nameSyntheticMembers = false
         }
@@ -152,10 +148,7 @@ dependencies {
     modCompileOnly("com.terraformersmc:modmenu:$modmenu_version")
 
     // FrozenLib
-    if (local_frozenlib)
-        api(project(":FrozenLib", configuration = "namedElements"))
-    else
-        modApi("maven.modrinth:frozenlib:$frozenlib_version")
+    modApi("maven.modrinth:frozenlib:$frozenlib_version")
 
     // Cloth Config
     modCompileOnly("me.shedaniel.cloth:cloth-config-fabric:$cloth_config_version") {

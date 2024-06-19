@@ -1,6 +1,7 @@
 package net.lunade.slime;
 
 import com.mojang.datafixers.util.Pair;
+import java.util.List;
 import net.lunade.slime.config.getter.ConfigValueGetter;
 import net.lunade.slime.impl.SlimeInterface;
 import net.minecraft.network.chat.Component;
@@ -14,8 +15,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
 
 public class SlimeMethods {
 
