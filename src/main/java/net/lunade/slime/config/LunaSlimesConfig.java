@@ -9,7 +9,7 @@ import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.lunade.slime.LunaSlimesMain;
+import net.lunade.slime.LunaSlimes;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Contract;
@@ -20,11 +20,11 @@ public class LunaSlimesConfig extends PartitioningSerializer.GlobalData {
 
     @ConfigEntry.Category("gameplay")
     @ConfigEntry.Gui.TransitiveObject
-    public final GameplayConfig gameplay = new GameplayConfig();
+    public final LunaSlimesGameplayConfig gameplay = new LunaSlimesGameplayConfig();
 
     @ConfigEntry.Category("visuals_audio")
     @ConfigEntry.Gui.TransitiveObject
-    public final VisualsAudioConfig visuals_audio = new VisualsAudioConfig();
+    public final LunaSlimesVisualsAudioConfig visuals_audio = new LunaSlimesVisualsAudioConfig();
 
     @Environment(EnvType.CLIENT)
     public static Screen buildScreen(Screen parent) {
@@ -33,18 +33,18 @@ public class LunaSlimesConfig extends PartitioningSerializer.GlobalData {
         ConfigEntryBuilder entryBuilder = configBuilder.entryBuilder();
 
         var gameplayTab = configBuilder.getOrCreateCategory(text("gameplay"));
-        GameplayConfig.setupEntries(gameplayTab, entryBuilder);
+        LunaSlimesGameplayConfig.setupEntries(gameplayTab, entryBuilder);
 
         var visualTab = configBuilder.getOrCreateCategory(text("visuals_audio"));
-        VisualsAudioConfig.setupEntries(visualTab, entryBuilder);
+        LunaSlimesVisualsAudioConfig.setupEntries(visualTab, entryBuilder);
 
         return configBuilder.build();
     }
 
     public static LunaSlimesConfig get() {
-        if (!LunaSlimesMain.areConfigsInit) {
+        if (!LunaSlimes.areConfigsInit) {
             AutoConfig.register(LunaSlimesConfig.class, PartitioningSerializer.wrap(GsonConfigSerializer::new));
-            LunaSlimesMain.areConfigsInit = true;
+            LunaSlimes.areConfigsInit = true;
         }
         return AutoConfig.getConfigHolder(LunaSlimesConfig.class).getConfig();
     }

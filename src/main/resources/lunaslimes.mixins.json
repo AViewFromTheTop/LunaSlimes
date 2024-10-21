@@ -4,9 +4,9 @@
   "package": "net.lunade.slime.mixin",
   "compatibilityLevel": "JAVA_17",
   "client": [
-    "client.LavaSlimeModelMixin",
     "client.MagmaCubeRendererMixin",
-    "client.SlimeRendererMixin"
+    "client.SlimeRendererMixin",
+    "client.SlimeRenderStateMixin"
   ],
   "mixins": [
     "LivingEntityMixin",

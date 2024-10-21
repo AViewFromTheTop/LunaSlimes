@@ -5,15 +5,15 @@ import net.frozenblock.lib.config.api.instance.json.JsonConfig;
 import net.frozenblock.lib.config.api.instance.json.JsonType;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import net.frozenblock.lib.config.api.sync.annotation.EntrySyncData;
-import net.lunade.slime.LunaSlimesMain;
+import net.lunade.slime.LunaSlimes;
 
-public final class GameplayFrozenConfig {
+public final class LunaSlimesGameplayFrozenConfig {
 
-	public static final Config<GameplayFrozenConfig> INSTANCE = ConfigRegistry.register(
+	public static final Config<LunaSlimesGameplayFrozenConfig> INSTANCE = ConfigRegistry.register(
 		new JsonConfig<>(
 			"lunaslimes",
-			GameplayFrozenConfig.class,
-			LunaSlimesMain.configPath("gameplay", true),
+			LunaSlimesGameplayFrozenConfig.class,
+			LunaSlimes.configPath("gameplay", true),
 			JsonType.JSON,
 			null,
 			null
@@ -38,17 +38,17 @@ public final class GameplayFrozenConfig {
 	@EntrySyncData("useSplitting")
 	public boolean useSplitting = true;
 
-	public static GameplayFrozenConfig get() {
+	public static LunaSlimesGameplayFrozenConfig get() {
 		return get(false);
 	}
 
-	public static GameplayFrozenConfig get(boolean real) {
+	public static LunaSlimesGameplayFrozenConfig get(boolean real) {
 		if (real)
 			return INSTANCE.instance();
 		return INSTANCE.config();
 	}
 
-	public static GameplayFrozenConfig getWithSync() {
+	public static LunaSlimesGameplayFrozenConfig getWithSync() {
 		return INSTANCE.configWithSync();
 	}
 }

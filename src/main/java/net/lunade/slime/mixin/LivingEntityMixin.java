@@ -1,9 +1,8 @@
 package net.lunade.slime.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import java.util.Optional;
-import net.lunade.slime.SlimeMethods;
-import net.lunade.slime.config.getter.ConfigValueGetter;
+import net.lunade.slime.LunaSlimesUtil;
+import net.lunade.slime.config.getter.LunaSlimesConfigValueGetter;
 import net.lunade.slime.impl.SlimeInterface;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.resources.ResourceKey;
@@ -18,6 +17,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.Optional;
+
 @Mixin(LivingEntity.class)
 public class LivingEntityMixin {
 
@@ -28,11 +29,11 @@ public class LivingEntityMixin {
         }
     }
 
-    @ModifyReturnValue(at = @At("RETURN"), method = "hurt")
-    public boolean lunaSlimes$hurt(boolean original) {
+    @ModifyReturnValue(at = @At("RETURN"), method = "hurtServer")
+    public boolean lunaSlimes$hurtServer(boolean original) {
         if (original && LivingEntity.class.cast(this) instanceof Slime slime) {
-            if (!slime.isTiny() && slime.isDeadOrDying() && ConfigValueGetter.useSplitting()) {
-                int split = SlimeMethods.spawnSingleSlime(slime);
+            if (!slime.isTiny() && slime.isDeadOrDying() && LunaSlimesConfigValueGetter.useSplitting()) {
+                int split = LunaSlimesUtil.spawnSingleSlime(slime);
                 slime.setSize(slime.getSize() - split, true);
                 slime.deathTime = 0;
             }
@@ -45,7 +46,7 @@ public class LivingEntityMixin {
         LivingEntity entity = LivingEntity.class.cast(this);
         if (entity instanceof Slime slime) {
             Optional<ResourceKey<DamageType>> damageType = damageSource.typeHolder().unwrapKey();
-            if (damageType.isPresent() && damageType.get() != DamageTypes.GENERIC_KILL && !slime.isTiny() && ConfigValueGetter.useSplitting()) {
+            if (damageType.isPresent() && damageType.get() != DamageTypes.GENERIC_KILL && !slime.isTiny() && LunaSlimesConfigValueGetter.useSplitting()) {
                 info.cancel();
             }
         }
@@ -55,7 +56,7 @@ public class LivingEntityMixin {
     public void lunaSlimes$doPush(Entity entity, CallbackInfo info) {
         LivingEntity thisEntity = LivingEntity.class.cast(this);
         if (thisEntity instanceof Slime && entity instanceof Slime slime2) {
-            SlimeMethods.mergeSlimes(Slime.class.cast(this), slime2);
+            LunaSlimesUtil.mergeSlimes(Slime.class.cast(this), slime2);
         }
     }
 
@@ -63,7 +64,7 @@ public class LivingEntityMixin {
     public void lunaSlimes$knockback(double d, double e, double f, CallbackInfo info) {
         LivingEntity entity = LivingEntity.class.cast(this);
         if (entity instanceof Slime slime) {
-            if (slime.isTiny() && slime.isDeadOrDying() && ConfigValueGetter.deathAnim()) {
+            if (slime.isTiny() && slime.isDeadOrDying() && LunaSlimesConfigValueGetter.deathAnim()) {
                 info.cancel();
             }
         }

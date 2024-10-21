@@ -6,24 +6,25 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.clothconfig.FrozenClothConfig;
-import static net.lunade.slime.config.LunaSlimesConfig.text;
-import static net.lunade.slime.config.LunaSlimesConfig.tooltip;
-import net.lunade.slime.config.frozenlib.VisualsAudioFrozenConfig;
+import net.lunade.slime.config.frozenlib.LunaSlimesVisualsAudioFrozenConfig;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
+import static net.lunade.slime.config.LunaSlimesConfig.text;
+import static net.lunade.slime.config.LunaSlimesConfig.tooltip;
+
 @Environment(EnvType.CLIENT)
-public final class VisualsAudioFrozenConfigGui {
-	private VisualsAudioFrozenConfigGui() {
+public final class LunaSlimesVisualsAudioFrozenConfigGui {
+	private LunaSlimesVisualsAudioFrozenConfigGui() {
 		throw new UnsupportedOperationException("VisualsAudioFrozenConfigGui contains only static declarations.");
 	}
 
 	public static void setupEntries(@NotNull ConfigCategory category, @NotNull ConfigEntryBuilder entryBuilder) {
-		var config = VisualsAudioFrozenConfig.get(true);
-		var modifiedConfig = VisualsAudioFrozenConfig.getWithSync();
-		Class<? extends VisualsAudioFrozenConfig> clazz = config.getClass();
-		Config<?> configInstance = VisualsAudioFrozenConfig.INSTANCE;
-		var defaultConfig = VisualsAudioFrozenConfig.INSTANCE.defaultInstance();
+		var config = LunaSlimesVisualsAudioFrozenConfig.get(true);
+		var modifiedConfig = LunaSlimesVisualsAudioFrozenConfig.getWithSync();
+		Class<? extends LunaSlimesVisualsAudioFrozenConfig> clazz = config.getClass();
+		Config<?> configInstance = LunaSlimesVisualsAudioFrozenConfig.INSTANCE;
+		var defaultConfig = LunaSlimesVisualsAudioFrozenConfig.INSTANCE.defaultInstance();
 
 		category.setBackground(ResourceLocation.tryBuild("lunaslimes", "textures/config/visuals_audio.png"));
 

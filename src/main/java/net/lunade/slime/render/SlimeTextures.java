@@ -1,12 +1,13 @@
 package net.lunade.slime.render;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
-import java.util.Map;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.lunade.slime.config.getter.ConfigValueGetter;
+import net.lunade.slime.config.getter.LunaSlimesConfigValueGetter;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
+
+import java.util.Map;
 
 @Environment(EnvType.CLIENT)
 public class SlimeTextures {
@@ -24,22 +25,22 @@ public class SlimeTextures {
     }
 
     public static ResourceLocation getSlimeTexture(int size, ResourceLocation backUp) {
-        if (ConfigValueGetter.scaleTextures()) return SLIME_TEXTURES.computeIfAbsent(Math.min(size, max), (integer) -> backUp);
+        if (LunaSlimesConfigValueGetter.scaleTextures()) return SLIME_TEXTURES.computeIfAbsent(Math.min(size, max), (integer) -> backUp);
         return backUp;
     }
 
     public static ResourceLocation getMamaCubeTexture(int size, ResourceLocation backUp) {
-        if (ConfigValueGetter.scaleTextures()) return MAGMA_CUBE_TEXTURES.computeIfAbsent(Math.min(size, max), (integer) -> backUp);
+        if (LunaSlimesConfigValueGetter.scaleTextures()) return MAGMA_CUBE_TEXTURES.computeIfAbsent(Math.min(size, max), (integer) -> backUp);
         return backUp;
     }
 
     public static ResourceLocation getMagmaCubeOverlayTexture(int size, ResourceLocation backUp) {
-        if (ConfigValueGetter.scaleTextures()) return MAGMA_CUBE_OVERLAY_TEXTURES.computeIfAbsent(Math.min(size, max), (integer) -> backUp);
+        if (LunaSlimesConfigValueGetter.scaleTextures()) return MAGMA_CUBE_OVERLAY_TEXTURES.computeIfAbsent(Math.min(size, max), (integer) -> backUp);
         return backUp;
     }
 
     public static RenderType getMagmaCubeOverlayRenderType(int size, RenderType backUp) {
-        if (ConfigValueGetter.scaleTextures()) return MAGMA_CUBE_OVERLAY_RENDER_TYPES.computeIfAbsent(Math.min(size, max), (integer) -> backUp);
+        if (LunaSlimesConfigValueGetter.scaleTextures()) return MAGMA_CUBE_OVERLAY_RENDER_TYPES.computeIfAbsent(Math.min(size, max), (integer) -> backUp);
         return backUp;
     }
 

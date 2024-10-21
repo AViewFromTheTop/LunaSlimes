@@ -6,15 +6,15 @@ import net.frozenblock.lib.config.api.instance.json.JsonType;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import net.frozenblock.lib.config.api.sync.SyncBehavior;
 import net.frozenblock.lib.config.api.sync.annotation.EntrySyncData;
-import net.lunade.slime.LunaSlimesMain;
+import net.lunade.slime.LunaSlimes;
 
-public final class VisualsAudioFrozenConfig {
+public final class LunaSlimesVisualsAudioFrozenConfig {
 
-	public static final Config<VisualsAudioFrozenConfig> INSTANCE = ConfigRegistry.register(
+	public static final Config<LunaSlimesVisualsAudioFrozenConfig> INSTANCE = ConfigRegistry.register(
 		new JsonConfig<>(
 			"lunaslimes",
-			VisualsAudioFrozenConfig.class,
-			LunaSlimesMain.configPath("visuals_audio", true),
+			LunaSlimesVisualsAudioFrozenConfig.class,
+			LunaSlimes.configPath("visuals_audio", true),
 			JsonType.JSON,
 			null,
 			null
@@ -26,7 +26,7 @@ public final class VisualsAudioFrozenConfig {
 			}
 
 			@Override
-			public void onSync(VisualsAudioFrozenConfig syncInstance) {
+			public void onSync(LunaSlimesVisualsAudioFrozenConfig syncInstance) {
 				var config = this.config();
 				GROW_ANIM = config.growAnim;
 				WOBBLE_ANIM = config.wobbleAnim;
@@ -39,13 +39,13 @@ public final class VisualsAudioFrozenConfig {
 		}
 	);
 
-	public static boolean GROW_ANIM;
-	public static boolean WOBBLE_ANIM;
-	public static int SQUISH_MULTIPLIER;
-	public static boolean DEATH_ANIM;
-	public static boolean NEW_SHADOWS;
-	public static boolean SCALE_TEXTURES;
-	public static boolean GLOWING_MAGMA_CUBE;
+	public static volatile boolean GROW_ANIM;
+	public static volatile boolean WOBBLE_ANIM;
+	public static volatile int SQUISH_MULTIPLIER;
+	public static volatile boolean DEATH_ANIM;
+	public static volatile boolean NEW_SHADOWS;
+	public static volatile boolean SCALE_TEXTURES;
+	public static volatile boolean GLOWING_MAGMA_CUBE;
 
 	@EntrySyncData(value = "growAnim", behavior = SyncBehavior.UNSYNCABLE)
 	public boolean growAnim = true;
@@ -83,17 +83,17 @@ public final class VisualsAudioFrozenConfig {
 	@EntrySyncData("splitSounds")
 	public boolean splitSounds = true;
 
-	public static VisualsAudioFrozenConfig get() {
+	public static LunaSlimesVisualsAudioFrozenConfig get() {
 		return get(false);
 	}
 
-	public static VisualsAudioFrozenConfig get(boolean real) {
+	public static LunaSlimesVisualsAudioFrozenConfig get(boolean real) {
 		if (real)
 			return INSTANCE.instance();
 		return INSTANCE.config();
 	}
 
-	public static VisualsAudioFrozenConfig getWithSync() {
+	public static LunaSlimesVisualsAudioFrozenConfig getWithSync() {
 		return INSTANCE.configWithSync();
 	}
 }

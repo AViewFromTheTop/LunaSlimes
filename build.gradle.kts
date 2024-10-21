@@ -18,7 +18,7 @@ buildscript {
 }
 
 plugins {
-    id("fabric-loom") version("+")
+    id("fabric-loom") version("1.7.+")
     id("org.quiltmc.gradle.licenser") version("+")
     id("org.ajoberstar.grgit") version("+")
     id("com.modrinth.minotaur") version("+")
@@ -136,7 +136,7 @@ dependencies {
     minecraft("com.mojang:minecraft:$minecraft_version")
     mappings(loom.layered {
         // please annoy treetrain if this doesnt work
-        mappings("org.quiltmc:quilt-mappings:$quilt_mappings:intermediary-v2")
+        //mappings("org.quiltmc:quilt-mappings:$quilt_mappings:intermediary-v2")
         officialMojangMappings {
             nameSyntheticMembers = false
         }
@@ -148,7 +148,7 @@ dependencies {
     modCompileOnly("com.terraformersmc:modmenu:$modmenu_version")
 
     // FrozenLib
-    modApi("maven.modrinth:frozenlib:$frozenlib_version")
+    modCompileOnly("maven.modrinth:frozenlib:$frozenlib_version")
 
     // Cloth Config
     modCompileOnly("me.shedaniel.cloth:cloth-config-fabric:$cloth_config_version") {
@@ -162,7 +162,7 @@ tasks {
         val properties = mapOf(
             "mod_id" to mod_id,
             "version" to version,
-            "minecraft_version" to ">=$minecraft_version",
+            "minecraft_version" to "~1.21-",//minecraft_version,
 
             "fabric_api_version" to ">=$fabric_api_version",
             "frozenlib_version" to ">=${frozenlib_version.split('-').firstOrNull()}-"

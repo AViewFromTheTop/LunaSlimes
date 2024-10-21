@@ -6,13 +6,14 @@ import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import static net.lunade.slime.config.LunaSlimesConfig.text;
-import static net.lunade.slime.config.LunaSlimesConfig.tooltip;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
+import static net.lunade.slime.config.LunaSlimesConfig.text;
+import static net.lunade.slime.config.LunaSlimesConfig.tooltip;
+
 @Config(name = "visuals_audio")
-public final class VisualsAudioConfig implements ConfigData {
+public final class LunaSlimesVisualsAudioConfig implements ConfigData {
 
     public boolean growAnim = true;
     public boolean wobbleAnim = true;

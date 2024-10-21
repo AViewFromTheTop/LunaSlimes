@@ -6,13 +6,14 @@ import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import static net.lunade.slime.config.LunaSlimesConfig.text;
-import static net.lunade.slime.config.LunaSlimesConfig.tooltip;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
+import static net.lunade.slime.config.LunaSlimesConfig.text;
+import static net.lunade.slime.config.LunaSlimesConfig.tooltip;
+
 @Config(name = "gameplay")
-public final class GameplayConfig implements ConfigData {
+public final class LunaSlimesGameplayConfig implements ConfigData {
 
     public int maxSize = 4;
     public int mergeCooldown = 0;

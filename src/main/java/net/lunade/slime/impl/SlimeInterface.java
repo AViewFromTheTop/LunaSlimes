@@ -2,7 +2,6 @@ package net.lunade.slime.impl;
 
 public interface SlimeInterface {
 
-    float lunaSlimes$prevSquish();
 
     int lunaSlimes$getMergeCooldown();
 

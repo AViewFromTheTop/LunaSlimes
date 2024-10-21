@@ -1,6 +1,6 @@
 package net.lunade.slime.mixin;
 
-import net.lunade.slime.config.getter.ConfigValueGetter;
+import net.lunade.slime.config.getter.LunaSlimesConfigValueGetter;
 import net.lunade.slime.impl.SlimeInterface;
 import net.minecraft.world.entity.monster.Slime;
 import org.spongepowered.asm.mixin.Final;
@@ -34,7 +34,7 @@ public class SlimeMoveControlMixin {
     public void lunaSlimes$tick(CallbackInfo info) {
         SlimeInterface slimeInterface = (SlimeInterface) this.slime;
         slimeInterface.lunaSlimes$setJumpDelay(this.jumpDelay);
-        if (ConfigValueGetter.jumpAntic()) {
+        if (LunaSlimesConfigValueGetter.jumpAntic()) {
             boolean antic = this.slime.onGround() && !this.slime.isInWater();
             if (this.jumpDelay == 3 && antic) {
                 slime.level().broadcastEntityEvent(slime, (byte) 61);

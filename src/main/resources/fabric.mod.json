@@ -17,7 +17,7 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "net.lunade.slime.LunaSlimesMain"
+      "net.lunade.slime.LunaSlimes"
     ],
     "client": [
       "net.lunade.slime.LunaSlimesClient"

@@ -7,17 +7,18 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Pair;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.lunade.slime.SlimeMethods;
-import net.lunade.slime.config.getter.ConfigValueGetter;
+import net.lunade.slime.LunaSlimesUtil;
+import net.lunade.slime.config.getter.LunaSlimesConfigValueGetter;
 import net.lunade.slime.impl.SlimeInterface;
+import net.lunade.slime.impl.client.SlimeRenderStateInterface;
 import net.lunade.slime.render.SlimeTextures;
 import net.minecraft.client.model.SlimeModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.SlimeRenderer;
+import net.minecraft.client.renderer.entity.state.SlimeRenderState;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.monster.Slime;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -26,62 +27,75 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Environment(EnvType.CLIENT)
 @Mixin(SlimeRenderer.class)
-public abstract class SlimeRendererMixin extends MobRenderer<Slime, SlimeModel<Slime>> {
+public abstract class SlimeRendererMixin extends MobRenderer<Slime, SlimeRenderState, SlimeModel> {
 
-    public SlimeRendererMixin(EntityRendererProvider.Context context, SlimeModel<Slime> entityModel, float f) {
+    public SlimeRendererMixin(EntityRendererProvider.Context context, SlimeModel entityModel, float f) {
         super(context, entityModel, f);
     }
 
+    @Inject(
+            method = "extractRenderState(Lnet/minecraft/world/entity/monster/Slime;Lnet/minecraft/client/renderer/entity/state/SlimeRenderState;F)V",
+            at = @At("TAIL")
+    )
+    public void lunaSlimes$extractRenderState(Slime slime, SlimeRenderState slimeRenderState, float f, CallbackInfo info) {
+        if (slimeRenderState instanceof SlimeRenderStateInterface renderStateInterface) {
+            renderStateInterface.lunaSlimes$setInWorld(((SlimeInterface) slime).lunaSlimes$isInWorld());
+            renderStateInterface.lunaSlimes$setWobble(LunaSlimesUtil.wobbleAnim(slime, f));
+            renderStateInterface.lunaSlimes$setSize(LunaSlimesUtil.getSlimeScale(slime, f));
+        }
+    }
+
     @WrapOperation(
-		method = "scale",
+		method = "scale(Lnet/minecraft/client/renderer/entity/state/SlimeRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;)V",
 		at = @At(
 			value = "INVOKE",
 			target = "Lcom/mojang/blaze3d/vertex/PoseStack;scale(FFF)V",
 			ordinal = 1
 		)
 	)
-    public void lunaSlimes$newScaling(PoseStack poseStack, float a, float b, float c, Operation<Void> operation, Slime slime, PoseStack poseStackThing, float f) {
-        if (((SlimeInterface) slime).lunaSlimes$isInWorld()) {
-            float h = SlimeMethods.getSlimeScale(slime, f);
-
-            Pair<Float, Float> wobble = SlimeMethods.wobbleAnim(slime, f);
+    public void lunaSlimes$newScaling(PoseStack poseStack, float a, float b, float c, Operation<Void> operation, SlimeRenderState slimeRenderState, PoseStack poseStack2) {
+        if (slimeRenderState instanceof SlimeRenderStateInterface renderStateInterface && renderStateInterface.lunaSlimes$isInWorld()) {
+            float slimeSize = renderStateInterface.lunaSlimes$getSize();
+            Pair<Float, Float> wobble = renderStateInterface.lunaSlimes$getWobble();
             float wobbleXZ = wobble.getFirst();
             float wobbleY = wobble.getSecond();
             poseStack.scale(wobbleXZ, wobbleY, wobbleXZ);
-            poseStack.translate(0.0F, -(2.05F - (wobbleY * 2.05F)), 0.0F);
-            float slimeSize = SlimeMethods.getSlimeScale(slime, f);
-            float i = (Mth.lerp(f, ((SlimeInterface) slime).lunaSlimes$prevSquish(), slime.squish) * ConfigValueGetter.squishMultiplier()) / ((slimeSize) * 0.5f + 1.0f);
+            poseStack.translate(0F, -(2.05F - (wobbleY * 2.05F)), 0F);
+            float i = (slimeRenderState.squish * LunaSlimesConfigValueGetter.squishMultiplier()) / ((slimeSize) * 0.5F + 1F);
 
             float j = 1.0F / (i + 1.0F);
-            operation.call(poseStack, j * h, 1.0F / j * h, j * h);
+            operation.call(poseStack, j * slimeSize, 1F / j * slimeSize, j * slimeSize);
         } else {
             operation.call(poseStack, a, b, c);
         }
     }
 
     @Inject(
-		method = "render",
+		method = "render(Lnet/minecraft/client/renderer/entity/state/SlimeRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
 		at = @At(
 			value = "INVOKE",
-			target = "Lnet/minecraft/client/renderer/entity/MobRenderer;render(Lnet/minecraft/world/entity/LivingEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
+			target = "Lnet/minecraft/client/renderer/entity/MobRenderer;render(Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
 			shift = At.Shift.BEFORE
 		)
 	)
-    public void lunaSlimes$newShadow(Slime slime, float f, float partialTick, PoseStack poseStack, MultiBufferSource multiBufferSource, int i, CallbackInfo info) {
-        if (ConfigValueGetter.newShadows()) {
-            float slimeSize = SlimeMethods.getSlimeScale(slime, partialTick);
-            Pair<Float, Float> wobble = SlimeMethods.wobbleAnim(slime, partialTick);
+    public void lunaSlimes$newShadow(SlimeRenderState slimeRenderState, PoseStack poseStack, MultiBufferSource multiBufferSource, int i, CallbackInfo info) {
+        if (LunaSlimesConfigValueGetter.newShadows() && slimeRenderState instanceof SlimeRenderStateInterface renderStateInterface) {
+            float slimeSize = renderStateInterface.lunaSlimes$getSize();
+            Pair<Float, Float> wobble = renderStateInterface.lunaSlimes$getWobble();
             float wobbleXZ = wobble.getFirst() * 2F;
             float size = ((slimeSize * 0.999F) * 0.75F) * wobbleXZ;
-            float squish = (Mth.lerp(partialTick, ((SlimeInterface) slime).lunaSlimes$prevSquish(), slime.squish) * ConfigValueGetter.squishMultiplier()) / (size * 0.5F + 1F);
+            float squish = (slimeRenderState.squish * LunaSlimesConfigValueGetter.squishMultiplier()) / (size * 0.5F + 1F);
             float j = (1.0F / (squish + 1F));
             this.shadowRadius = 0.25F * (j * size);
         }
     }
 
-    @ModifyReturnValue(at = @At("RETURN"), method = "getTextureLocation")
-    public ResourceLocation lunaSlimes$getTextureLocation(ResourceLocation original, Slime slime) {
-        return SlimeTextures.getSlimeTexture(slime.getSize(), original);
+    @ModifyReturnValue(
+            at = @At("RETURN"),
+            method = "getTextureLocation(Lnet/minecraft/client/renderer/entity/state/SlimeRenderState;)Lnet/minecraft/resources/ResourceLocation;"
+    )
+    public ResourceLocation lunaSlimes$getTextureLocation(ResourceLocation original, SlimeRenderState slimeRenderState) {
+        return SlimeTextures.getSlimeTexture(slimeRenderState.size, original);
     }
 
 }

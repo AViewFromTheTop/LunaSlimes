@@ -7,22 +7,22 @@ import net.fabricmc.api.Environment;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.clothconfig.FrozenClothConfig;
 import net.lunade.slime.config.LunaSlimesConfig;
-import net.lunade.slime.config.frozenlib.GameplayFrozenConfig;
+import net.lunade.slime.config.frozenlib.LunaSlimesGameplayFrozenConfig;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
 @Environment(EnvType.CLIENT)
-public final class GameplayFrozenConfigGui {
-	private GameplayFrozenConfigGui() {
+public final class LunaSlimesGameplayFrozenConfigGui {
+	private LunaSlimesGameplayFrozenConfigGui() {
 		throw new UnsupportedOperationException("GameplayFrozenConfigGui contains only static declarations.");
 	}
 
 	public static void setupEntries(@NotNull ConfigCategory category, @NotNull ConfigEntryBuilder entryBuilder) {
-		var config = GameplayFrozenConfig.get(true);
-		var modifiedConfig = GameplayFrozenConfig.getWithSync();
-		Class<? extends GameplayFrozenConfig> clazz = config.getClass();
-		Config<?> configInstance = GameplayFrozenConfig.INSTANCE;
-		var defaultConfig = GameplayFrozenConfig.INSTANCE.defaultInstance();
+		var config = LunaSlimesGameplayFrozenConfig.get(true);
+		var modifiedConfig = LunaSlimesGameplayFrozenConfig.getWithSync();
+		Class<? extends LunaSlimesGameplayFrozenConfig> clazz = config.getClass();
+		Config<?> configInstance = LunaSlimesGameplayFrozenConfig.INSTANCE;
+		var defaultConfig = LunaSlimesGameplayFrozenConfig.INSTANCE.defaultInstance();
 
 		category.setBackground(ResourceLocation.tryBuild("lunaslimes", "textures/config/gameplay.png"));
 

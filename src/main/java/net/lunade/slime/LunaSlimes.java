@@ -1,6 +1,5 @@
 package net.lunade.slime;
 
-import java.nio.file.Path;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -9,7 +8,9 @@ import net.minecraft.sounds.SoundEvent;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-public class LunaSlimesMain implements ModInitializer {
+import java.nio.file.Path;
+
+public class LunaSlimes implements ModInitializer {
 
     public static final SoundEvent SLIME_MERGE = SoundEvent.createVariableRangeEvent(ResourceLocation.tryBuild("lunaslimes", "entity.slime.merge"));
     public static final SoundEvent SLIME_SPLIT = SoundEvent.createVariableRangeEvent(ResourceLocation.tryBuild("lunaslimes", "entity.slime.split"));

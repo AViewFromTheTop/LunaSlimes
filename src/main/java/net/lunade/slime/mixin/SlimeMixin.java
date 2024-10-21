@@ -5,8 +5,8 @@ import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
-import net.lunade.slime.SlimeMethods;
-import net.lunade.slime.config.getter.ConfigValueGetter;
+import net.lunade.slime.LunaSlimesUtil;
+import net.lunade.slime.config.getter.LunaSlimesConfigValueGetter;
 import net.lunade.slime.impl.SlimeInterface;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleOptions;
@@ -19,7 +19,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.monster.Slime;
@@ -61,8 +61,6 @@ public class SlimeMixin implements SlimeInterface {
     public int lunaSlimes$jumpSquishes;
     @Unique
     public IntArrayList lunaSlimes$landDelays = new IntArrayList();
-    @Unique
-    public float lunaSlimes$previousSquish;
     @Unique
     public int lunaSlimes$prevWobbleAnim;
     @Unique
@@ -139,7 +137,7 @@ public class SlimeMixin implements SlimeInterface {
     @Inject(at = @At("HEAD"), method = "push")
     public void lunaSlimes$push(Entity entity, CallbackInfo info) {
         if (entity instanceof Slime slime2) {
-            SlimeMethods.mergeSlimes(Slime.class.cast(this), slime2);
+            LunaSlimesUtil.mergeSlimes(Slime.class.cast(this), slime2);
         }
     }
 
@@ -148,7 +146,6 @@ public class SlimeMixin implements SlimeInterface {
         Slime slime = Slime.class.cast(this);
         SynchedEntityData entityData = slime.getEntityData();
         this.lunaSlimes$setMergeCooldown(this.lunaSlimes$getMergeCooldown() - 1);
-        this.lunaSlimes$previousSquish = Slime.class.cast(this).squish;
         entityData.set(LUNASLIMES$PREV_WOBBLE_ANIM_PROGRESS, entityData.get(LUNASLIMES$WOBBLE_ANIM_PROGRESS));
         entityData.set(LUNASLIMES$PREV_SIZE, entityData.get(LUNASLIMES$CURRENT_SIZE));
         this.lunaSlimes$prevWobbleAnim = entityData.get(LUNASLIMES$PREV_WOBBLE_ANIM_PROGRESS);
@@ -168,7 +165,7 @@ public class SlimeMixin implements SlimeInterface {
             this.lunaSlimes$landDelays.set(index, array);
             if (array <= 0) {
                 if (array <= -1) {
-                    SlimeMethods.spawnSlimeLandParticles(slime);
+                    LunaSlimesUtil.spawnSlimeLandParticles(slime);
                     slime.playSound(slime.getSquishSound(), slime.getSoundVolume(), ((slime.getRandom().nextFloat() - slime.getRandom().nextFloat()) * 0.2F + 1.0F) / 0.8F);
                 } else {
                     slime.targetSquish = -0.5F;
@@ -182,14 +179,14 @@ public class SlimeMixin implements SlimeInterface {
         }
         this.lunaSlimes$jumpAntic = Slime.class.cast(this).getEntityData().get(LUNASLIMES$JUMP_ANTIC);
 
-        if (ConfigValueGetter.jumpAntic()) {
+        if (LunaSlimesConfigValueGetter.jumpAntic()) {
             if (this.lunaSlimes$jumpSquishes > 0) {
                 if (this.lunaSlimes$jumpSquishes == 3 && this.lunaSlimes$jumpAntic) {
-                    SlimeMethods.setSquish(slime, -0.05F);
+                    LunaSlimesUtil.setSquish(slime, -0.05F);
                 } else if (this.lunaSlimes$jumpSquishes == 2 && this.lunaSlimes$jumpAntic) {
-                    SlimeMethods.setSquish(slime, -0.15F);
+                    LunaSlimesUtil.setSquish(slime, -0.15F);
                 } else if (this.lunaSlimes$jumpSquishes == 1 && this.lunaSlimes$jumpAntic) {
-                    SlimeMethods.setSquish(slime, -0.3F);
+                    LunaSlimesUtil.setSquish(slime, -0.3F);
                 }
                 --this.lunaSlimes$jumpSquishes;
             }
@@ -209,11 +206,15 @@ public class SlimeMixin implements SlimeInterface {
 
     @Inject(at = @At("HEAD"), method = "finalizeSpawn")
     public void lunaSlimes$finalizeSpawn(
-            ServerLevelAccessor world, DifficultyInstance difficulty, MobSpawnType mobSpawnType, SpawnGroupData spawnGroupData, CallbackInfoReturnable<SpawnGroupData> info
+            ServerLevelAccessor serverLevelAccessor, DifficultyInstance difficultyInstance, EntitySpawnReason entitySpawnReason, SpawnGroupData spawnGroupData, CallbackInfoReturnable<SpawnGroupData> cir
     ) {
         this.lunaSlimes$playWobbleAnim();
-        if (mobSpawnType != MobSpawnType.SPAWN_EGG && mobSpawnType != MobSpawnType.MOB_SUMMONED && mobSpawnType != MobSpawnType.BUCKET && mobSpawnType != MobSpawnType.DISPENSER) {
-            this.lunaSlimes$setMergeCooldown(ConfigValueGetter.spawnedMergeCooldown());
+        if (entitySpawnReason != EntitySpawnReason.SPAWN_ITEM_USE
+            && entitySpawnReason != EntitySpawnReason.MOB_SUMMONED
+            && entitySpawnReason != EntitySpawnReason.BUCKET
+            && entitySpawnReason != EntitySpawnReason.DISPENSER
+        ) {
+            this.lunaSlimes$setMergeCooldown(LunaSlimesConfigValueGetter.spawnedMergeCooldown());
         }
     }
 
@@ -235,7 +236,7 @@ public class SlimeMixin implements SlimeInterface {
 
     @Inject(at = @At("HEAD"), method = "decreaseSquish", cancellable = true)
     public void lunaSlimes$decreaseSquish(CallbackInfo info) {
-        if ((this.lunaSlimes$jumpAntic && ConfigValueGetter.jumpAntic()) || !this.lunaSlimes$canSquish()) {
+        if ((this.lunaSlimes$jumpAntic && LunaSlimesConfigValueGetter.jumpAntic()) || !this.lunaSlimes$canSquish()) {
             info.cancel();
         }
     }
@@ -261,25 +262,15 @@ public class SlimeMixin implements SlimeInterface {
         return false;
     }
 
-    @WrapOperation(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;addFreshEntity(Lnet/minecraft/world/entity/Entity;)Z"), method = "remove")
-    public boolean lunaSlimes$beforeSpawnNewSlime(Level par1, Entity par2, Operation<Boolean> operation) {
-        if (par2 instanceof Slime) {
-            ((SlimeInterface) par2).lunaSlimes$setMergeCooldown(Math.max(ConfigValueGetter.onSplitCooldown(), ConfigValueGetter.splitCooldown()) * 2);
-        }
-        Slime slime = Slime.class.cast(this);
-        par2.setSilent(slime.isSilent());
-        return par1.addFreshEntity(par2);
+    @Inject(method = "method_63653", at = @At("HEAD"))
+    public void lunaSlimes$beforeSpawnNewSlime(int i, float f, float g, Slime slime, CallbackInfo info) {
+        ((SlimeInterface) slime).lunaSlimes$setMergeCooldown(Math.max(LunaSlimesConfigValueGetter.onSplitCooldown(), LunaSlimesConfigValueGetter.splitCooldown()) * 2);
+        slime.setSilent(slime.isSilent());
     }
 
     @ModifyReturnValue(at = @At("RETURN"), method = "getParticleType")
     public ParticleOptions lunaSlimes$getParticleType(ParticleOptions original) {
-        return ConfigValueGetter.slimeBlockParticles() ? LUNASLIMES$NEW_SLIME_PARTICLES : original;
-    }
-
-    @Unique
-    @Override
-    public float lunaSlimes$prevSquish() {
-        return this.lunaSlimes$previousSquish;
+        return LunaSlimesConfigValueGetter.slimeBlockParticles() ? LUNASLIMES$NEW_SLIME_PARTICLES : original;
     }
 
     @Unique
@@ -358,7 +349,7 @@ public class SlimeMixin implements SlimeInterface {
     @Unique
     @Override
     public float lunaSlimes$getDeathProgress(float partialTick) {
-        return ConfigValueGetter.deathAnim() && Slime.class.cast(this).isDeadOrDying() ? ((20F - Mth.lerp(partialTick, this.lunaSlimes$prevDeathTime, (Slime.class.cast(this).deathTime))) / 20F) : 1F;
+        return LunaSlimesConfigValueGetter.deathAnim() && Slime.class.cast(this).isDeadOrDying() ? ((20F - Mth.lerp(partialTick, this.lunaSlimes$prevDeathTime, (Slime.class.cast(this).deathTime))) / 20F) : 1F;
     }
 
     @Unique
