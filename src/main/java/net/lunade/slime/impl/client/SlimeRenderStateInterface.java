@@ -4,15 +4,15 @@ import com.mojang.datafixers.util.Pair;
 
 public interface SlimeRenderStateInterface {
 
-    void lunaSlimes$setWobble(Pair<Float, Float> wobble);
+	void lunaSlimes$setWobble(Pair<Float, Float> wobble);
 
-    Pair<Float, Float> lunaSlimes$getWobble();
+	Pair<Float, Float> lunaSlimes$getWobble();
 
-    void lunaSlimes$setSize(float size);
+	void lunaSlimes$setSize(float size);
 
-    float lunaSlimes$getSize();
+	float lunaSlimes$getSize();
 
-    void lunaSlimes$setInWorld(boolean inWorld);
+	void lunaSlimes$setInWorld(boolean inWorld);
 
-    boolean lunaSlimes$isInWorld();
+	boolean lunaSlimes$isInWorld();
 }

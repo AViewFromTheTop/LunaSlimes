@@ -12,10 +12,10 @@ import org.jetbrains.annotations.NotNull;
 @Environment(EnvType.CLIENT)
 public class LunaSlimesClothScreenBuilder {
 
-    @Contract(pure = true)
-    public static @NotNull ConfigScreenFactory<Screen> buildScreen() {
-        if (LunaSlimesConstants.HAS_FROZENLIB) return LunaSlimesFrozenConfigGui::buildScreen;
-        return LunaSlimesConfig::buildScreen;
-    }
+	@Contract(pure = true)
+	public static @NotNull ConfigScreenFactory<Screen> buildScreen() {
+		if (LunaSlimesConstants.HAS_FROZENLIB) return LunaSlimesFrozenConfigGui::buildScreen;
+		return LunaSlimesConfig::buildScreen;
+	}
 
 }

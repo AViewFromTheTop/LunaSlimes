@@ -13,16 +13,16 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(OozingMobEffect.class)
 public class OozingMobEffectMixin {
 
-    @WrapOperation(
+	@WrapOperation(
 		method = "spawnSlimeOffspring",
 		at = @At(
 			value = "INVOKE",
 			target = "Lnet/minecraft/world/level/Level;addFreshEntity(Lnet/minecraft/world/entity/Entity;)Z"
 		)
 	)
-    public boolean lunaSlimes$spawnSlimeOffspring(Level instance, Entity entity, Operation<Boolean> original) {
+	public boolean lunaSlimes$spawnSlimeOffspring(Level instance, Entity entity, Operation<Boolean> original) {
 		if (entity instanceof Slime slime) {
-			((SlimeInterface)slime).lunaSlimes$setMergeCooldown(100);
+			((SlimeInterface) slime).lunaSlimes$setMergeCooldown(100);
 		}
 		return original.call(instance, entity);
 	}

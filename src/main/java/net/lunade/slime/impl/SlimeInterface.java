@@ -3,33 +3,33 @@ package net.lunade.slime.impl;
 public interface SlimeInterface {
 
 
-    int lunaSlimes$getMergeCooldown();
+	int lunaSlimes$getMergeCooldown();
 
-    void lunaSlimes$setMergeCooldown(int i);
+	void lunaSlimes$setMergeCooldown(int i);
 
-    float lunaSlimes$wobbleAnimProgress(float tickDelta);
+	float lunaSlimes$wobbleAnimProgress(float tickDelta);
 
-    void lunaSlimes$playWobbleAnim();
+	void lunaSlimes$playWobbleAnim();
 
-    float lunaSlimes$getSizeScale(float tickDelta);
+	float lunaSlimes$getSizeScale(float tickDelta);
 
-    void lunaSlimes$cheatSize(float f);
+	void lunaSlimes$cheatSize(float f);
 
-    void lunaSlimes$setJumpAntic(boolean bl);
+	void lunaSlimes$setJumpAntic(boolean bl);
 
-    boolean lunaSlimes$getJumpAntic();
+	boolean lunaSlimes$getJumpAntic();
 
-    void lunaSlimes$setJumpAnticTicks(int i);
+	void lunaSlimes$setJumpAnticTicks(int i);
 
-    int lunaSlimes$getSavedJumpDelay();
+	int lunaSlimes$getSavedJumpDelay();
 
-    void lunaSlimes$setJumpDelay(int i);
+	void lunaSlimes$setJumpDelay(int i);
 
-    float lunaSlimes$getDeathProgress(float f);
+	float lunaSlimes$getDeathProgress(float f);
 
-    boolean lunaSlimes$canSquish();
+	boolean lunaSlimes$canSquish();
 
-    void lunaSlimes$setInWorld(boolean bl);
+	void lunaSlimes$setInWorld(boolean bl);
 
-    boolean lunaSlimes$isInWorld();
+	boolean lunaSlimes$isInWorld();
 }

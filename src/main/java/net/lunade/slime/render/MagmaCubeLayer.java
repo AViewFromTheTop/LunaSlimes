@@ -17,26 +17,22 @@ import org.jetbrains.annotations.NotNull;
 
 @Environment(EnvType.CLIENT)
 public class MagmaCubeLayer extends EyesLayer<SlimeRenderState, LavaSlimeModel> {
-    private static final RenderType UNSCALED_OVERLAY = RenderType.eyes(ResourceLocation.tryBuild("lunaslimes", "textures/entity/slime/magmacube_overlay_" + 1 + ".png"));
+	private static final RenderType OVERLAY = RenderType.eyes(ResourceLocation.tryBuild("lunaslimes", "textures/entity/slime/magmacube_overlay.png"));
 
-    public MagmaCubeLayer(RenderLayerParent<SlimeRenderState, LavaSlimeModel> renderLayerParent) {
-        super(renderLayerParent);
-    }
+	public MagmaCubeLayer(RenderLayerParent<SlimeRenderState, LavaSlimeModel> renderLayerParent) {
+		super(renderLayerParent);
+	}
 
-    @Override
-    public void render(PoseStack poseStack, MultiBufferSource multiBufferSource, int i, SlimeRenderState slimeRenderState, float f, float g) {
-        if (LunaSlimesConfigValueGetter.glowingMagma()) {
-            VertexConsumer vertexConsumer = multiBufferSource.getBuffer(this.newRenderType(slimeRenderState));
-            this.getParentModel().renderToBuffer(poseStack, vertexConsumer, 15728640, OverlayTexture.NO_OVERLAY);
-        }
-    }
+	@Override
+	public void render(PoseStack poseStack, MultiBufferSource multiBufferSource, int i, SlimeRenderState slimeRenderState, float f, float g) {
+		if (LunaSlimesConfigValueGetter.glowingMagma()) {
+			VertexConsumer vertexConsumer = multiBufferSource.getBuffer(this.renderType());
+			this.getParentModel().renderToBuffer(poseStack, vertexConsumer, 15728640, OverlayTexture.NO_OVERLAY);
+		}
+	}
 
-    @Override
-    public @NotNull RenderType renderType() {
-        return UNSCALED_OVERLAY;
-    }
-
-    public RenderType newRenderType(@NotNull SlimeRenderState slimeRenderState) {
-        return SlimeTextures.getMagmaCubeOverlayRenderType(slimeRenderState.size, this.renderType());
-    }
+	@Override
+	public @NotNull RenderType renderType() {
+		return OVERLAY;
+	}
 }

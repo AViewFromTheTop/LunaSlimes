@@ -12,13 +12,13 @@ import org.jetbrains.annotations.NotNull;
 @Environment(EnvType.CLIENT)
 public final class LunaSlimesModMenu implements ModMenuApi {
 
-    @Contract(pure = true)
-    @Override
-    public @NotNull ConfigScreenFactory<Screen> getModConfigScreenFactory() {
-        if (LunaSlimesConstants.HAS_CLOTH_CONFIG) {
-            return LunaSlimesClothScreenBuilder.buildScreen();
-        }
-        return (screen -> null);
-    }
+	@Contract(pure = true)
+	@Override
+	public @NotNull ConfigScreenFactory<Screen> getModConfigScreenFactory() {
+		if (LunaSlimesConstants.HAS_CLOTH_CONFIG) {
+			return LunaSlimesClothScreenBuilder.buildScreen();
+		}
+		return (screen -> null);
+	}
 
 }

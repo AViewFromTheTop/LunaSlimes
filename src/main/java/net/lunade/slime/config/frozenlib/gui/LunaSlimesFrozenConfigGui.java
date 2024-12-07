@@ -11,22 +11,22 @@ import org.jetbrains.annotations.NotNull;
 
 public class LunaSlimesFrozenConfigGui extends PartitioningSerializer.GlobalData {
 
-    public static Screen buildScreen(@NotNull Screen parent) {
-        var configBuilder = ConfigBuilder.create().setParentScreen(parent).setTitle(LunaSlimesConfig.text("component.title"));
-        configBuilder.setSavingRunnable(() -> {
-            LunaSlimesGameplayFrozenConfig.INSTANCE.save();
-            LunaSlimesVisualsAudioFrozenConfig.INSTANCE.save();
-        });
+	public static Screen buildScreen(@NotNull Screen parent) {
+		var configBuilder = ConfigBuilder.create().setParentScreen(parent).setTitle(LunaSlimesConfig.text("component.title"));
+		configBuilder.setSavingRunnable(() -> {
+			LunaSlimesGameplayFrozenConfig.INSTANCE.save();
+			LunaSlimesVisualsAudioFrozenConfig.INSTANCE.save();
+		});
 
-        ConfigEntryBuilder entryBuilder = configBuilder.entryBuilder();
+		ConfigEntryBuilder entryBuilder = configBuilder.entryBuilder();
 
-        var gameplay = configBuilder.getOrCreateCategory(LunaSlimesConfig.text("gameplay"));
-        LunaSlimesGameplayFrozenConfigGui.setupEntries(gameplay, entryBuilder);
+		var gameplay = configBuilder.getOrCreateCategory(LunaSlimesConfig.text("gameplay"));
+		LunaSlimesGameplayFrozenConfigGui.setupEntries(gameplay, entryBuilder);
 
-        var visualsAudio = configBuilder.getOrCreateCategory(LunaSlimesConfig.text("visuals_audio"));
-        LunaSlimesVisualsAudioFrozenConfigGui.setupEntries(visualsAudio, entryBuilder);
+		var visualsAudio = configBuilder.getOrCreateCategory(LunaSlimesConfig.text("visuals_audio"));
+		LunaSlimesVisualsAudioFrozenConfigGui.setupEntries(visualsAudio, entryBuilder);
 
-        return configBuilder.build();
-    }
+		return configBuilder.build();
+	}
 
 }

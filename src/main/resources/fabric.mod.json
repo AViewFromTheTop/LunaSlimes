@@ -19,9 +19,6 @@
     "main": [
       "net.lunade.slime.LunaSlimes"
     ],
-    "client": [
-      "net.lunade.slime.LunaSlimesClient"
-    ],
     "modmenu": [
       "net.lunade.slime.LunaSlimesModMenu"
     ]
@@ -42,7 +39,7 @@
   "custom": {
     "modmenu": {
       "links": {
-        "modmenu.discord": "https://discord.gg/frozenblock-modding-oasis-780746010614956112",
+        "modmenu.discord": "https://discord.gg/frozenblock",
         "modmenu.modrinth": "https://modrinth.com/mod/luna-slimes",
         "modmenu.twitter": "https://twitter.com/LunadeModding",
         "modmenu.youtube": "https://www.youtube.com/@LunadeMusic"

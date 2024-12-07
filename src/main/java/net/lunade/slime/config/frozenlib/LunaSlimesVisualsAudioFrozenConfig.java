@@ -33,7 +33,6 @@ public final class LunaSlimesVisualsAudioFrozenConfig {
 				SQUISH_MULTIPLIER = config.squishMultiplier;
 				DEATH_ANIM = config.deathAnim;
 				NEW_SHADOWS = config.newShadows;
-				SCALE_TEXTURES = config.scaleTextures;
 				GLOWING_MAGMA_CUBE = config.glowingMagma;
 			}
 		}
@@ -44,7 +43,6 @@ public final class LunaSlimesVisualsAudioFrozenConfig {
 	public static volatile int SQUISH_MULTIPLIER;
 	public static volatile boolean DEATH_ANIM;
 	public static volatile boolean NEW_SHADOWS;
-	public static volatile boolean SCALE_TEXTURES;
 	public static volatile boolean GLOWING_MAGMA_CUBE;
 
 	@EntrySyncData(value = "growAnim", behavior = SyncBehavior.UNSYNCABLE)
@@ -67,9 +65,6 @@ public final class LunaSlimesVisualsAudioFrozenConfig {
 
 	@EntrySyncData("particles")
 	public boolean particles = true;
-
-	@EntrySyncData(value = "scaleTextures", behavior = SyncBehavior.UNSYNCABLE)
-	public boolean scaleTextures = true;
 
 	@EntrySyncData(value = "glowingMagma", behavior = SyncBehavior.UNSYNCABLE)
 	public boolean glowingMagma = true;

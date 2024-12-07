@@ -12,12 +12,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(MagmaCube.class)
 public class MagmaCubeMixin {
 
-    @Inject(at = @At("HEAD"), method = "decreaseSquish", cancellable = true)
-    public void lunaSlimes$decreaseSquish(CallbackInfo info) {
-        Slime slime = Slime.class.cast(this);
-        if ((((SlimeInterface) slime).lunaSlimes$getJumpAntic() && LunaSlimesConfigValueGetter.jumpAntic()) || !((SlimeInterface) slime).lunaSlimes$canSquish()) {
-            info.cancel();
-        }
-    }
+	@Inject(at = @At("HEAD"), method = "decreaseSquish", cancellable = true)
+	public void lunaSlimes$decreaseSquish(CallbackInfo info) {
+		Slime slime = Slime.class.cast(this);
+		if ((((SlimeInterface) slime).lunaSlimes$getJumpAntic() && LunaSlimesConfigValueGetter.jumpAntic()) || !((SlimeInterface) slime).lunaSlimes$canSquish()) {
+			info.cancel();
+		}
+	}
 
 }

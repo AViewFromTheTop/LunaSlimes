@@ -27,92 +27,92 @@ public final class LunaSlimesGameplayFrozenConfigGui {
 		category.setBackground(ResourceLocation.tryBuild("lunaslimes", "textures/config/gameplay.png"));
 
 		var maxSize = category.addEntry(
-				FrozenClothConfig.syncedEntry(
-						entryBuilder.startIntSlider(LunaSlimesConfig.text("max_size"), modifiedConfig.maxSize, 1, 127)
-								.setDefaultValue(defaultConfig.maxSize)
-								.setSaveConsumer(newValue -> config.maxSize = newValue)
-								.setTooltip(LunaSlimesConfig.tooltip("max_size"))
-								.setMin(1)
-								.setMax(127)
-								.build(),
-						clazz,
-						"maxSize",
-						configInstance
-				)
+			FrozenClothConfig.syncedEntry(
+				entryBuilder.startIntSlider(LunaSlimesConfig.text("max_size"), modifiedConfig.maxSize, 1, 127)
+					.setDefaultValue(defaultConfig.maxSize)
+					.setSaveConsumer(newValue -> config.maxSize = newValue)
+					.setTooltip(LunaSlimesConfig.tooltip("max_size"))
+					.setMin(1)
+					.setMax(127)
+					.build(),
+				clazz,
+				"maxSize",
+				configInstance
+			)
 		);
 
 		var mergeCooldown = category.addEntry(
-				FrozenClothConfig.syncedEntry(
-						entryBuilder.startIntSlider(LunaSlimesConfig.text("merge_cooldown"), modifiedConfig.mergeCooldown, 0, 500)
-								.setDefaultValue(defaultConfig.mergeCooldown)
-								.setSaveConsumer(newValue -> config.mergeCooldown = newValue)
-								.setTooltip(LunaSlimesConfig.tooltip("merge_cooldown"))
-								.setMin(0)
-								.setMax(500)
-								.build(),
-						clazz,
-						"mergeCooldown",
-						configInstance
-				)
+			FrozenClothConfig.syncedEntry(
+				entryBuilder.startIntSlider(LunaSlimesConfig.text("merge_cooldown"), modifiedConfig.mergeCooldown, 0, 500)
+					.setDefaultValue(defaultConfig.mergeCooldown)
+					.setSaveConsumer(newValue -> config.mergeCooldown = newValue)
+					.setTooltip(LunaSlimesConfig.tooltip("merge_cooldown"))
+					.setMin(0)
+					.setMax(500)
+					.build(),
+				clazz,
+				"mergeCooldown",
+				configInstance
+			)
 		);
 
 		var onSplitCooldown = category.addEntry(
-				FrozenClothConfig.syncedEntry(
-						entryBuilder.startIntSlider(LunaSlimesConfig.text("on_split_cooldown"), modifiedConfig.onSplitCooldown, 0, 500)
-								.setDefaultValue(defaultConfig.onSplitCooldown)
-								.setSaveConsumer(newValue -> config.onSplitCooldown = newValue)
-								.setTooltip(LunaSlimesConfig.tooltip("on_split_cooldown"))
-								.setMin(0)
-								.setMax(500)
-								.build(),
-						clazz,
-						"onSplitCooldown",
-						configInstance
-				)
+			FrozenClothConfig.syncedEntry(
+				entryBuilder.startIntSlider(LunaSlimesConfig.text("on_split_cooldown"), modifiedConfig.onSplitCooldown, 0, 500)
+					.setDefaultValue(defaultConfig.onSplitCooldown)
+					.setSaveConsumer(newValue -> config.onSplitCooldown = newValue)
+					.setTooltip(LunaSlimesConfig.tooltip("on_split_cooldown"))
+					.setMin(0)
+					.setMax(500)
+					.build(),
+				clazz,
+				"onSplitCooldown",
+				configInstance
+			)
 		);
 
 		var splitCooldown = category.addEntry(
-				FrozenClothConfig.syncedEntry(
-						entryBuilder.startIntSlider(LunaSlimesConfig.text("split_cooldown"), modifiedConfig.splitCooldown, 0, 500)
-								.setDefaultValue(defaultConfig.splitCooldown)
-								.setSaveConsumer(newValue -> config.splitCooldown = newValue)
-								.setTooltip(LunaSlimesConfig.tooltip("split_cooldown"))
-								.setMin(0)
-								.setMax(500)
-								.build(),
-						clazz,
-						"splitCooldown",
-						configInstance
-				)
+			FrozenClothConfig.syncedEntry(
+				entryBuilder.startIntSlider(LunaSlimesConfig.text("split_cooldown"), modifiedConfig.splitCooldown, 0, 500)
+					.setDefaultValue(defaultConfig.splitCooldown)
+					.setSaveConsumer(newValue -> config.splitCooldown = newValue)
+					.setTooltip(LunaSlimesConfig.tooltip("split_cooldown"))
+					.setMin(0)
+					.setMax(500)
+					.build(),
+				clazz,
+				"splitCooldown",
+				configInstance
+			)
 		);
 
 		var spawnedMergeCooldown = category.addEntry(
-				FrozenClothConfig.syncedEntry(
-						entryBuilder.startIntSlider(LunaSlimesConfig.text("spawned_merge_cooldown"), modifiedConfig.spawnedMergeCooldown, 0, 500)
-								.setDefaultValue(defaultConfig.spawnedMergeCooldown)
-								.setSaveConsumer(newValue -> config.spawnedMergeCooldown = newValue)
-								.setTooltip(LunaSlimesConfig.tooltip("spawned_merge_cooldown"))
-								.setMin(0)
-								.setMax(500)
-								.build(),
-						clazz,
-						"spawnedMergeCooldown",
-						configInstance
-				)
+			FrozenClothConfig.syncedEntry(
+				entryBuilder.startIntSlider(LunaSlimesConfig.text("spawned_merge_cooldown"), modifiedConfig.spawnedMergeCooldown, 0, 500)
+					.setDefaultValue(defaultConfig.spawnedMergeCooldown)
+					.setSaveConsumer(newValue -> config.spawnedMergeCooldown = newValue)
+					.setTooltip(LunaSlimesConfig.tooltip("spawned_merge_cooldown"))
+					.setMin(0)
+					.setMax(500)
+					.build(),
+				clazz,
+				"spawnedMergeCooldown",
+				configInstance
+			)
 		);
 
 		var useSplitting = category.addEntry(
-				FrozenClothConfig.syncedEntry(
-						entryBuilder.startBooleanToggle(LunaSlimesConfig.text("use_splitting"), modifiedConfig.useSplitting)
-								.setDefaultValue(defaultConfig.useSplitting)
-								.setSaveConsumer(newValue -> config.useSplitting = newValue)
-								.setYesNoTextSupplier(bool -> LunaSlimesConfig.text("use_splitting." + bool))
-								.setTooltip(LunaSlimesConfig.tooltip("use_splitting"))
-								.build(),
-						clazz,
-						"useSplitting",
-						configInstance
-				)
+			FrozenClothConfig.syncedEntry(
+				entryBuilder.startBooleanToggle(LunaSlimesConfig.text("use_splitting"), modifiedConfig.useSplitting)
+					.setDefaultValue(defaultConfig.useSplitting)
+					.setSaveConsumer(newValue -> config.useSplitting = newValue)
+					.setYesNoTextSupplier(bool -> LunaSlimesConfig.text("use_splitting." + bool))
+					.setTooltip(LunaSlimesConfig.tooltip("use_splitting"))
+					.build(),
+				clazz,
+				"useSplitting",
+				configInstance
+			)
 		);
 	}
 
