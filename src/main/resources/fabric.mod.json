@@ -31,8 +31,8 @@
   ],
   "accessWidener": "lunaslimes.accesswidener",
   "depends": {
-    "fabric-api": "${fabric_api_version}",
-    "minecraft": "${minecraft_version}",
+    "fabric-api": "*",
+    "minecraft": "*",
     "java": ">=21"
   },
   "suggests": {
@@ -42,10 +42,12 @@
   "custom": {
     "modmenu": {
       "links": {
-        "modmenu.discord": "https://discord.gg/frozenblock-modding-oasis-780746010614956112",
-        "modmenu.modrinth": "https://modrinth.com/mod/luna-slimes",
-        "modmenu.twitter": "https://twitter.com/LunadeModding",
-        "modmenu.youtube": "https://www.youtube.com/@LunadeMusic"
+        "X": "https://x.com/FB_Oasis",
+        "Bluesky": "https://bsky.app/profile/frozenblock.bsky.social",
+        "modmenu.discord": "https://discord.gg/frozenblock",
+        "modmenu.modrinth": "https://modrinth.com/organization/frozenblock",
+        "modmenu.youtube": "https://www.youtube.com/@frozenblockmoddingoasismod",
+        "modmenu.kofi": "https://ko-fi.com/frozenblock"
       }
     }
   }

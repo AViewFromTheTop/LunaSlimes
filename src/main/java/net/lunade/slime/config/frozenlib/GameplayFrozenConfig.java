@@ -14,9 +14,7 @@ public final class GameplayFrozenConfig {
 			"lunaslimes",
 			GameplayFrozenConfig.class,
 			LunaSlimesMain.configPath("gameplay", true),
-			JsonType.JSON,
-			null,
-			null
+			JsonType.JSON
 		)
 	);
 
