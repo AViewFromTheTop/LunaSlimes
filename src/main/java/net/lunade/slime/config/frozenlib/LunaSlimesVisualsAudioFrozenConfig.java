@@ -15,9 +15,7 @@ public final class LunaSlimesVisualsAudioFrozenConfig {
 			"lunaslimes",
 			LunaSlimesVisualsAudioFrozenConfig.class,
 			LunaSlimes.configPath("visuals_audio", true),
-			JsonType.JSON,
-			null,
-			null
+			JsonType.JSON
 		) {
 			@Override
 			public void onSave() throws Exception {
