@@ -82,7 +82,7 @@ public class LunaSlimesUtil {
 				slime.setInvulnerable(origin.isInvulnerable());
 				slime.setSilent(origin.isSilent());
 				slime.setSize(splitOff = i % 2 == 0 ? (int) (i * 0.5) : 1, true);
-				slime.moveTo(origin.getX() + (double) g, origin.getY() + 0.5D, origin.getZ() + (double) h, origin.getRandom().nextFloat() * 360F, 0F);
+				slime.snapTo(origin.getX() + (double) g, origin.getY() + 0.5D, origin.getZ() + (double) h, origin.getRandom().nextFloat() * 360F, 0F);
 				((SlimeInterface) origin).lunaSlimes$setMergeCooldown(LunaSlimesConfigValueGetter.onSplitCooldown());
 				((SlimeInterface) slime).lunaSlimes$setMergeCooldown(LunaSlimesConfigValueGetter.splitCooldown());
 				((SlimeInterface) origin).lunaSlimes$playWobbleAnim();

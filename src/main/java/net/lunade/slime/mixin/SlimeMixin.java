@@ -102,36 +102,20 @@ public class SlimeMixin implements SlimeInterface {
 		compoundTag.putInt("MergeCooldown", this.lunaSlimes$getMergeCooldown());
 		compoundTag.putBoolean("JumpAntic", this.lunaSlimes$jumpAntic);
 		compoundTag.putInt("SlimeJumpDelay", this.lunaSlimes$jumpDelay);
-		compoundTag.putIntArray("LandDelays", this.lunaSlimes$landDelays);
+		compoundTag.putIntArray("LandDelays", this.lunaSlimes$landDelays.toIntArray());
 	}
 
 	@Inject(at = @At("TAIL"), method = "readAdditionalSaveData")
 	public void lunaSlimes$readAdditionalSaveData(CompoundTag compoundTag, CallbackInfo info) {
 		Slime slime = Slime.class.cast(this);
-		if (compoundTag.contains("PrevWobbleAnimProgress")) {
-			slime.getEntityData().set(LUNASLIMES$PREV_WOBBLE_ANIM_PROGRESS, compoundTag.getInt("PrevWobbleAnimProgress"));
-		}
-		if (compoundTag.contains("WobbleAnimProgress")) {
-			slime.getEntityData().set(LUNASLIMES$WOBBLE_ANIM_PROGRESS, compoundTag.getInt("WobbleAnimProgress"));
-		}
-		if (compoundTag.contains("PrevSize")) {
-			slime.getEntityData().set(LUNASLIMES$PREV_SIZE, compoundTag.getFloat("PrevSize"));
-		}
-		if (compoundTag.contains("CurrentSize")) {
-			slime.getEntityData().set(LUNASLIMES$CURRENT_SIZE, compoundTag.getFloat("CurrentSize"));
-		}
-		if (compoundTag.contains("MergeCooldown")) {
-			this.lunaSlimes$setMergeCooldown(compoundTag.getInt("MergeCooldown"));
-		}
-		if (compoundTag.contains("JumpAntic")) {
-			this.lunaSlimes$jumpAntic = compoundTag.getBoolean("JumpAntic");
-		}
-		if (compoundTag.contains("SlimeJumpDelay")) {
-			this.lunaSlimes$jumpDelay = compoundTag.getInt("SlimeJumpDelay");
-		}
-		if (compoundTag.contains("LandDelays")) {
-			this.lunaSlimes$landDelays = IntArrayList.wrap(compoundTag.getIntArray("LandDelays"));
-		}
+		compoundTag.getInt("PrevWobbleAnimProgress").ifPresent(i -> slime.getEntityData().set(LUNASLIMES$PREV_WOBBLE_ANIM_PROGRESS, i));
+		compoundTag.getInt("WobbleAnimProgress").ifPresent(i -> slime.getEntityData().set(LUNASLIMES$WOBBLE_ANIM_PROGRESS, i));
+		compoundTag.getFloat("PrevSize").ifPresent(f -> slime.getEntityData().set(LUNASLIMES$PREV_SIZE, f));
+		compoundTag.getFloat("CurrentSize").ifPresent(f -> slime.getEntityData().set(LUNASLIMES$CURRENT_SIZE, f));
+		this.lunaSlimes$setMergeCooldown(compoundTag.getIntOr("MergeCooldown", 0));
+		this.lunaSlimes$jumpAntic = compoundTag.getBooleanOr("JumpAntic", false);
+		this.lunaSlimes$jumpDelay = compoundTag.getIntOr("SlimeJumpDelay", 0);
+		compoundTag.getIntArray("LandDelays").ifPresent(intArray -> this.lunaSlimes$landDelays = IntArrayList.wrap(intArray));
 	}
 
 	@Inject(at = @At("HEAD"), method = "push")
