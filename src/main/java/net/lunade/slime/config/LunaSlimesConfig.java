@@ -42,11 +42,15 @@ public class LunaSlimesConfig extends PartitioningSerializer.GlobalData {
 	}
 
 	public static LunaSlimesConfig get() {
+		register();
+		return AutoConfig.getConfigHolder(LunaSlimesConfig.class).getConfig();
+	}
+
+	public static void register() {
 		if (!LunaSlimes.areConfigsInit) {
 			AutoConfig.register(LunaSlimesConfig.class, PartitioningSerializer.wrap(GsonConfigSerializer::new));
 			LunaSlimes.areConfigsInit = true;
 		}
-		return AutoConfig.getConfigHolder(LunaSlimesConfig.class).getConfig();
 	}
 
 	@NotNull

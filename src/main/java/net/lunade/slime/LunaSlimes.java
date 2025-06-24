@@ -2,6 +2,7 @@ package net.lunade.slime;
 
 import java.nio.file.Path;
 import net.fabricmc.api.ModInitializer;
+import net.lunade.slime.config.LunaSlimesConfig;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -18,6 +19,7 @@ public class LunaSlimes implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
+		LunaSlimesConfig.register();
 		Registry.register(BuiltInRegistries.SOUND_EVENT, ResourceLocation.tryBuild("lunaslimes", "entity.slime.merge"), SLIME_MERGE);
 		Registry.register(BuiltInRegistries.SOUND_EVENT, ResourceLocation.tryBuild("lunaslimes", "entity.slime.split"), SLIME_SPLIT);
 		Registry.register(BuiltInRegistries.SOUND_EVENT, ResourceLocation.tryBuild("lunaslimes", "entity.magmacube.merge"), MAGMA_MERGE);

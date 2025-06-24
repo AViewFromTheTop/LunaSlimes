@@ -25,10 +25,9 @@ public class MagmaCubeLayer extends EyesLayer<SlimeRenderState, LavaSlimeModel> 
 
 	@Override
 	public void render(PoseStack poseStack, MultiBufferSource multiBufferSource, int i, SlimeRenderState slimeRenderState, float f, float g) {
-		if (LunaSlimesConfigValueGetter.glowingMagma()) {
-			VertexConsumer vertexConsumer = multiBufferSource.getBuffer(this.renderType());
-			this.getParentModel().renderToBuffer(poseStack, vertexConsumer, 15728640, OverlayTexture.NO_OVERLAY);
-		}
+		if (!LunaSlimesConfigValueGetter.glowingMagma()) return;
+		VertexConsumer vertexConsumer = multiBufferSource.getBuffer(this.renderType());
+		this.getParentModel().renderToBuffer(poseStack, vertexConsumer, 15728640, OverlayTexture.NO_OVERLAY);
 	}
 
 	@Override

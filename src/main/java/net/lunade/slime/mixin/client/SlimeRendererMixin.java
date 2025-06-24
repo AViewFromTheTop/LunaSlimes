@@ -60,7 +60,7 @@ public abstract class SlimeRendererMixin extends MobRenderer<Slime, SlimeRenderS
 			poseStack.translate(0F, -(2.05F - (wobbleY * 2.05F)), 0F);
 			float i = (slimeRenderState.squish * LunaSlimesConfigValueGetter.squishMultiplier()) / ((slimeSize) * 0.5F + 1F);
 
-			float j = 1.0F / (i + 1.0F);
+			float j = 1F / (i + 1F);
 			operation.call(poseStack, j * slimeSize, 1F / j * slimeSize, j * slimeSize);
 		} else {
 			operation.call(poseStack, a, b, c);

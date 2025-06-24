@@ -26,6 +26,8 @@ import net.minecraft.world.entity.monster.Slime;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -93,36 +95,34 @@ public class SlimeMixin implements SlimeInterface {
 	}
 
 	@Inject(at = @At("TAIL"), method = "addAdditionalSaveData")
-	public void lunaSlimes$addAdditionalSaveData(CompoundTag compoundTag, CallbackInfo info) {
+	public void lunaSlimes$addAdditionalSaveData(ValueOutput output, CallbackInfo info) {
 		SynchedEntityData entityData = Slime.class.cast(this).getEntityData();
-		compoundTag.putInt("PrevWobbleAnimProgress", entityData.get(LUNASLIMES$PREV_WOBBLE_ANIM_PROGRESS));
-		compoundTag.putInt("WobbleAnimProgress", entityData.get(LUNASLIMES$WOBBLE_ANIM_PROGRESS));
-		compoundTag.putFloat("PrevSize", entityData.get(LUNASLIMES$PREV_SIZE));
-		compoundTag.putFloat("CurrentSize", entityData.get(LUNASLIMES$CURRENT_SIZE));
-		compoundTag.putInt("MergeCooldown", this.lunaSlimes$getMergeCooldown());
-		compoundTag.putBoolean("JumpAntic", this.lunaSlimes$jumpAntic);
-		compoundTag.putInt("SlimeJumpDelay", this.lunaSlimes$jumpDelay);
-		compoundTag.putIntArray("LandDelays", this.lunaSlimes$landDelays.toIntArray());
+		output.putInt("PrevWobbleAnimProgress", entityData.get(LUNASLIMES$PREV_WOBBLE_ANIM_PROGRESS));
+		output.putInt("WobbleAnimProgress", entityData.get(LUNASLIMES$WOBBLE_ANIM_PROGRESS));
+		output.putFloat("PrevSize", entityData.get(LUNASLIMES$PREV_SIZE));
+		output.putFloat("CurrentSize", entityData.get(LUNASLIMES$CURRENT_SIZE));
+		output.putInt("MergeCooldown", this.lunaSlimes$getMergeCooldown());
+		output.putBoolean("JumpAntic", this.lunaSlimes$jumpAntic);
+		output.putInt("SlimeJumpDelay", this.lunaSlimes$jumpDelay);
+		output.putIntArray("LandDelays", this.lunaSlimes$landDelays.toIntArray());
 	}
 
 	@Inject(at = @At("TAIL"), method = "readAdditionalSaveData")
-	public void lunaSlimes$readAdditionalSaveData(CompoundTag compoundTag, CallbackInfo info) {
+	public void lunaSlimes$readAdditionalSaveData(ValueInput input, CallbackInfo info) {
 		Slime slime = Slime.class.cast(this);
-		compoundTag.getInt("PrevWobbleAnimProgress").ifPresent(i -> slime.getEntityData().set(LUNASLIMES$PREV_WOBBLE_ANIM_PROGRESS, i));
-		compoundTag.getInt("WobbleAnimProgress").ifPresent(i -> slime.getEntityData().set(LUNASLIMES$WOBBLE_ANIM_PROGRESS, i));
-		compoundTag.getFloat("PrevSize").ifPresent(f -> slime.getEntityData().set(LUNASLIMES$PREV_SIZE, f));
-		compoundTag.getFloat("CurrentSize").ifPresent(f -> slime.getEntityData().set(LUNASLIMES$CURRENT_SIZE, f));
-		this.lunaSlimes$setMergeCooldown(compoundTag.getIntOr("MergeCooldown", 0));
-		this.lunaSlimes$jumpAntic = compoundTag.getBooleanOr("JumpAntic", false);
-		this.lunaSlimes$jumpDelay = compoundTag.getIntOr("SlimeJumpDelay", 0);
-		compoundTag.getIntArray("LandDelays").ifPresent(intArray -> this.lunaSlimes$landDelays = IntArrayList.wrap(intArray));
+		input.getInt("PrevWobbleAnimProgress").ifPresent(i -> slime.getEntityData().set(LUNASLIMES$PREV_WOBBLE_ANIM_PROGRESS, i));
+		input.getInt("WobbleAnimProgress").ifPresent(i -> slime.getEntityData().set(LUNASLIMES$WOBBLE_ANIM_PROGRESS, i));
+		slime.getEntityData().set(LUNASLIMES$PREV_SIZE, input.getFloatOr("PrevSize", 0F));
+		slime.getEntityData().set(LUNASLIMES$CURRENT_SIZE, input.getFloatOr("CurrentSize", 0F));
+		this.lunaSlimes$setMergeCooldown(input.getIntOr("MergeCooldown", 0));
+		this.lunaSlimes$jumpAntic = input.getBooleanOr("JumpAntic", false);
+		this.lunaSlimes$jumpDelay = input.getIntOr("SlimeJumpDelay", 0);
+		input.getIntArray("LandDelays").ifPresent(intArray -> this.lunaSlimes$landDelays = IntArrayList.wrap(intArray));
 	}
 
 	@Inject(at = @At("HEAD"), method = "push")
 	public void lunaSlimes$push(Entity entity, CallbackInfo info) {
-		if (entity instanceof Slime slime2) {
-			LunaSlimesUtil.mergeSlimes(Slime.class.cast(this), slime2);
-		}
+		if (entity instanceof Slime slime2) LunaSlimesUtil.mergeSlimes(Slime.class.cast(this), slime2);
 	}
 
 	@Inject(at = @At("HEAD"), method = "tick")
@@ -158,9 +158,8 @@ public class SlimeMixin implements SlimeInterface {
 		}
 		this.lunaSlimes$landDelays.removeIf((integer -> integer <= -1));
 
-		if (!slime.level().isClientSide) {
-			entityData.set(LUNASLIMES$JUMP_ANTIC, this.lunaSlimes$jumpAntic);
-		}
+		if (!slime.level().isClientSide) entityData.set(LUNASLIMES$JUMP_ANTIC, this.lunaSlimes$jumpAntic);
+
 		this.lunaSlimes$jumpAntic = Slime.class.cast(this).getEntityData().get(LUNASLIMES$JUMP_ANTIC);
 
 		if (LunaSlimesConfigValueGetter.jumpAntic()) {
@@ -241,7 +240,8 @@ public class SlimeMixin implements SlimeInterface {
 		return false;
 	}
 
-	@WrapWithCondition(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/monster/Slime;playSound(Lnet/minecraft/sounds/SoundEvent;FF)V"), method = "tick")
+	@WrapWithCondition(
+		at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/monster/Slime;playSound(Lnet/minecraft/sounds/SoundEvent;FF)V"), method = "tick")
 	public boolean lunaSlimes$stopSound(Slime slime, SoundEvent soundEvent, float a, float b) {
 		return false;
 	}
@@ -333,7 +333,9 @@ public class SlimeMixin implements SlimeInterface {
 	@Unique
 	@Override
 	public float lunaSlimes$getDeathProgress(float partialTick) {
-		return LunaSlimesConfigValueGetter.deathAnim() && Slime.class.cast(this).isDeadOrDying() ? ((20F - Mth.lerp(partialTick, this.lunaSlimes$prevDeathTime, (Slime.class.cast(this).deathTime))) / 20F) : 1F;
+		return LunaSlimesConfigValueGetter.deathAnim() && Slime.class.cast(this).isDeadOrDying()
+			? ((20F - Mth.lerp(partialTick, this.lunaSlimes$prevDeathTime, (Slime.class.cast(this).deathTime))) / 20F)
+			: 1F;
 	}
 
 	@Unique

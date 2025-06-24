@@ -15,10 +15,8 @@ public final class LunaSlimesModMenu implements ModMenuApi {
 	@Contract(pure = true)
 	@Override
 	public @NotNull ConfigScreenFactory<Screen> getModConfigScreenFactory() {
-		if (LunaSlimesConstants.HAS_CLOTH_CONFIG) {
-			return LunaSlimesClothScreenBuilder.buildScreen();
-		}
-		return (screen -> null);
+		if (LunaSlimesConstants.HAS_CLOTH_CONFIG) return LunaSlimesClothScreenBuilder.buildScreen();
+		return screen -> null;
 	}
 
 }

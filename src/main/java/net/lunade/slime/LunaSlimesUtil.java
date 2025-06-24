@@ -40,12 +40,9 @@ public class LunaSlimesUtil {
 						slime1.playSound(entityType == EntityType.MAGMA_CUBE ? LunaSlimes.MAGMA_MERGE : LunaSlimes.SLIME_MERGE, slime1.getSoundVolume(), 1F + (slime1.getRandom().nextFloat() - slime1.getRandom().nextFloat()) * 0.4f);
 					}
 					((SlimeInterface) slime2).lunaSlimes$playWobbleAnim();
-					if (slime2.isPersistenceRequired()) {
-						slime1.setPersistenceRequired();
-					}
-					if (slime2.hasCustomName() && !slime1.hasCustomName()) {
-						slime1.setCustomName(slime2.getCustomName());
-					}
+
+					if (slime2.isPersistenceRequired()) slime1.setPersistenceRequired();
+					if (slime2.hasCustomName() && !slime1.hasCustomName()) slime1.setCustomName(slime2.getCustomName());
 					slime1.setInvulnerable(slime2.isInvulnerable());
 					slime1.setSilent(slime2.isSilent());
 					slime1.setRemainingFireTicks((int) Math.max(slime1.getRemainingFireTicks(), slime2.getRemainingFireTicks() * 0.5));
@@ -74,9 +71,7 @@ public class LunaSlimesUtil {
 			EntityType<? extends Slime> entityType = origin.getType();
 			Slime slime = entityType.create(origin.level(), EntitySpawnReason.TRIGGERED);
 			if (slime != null) {
-				if (origin.isPersistenceRequired()) {
-					slime.setPersistenceRequired();
-				}
+				if (origin.isPersistenceRequired()) slime.setPersistenceRequired();
 				slime.setCustomName(component);
 				slime.setNoAi(bl);
 				slime.setInvulnerable(origin.isInvulnerable());
@@ -93,7 +88,11 @@ public class LunaSlimesUtil {
 				slime.setDeltaMovement(origin.getDeltaMovement());
 				origin.level().addFreshEntity(slime);
 				if (LunaSlimesConfigValueGetter.splitSounds()) {
-					slime.playSound(entityType == EntityType.MAGMA_CUBE ? LunaSlimes.MAGMA_SPLIT : LunaSlimes.SLIME_SPLIT, slime.getSoundVolume(), 1F + (slime.getRandom().nextFloat() - slime.getRandom().nextFloat()) * 0.4f);
+					slime.playSound(
+						entityType == EntityType.MAGMA_CUBE ? LunaSlimes.MAGMA_SPLIT : LunaSlimes.SLIME_SPLIT,
+						slime.getSoundVolume(),
+						1F + (slime.getRandom().nextFloat() - slime.getRandom().nextFloat()) * 0.4F
+					);
 				}
 			}
 		}
@@ -127,15 +126,11 @@ public class LunaSlimesUtil {
 	}
 
 	public static void setSquish(@NotNull Slime slime, float squish) {
-		if (squish < slime.targetSquish) {
-			slime.targetSquish = squish;
-		}
+		if (squish < slime.targetSquish) slime.targetSquish = squish;
 	}
 
 	public static void setStretch(@NotNull Slime slime, float stretch) {
-		if (stretch > slime.targetSquish) {
-			slime.targetSquish = stretch;
-		}
+		if (stretch > slime.targetSquish) slime.targetSquish = stretch;
 	}
 
 	private static @NotNull EntityDimensions getDimensionsForSize(@NotNull Slime slime, int size) {
