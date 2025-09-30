@@ -8,6 +8,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EntityEvent;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.monster.MagmaCube;
 import net.minecraft.world.entity.monster.Slime;
@@ -22,8 +23,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class MobMixin {
 
 	@Inject(at = @At("HEAD"), method = "handleEntityEvent")
-	public void lunaSlimes$handleEntityEvent(byte b, CallbackInfo info) {
-		if (Mob.class.cast(this) instanceof Slime slime && b == (byte) 61 && LunaSlimesConfigValueGetter.jumpAntic()) {
+	public void lunaSlimes$handleEntityEvent(byte event, CallbackInfo info) {
+		if (Mob.class.cast(this) instanceof Slime slime && event == EntityEvent.TENDRILS_SHIVER && LunaSlimesConfigValueGetter.jumpAntic()) {
 			LunaSlimesUtil.setSquish(slime, -0.05F);
 			((SlimeInterface) slime).lunaSlimes$setJumpAnticTicks(3);
 		}
@@ -31,16 +32,14 @@ public class MobMixin {
 
 	@Inject(method = "getLootTable", at = @At("TAIL"), cancellable = true)
 	public void lunaSlimes$modifyMagmaCubeLootTable(CallbackInfoReturnable<Optional<ResourceKey<LootTable>>> info) {
-		if (Mob.class.cast(this) instanceof MagmaCube magmaCube) {
-			if (LunaSlimesConfigValueGetter.useSplitting()) {
-				ResourceLocation resourceLocation = BuiltInRegistries.ENTITY_TYPE.getKey(magmaCube.getType());
-				ResourceKey<LootTable> lootTable = ResourceKey.create(
-					Registries.LOOT_TABLE,
-					ResourceLocation.tryBuild("lunaslimes", "entities/" + resourceLocation.getPath())
-				);
-				info.setReturnValue(Optional.of(lootTable));
-			}
-		}
+		if (!(Mob.class.cast(this) instanceof MagmaCube magmaCube)) return;
+		if (!LunaSlimesConfigValueGetter.useSplitting()) return;
+		final ResourceLocation resourceLocation = BuiltInRegistries.ENTITY_TYPE.getKey(magmaCube.getType());
+		final ResourceKey<LootTable> lootTable = ResourceKey.create(
+			Registries.LOOT_TABLE,
+			ResourceLocation.tryBuild("lunaslimes", "entities/" + resourceLocation.getPath())
+		);
+		info.setReturnValue(Optional.of(lootTable));
 	}
 
 }

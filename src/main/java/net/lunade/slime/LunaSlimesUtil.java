@@ -20,108 +20,117 @@ import org.jetbrains.annotations.NotNull;
 public class LunaSlimesUtil {
 
 	public static void mergeSlimes(@NotNull Slime slime1, @NotNull Slime slime2) {
-		EntityType<? extends Slime> entityType = slime1.getType();
-		if (slime2.getType() == entityType && slime1.isAlive() && slime2.isAlive()) {
-			int thisSize = slime1.getSize();
-			int otherSize = slime2.getSize();
-			if ((thisSize > otherSize || thisSize == otherSize) && thisSize <= LunaSlimesConfigValueGetter.maxSize() - 1 && ((SlimeInterface) slime1).lunaSlimes$getMergeCooldown() <= 0 && ((SlimeInterface) slime2).lunaSlimes$getMergeCooldown() <= 0) {
-				EntityDimensions oldDimensions = getDimensionsForSize(slime1, thisSize);
-				EntityDimensions inflated = getDimensionsForSize(slime1, thisSize + 1);
-				Vec3 newPos = slime1.position().add(0F, (inflated.height() - oldDimensions.height()) * 0.5F, 0F);
-				Vec3 vec3 = slime1.getDeltaMovement();
-				Vec3 vec32 = collideWithBox(slime1, vec3, inflated.makeBoundingBox(newPos));
-				boolean horizontalCollision = !Mth.equal(vec3.x, vec32.x) || !Mth.equal(vec3.z, vec32.z);
-				boolean verticalCollision = vec3.y != vec32.y;
-				if (!horizontalCollision && !verticalCollision) {
-					slime1.setSize(thisSize + 1, true);
-					((SlimeInterface) slime1).lunaSlimes$setMergeCooldown(LunaSlimesConfigValueGetter.mergeCooldown());
-					((SlimeInterface) slime1).lunaSlimes$playWobbleAnim();
-					if (LunaSlimesConfigValueGetter.mergeSounds()) {
-						slime1.playSound(entityType == EntityType.MAGMA_CUBE ? LunaSlimes.MAGMA_MERGE : LunaSlimes.SLIME_MERGE, slime1.getSoundVolume(), 1F + (slime1.getRandom().nextFloat() - slime1.getRandom().nextFloat()) * 0.4f);
-					}
-					((SlimeInterface) slime2).lunaSlimes$playWobbleAnim();
+		final EntityType<? extends Slime> entityType = slime1.getType();
+		if (slime2.getType() != entityType || !slime1.isAlive() || !slime2.isAlive()) return;
 
-					if (slime2.isPersistenceRequired()) slime1.setPersistenceRequired();
-					if (slime2.hasCustomName() && !slime1.hasCustomName()) slime1.setCustomName(slime2.getCustomName());
-					slime1.setInvulnerable(slime2.isInvulnerable());
-					slime1.setSilent(slime2.isSilent());
-					slime1.setRemainingFireTicks((int) Math.max(slime1.getRemainingFireTicks(), slime2.getRemainingFireTicks() * 0.5));
-					slime1.setTicksFrozen((int) Math.max(slime1.getTicksFrozen(), slime2.getTicksFrozen() * 0.5));
-					slime1.setPos(newPos);
-					if (otherSize - 1 <= 0) {
-						slime2.discard();
-					} else {
-						slime2.setSize(otherSize - 1, true);
-					}
+		final int thisSize = slime1.getSize();
+		final int otherSize = slime2.getSize();
+		if ((thisSize > otherSize || thisSize == otherSize)
+			&& thisSize <= LunaSlimesConfigValueGetter.maxSize() - 1
+			&& ((SlimeInterface) slime1).lunaSlimes$getMergeCooldown() <= 0
+			&& ((SlimeInterface) slime2).lunaSlimes$getMergeCooldown() <= 0
+		) {
+			final EntityDimensions oldDimensions = getDimensionsForSize(slime1, thisSize);
+			final EntityDimensions inflated = getDimensionsForSize(slime1, thisSize + 1);
+			final Vec3 newPos = slime1.position().add(0F, (inflated.height() - oldDimensions.height()) * 0.5F, 0F);
+			final Vec3 vec3 = slime1.getDeltaMovement();
+			final Vec3 vec32 = collideWithBox(slime1, vec3, inflated.makeBoundingBox(newPos));
+			final boolean horizontalCollision = !Mth.equal(vec3.x, vec32.x) || !Mth.equal(vec3.z, vec32.z);
+			final boolean verticalCollision = vec3.y != vec32.y;
+			if (!horizontalCollision && !verticalCollision) {
+				slime1.setSize(thisSize + 1, true);
+				((SlimeInterface) slime1).lunaSlimes$setMergeCooldown(LunaSlimesConfigValueGetter.mergeCooldown());
+				((SlimeInterface) slime1).lunaSlimes$playWobbleAnim();
+				if (LunaSlimesConfigValueGetter.mergeSounds()) {
+					slime1.playSound(
+						entityType == EntityType.MAGMA_CUBE ? LunaSlimes.MAGMA_MERGE : LunaSlimes.SLIME_MERGE,
+						slime1.getSoundVolume(),
+						1F + (slime1.getRandom().nextFloat() - slime1.getRandom().nextFloat()) * 0.4F
+					);
+				}
+				((SlimeInterface) slime2).lunaSlimes$playWobbleAnim();
+
+				if (slime2.isPersistenceRequired()) slime1.setPersistenceRequired();
+				if (slime2.hasCustomName() && !slime1.hasCustomName()) slime1.setCustomName(slime2.getCustomName());
+				slime1.setInvulnerable(slime2.isInvulnerable());
+				slime1.setSilent(slime2.isSilent());
+				slime1.setRemainingFireTicks((int) Math.max(slime1.getRemainingFireTicks(), slime2.getRemainingFireTicks() * 0.5));
+				slime1.setTicksFrozen((int) Math.max(slime1.getTicksFrozen(), slime2.getTicksFrozen() * 0.5));
+				slime1.setPos(newPos);
+				if (otherSize - 1 <= 0) {
+					slime2.discard();
+				} else {
+					slime2.setSize(otherSize - 1, true);
 				}
 			}
 		}
 	}
 
 	public static int spawnSingleSlime(@NotNull Slime origin) {
-		int i = origin.getSize();
+		final int originalSize = origin.getSize();
+		if (origin.level().isClientSide() || originalSize <= 0) return 0;
+
 		int splitOff = 0;
-		if (!origin.level().isClientSide && i > 1) {
-			Component component = origin.getCustomName();
-			boolean bl = origin.isNoAi();
-			float f = (float) i / 4F;
-			int l = (int) ((2 + origin.getRandom().nextInt(3)) * origin.getRandom().nextDouble());
-			float g = ((float) (l % 2) - 0.5F) * f;
-			float h = ((float) (l / 2) - 0.5F) * f;
-			EntityType<? extends Slime> entityType = origin.getType();
-			Slime slime = entityType.create(origin.level(), EntitySpawnReason.TRIGGERED);
-			if (slime != null) {
-				if (origin.isPersistenceRequired()) slime.setPersistenceRequired();
-				slime.setCustomName(component);
-				slime.setNoAi(bl);
-				slime.setInvulnerable(origin.isInvulnerable());
-				slime.setSilent(origin.isSilent());
-				slime.setSize(splitOff = i % 2 == 0 ? (int) (i * 0.5) : 1, true);
-				slime.snapTo(origin.getX() + (double) g, origin.getY() + 0.5D, origin.getZ() + (double) h, origin.getRandom().nextFloat() * 360F, 0F);
-				((SlimeInterface) origin).lunaSlimes$setMergeCooldown(LunaSlimesConfigValueGetter.onSplitCooldown());
-				((SlimeInterface) slime).lunaSlimes$setMergeCooldown(LunaSlimesConfigValueGetter.splitCooldown());
-				((SlimeInterface) origin).lunaSlimes$playWobbleAnim();
-				((SlimeInterface) slime).lunaSlimes$playWobbleAnim();
-				LunaSlimesUtil.spawnSlimeParticles(origin);
-				slime.setRemainingFireTicks(origin.getRemainingFireTicks());
-				slime.setTicksFrozen(origin.getTicksFrozen());
-				slime.setDeltaMovement(origin.getDeltaMovement());
-				origin.level().addFreshEntity(slime);
-				if (LunaSlimesConfigValueGetter.splitSounds()) {
-					slime.playSound(
-						entityType == EntityType.MAGMA_CUBE ? LunaSlimes.MAGMA_SPLIT : LunaSlimes.SLIME_SPLIT,
-						slime.getSoundVolume(),
-						1F + (slime.getRandom().nextFloat() - slime.getRandom().nextFloat()) * 0.4F
-					);
-				}
-			}
+		final Component component = origin.getCustomName();
+		final float quarterSize = (float) originalSize / 4F;
+		int l = (int) ((2 + origin.getRandom().nextInt(3)) * origin.getRandom().nextDouble());
+		float g = ((float) (l % 2) - 0.5F) * quarterSize;
+		float h = ((float) (l / 2) - 0.5F) * quarterSize;
+		final EntityType<? extends Slime> entityType = origin.getType();
+		final Slime slime = entityType.create(origin.level(), EntitySpawnReason.TRIGGERED);
+		if (slime == null) return splitOff;
+
+		if (origin.isPersistenceRequired()) slime.setPersistenceRequired();
+		slime.setCustomName(component);
+		slime.setNoAi(origin.isNoAi());
+		slime.setInvulnerable(origin.isInvulnerable());
+		slime.setSilent(origin.isSilent());
+		slime.setSize(splitOff = originalSize % 2 == 0 ? (int) (originalSize * 0.5) : 1, true);
+		slime.snapTo(origin.getX() + (double) g, origin.getY() + 0.5D, origin.getZ() + (double) h, origin.getRandom().nextFloat() * 360F, 0F);
+		((SlimeInterface) origin).lunaSlimes$setMergeCooldown(LunaSlimesConfigValueGetter.onSplitCooldown());
+		((SlimeInterface) slime).lunaSlimes$setMergeCooldown(LunaSlimesConfigValueGetter.splitCooldown());
+		((SlimeInterface) origin).lunaSlimes$playWobbleAnim();
+		((SlimeInterface) slime).lunaSlimes$playWobbleAnim();
+		LunaSlimesUtil.spawnSlimeParticles(origin);
+		slime.setRemainingFireTicks(origin.getRemainingFireTicks());
+		slime.setTicksFrozen(origin.getTicksFrozen());
+		slime.setDeltaMovement(origin.getDeltaMovement());
+		origin.level().addFreshEntity(slime);
+		if (LunaSlimesConfigValueGetter.splitSounds()) {
+			slime.playSound(
+				entityType == EntityType.MAGMA_CUBE ? LunaSlimes.MAGMA_SPLIT : LunaSlimes.SLIME_SPLIT,
+				slime.getSoundVolume(),
+				1F + (slime.getRandom().nextFloat() - slime.getRandom().nextFloat()) * 0.4F
+			);
 		}
 		return splitOff;
 	}
 
 	public static void spawnSlimeParticles(@NotNull Slime slime) {
-		if (slime.level() instanceof ServerLevel level && LunaSlimesConfigValueGetter.particles()) {
-			level.sendParticles(slime.getParticleType(), slime.getX(), slime.getY(0.6666666666666666D), slime.getZ(), level.random.nextInt(slime.getSize() * 6, slime.getSize() * 12), slime.getBbWidth() / 4.0F, slime.getBbHeight() / 4.0F, slime.getBbWidth() / 4.0F, 0.05D);
-		}
+		if (!(slime.level() instanceof ServerLevel level) || !LunaSlimesConfigValueGetter.particles()) return;
+		level.sendParticles(slime.getParticleType(), slime.getX(), slime.getY(0.6666666666666666D), slime.getZ(), level.random.nextInt(slime.getSize() * 6, slime.getSize() * 12), slime.getBbWidth() / 4.0F, slime.getBbHeight() / 4.0F, slime.getBbWidth() / 4.0F, 0.05D);
 	}
 
 	public static void spawnSlimeLandParticles(@NotNull Slime slime) {
-		if (slime.level() instanceof ServerLevel level) {
-			level.sendParticles(slime.getParticleType(), slime.getX(), slime.getY(), slime.getZ(), level.random.nextInt(slime.getSize() * 6, slime.getSize() * 8), slime.getBbWidth() / 3.5F, 0F, slime.getBbWidth() / 3.5F, 0.05D);
-		}
+		if (!(slime.level() instanceof ServerLevel level)) return;
+		level.sendParticles(slime.getParticleType(), slime.getX(), slime.getY(), slime.getZ(), level.random.nextInt(slime.getSize() * 6, slime.getSize() * 8), slime.getBbWidth() / 3.5F, 0F, slime.getBbWidth() / 3.5F, 0.05D);
 	}
 
 	public static float getSlimeScale(Slime slime, float partialTick) {
-		return (LunaSlimesConfigValueGetter.growAnim() ? ((SlimeInterface) slime).lunaSlimes$getSizeScale(partialTick) : slime.getSize()) * ((SlimeInterface) slime).lunaSlimes$getDeathProgress(partialTick);
+		return (LunaSlimesConfigValueGetter.growAnim()
+			? ((SlimeInterface) slime).lunaSlimes$getSizeScale(partialTick)
+			: slime.getSize()) * ((SlimeInterface) slime).lunaSlimes$getDeathProgress(partialTick);
 	}
 
 	public static float getSlimeWobbleAnimProgress(Slime slime, float partialTick) {
-		return LunaSlimesConfigValueGetter.wobbleAnim() ? ((SlimeInterface) slime).lunaSlimes$wobbleAnimProgress(partialTick) : 0F;
+		return LunaSlimesConfigValueGetter.wobbleAnim()
+		? ((SlimeInterface) slime).lunaSlimes$wobbleAnimProgress(partialTick)
+			: 0F;
 	}
 
 	@NotNull
 	public static Pair<Float, Float> wobbleAnim(Slime slime, float partialTick) {
-		float cosWobble = (float) Math.cos((((LunaSlimesUtil.getSlimeWobbleAnimProgress(slime, partialTick) + (0.0955F * Math.PI)) * Math.PI) * 5F));
+		final float cosWobble = (float) Math.cos((((LunaSlimesUtil.getSlimeWobbleAnimProgress(slime, partialTick) + (0.0955F * Math.PI)) * Math.PI) * 5F));
 		return Pair.of((cosWobble * 0.1F) + 1F, -(cosWobble * 0.025F) + 1F);
 	}
 
@@ -138,10 +147,10 @@ public class LunaSlimesUtil {
 	}
 
 	private static Vec3 collideWithBox(@NotNull Slime slime, Vec3 vec3, @NotNull AABB aABB) {
-		List<VoxelShape> list = slime.level().getEntityCollisions(slime, aABB.expandTowards(vec3));
-		Vec3 vec32 = vec3.lengthSqr() == 0D ? vec3 : Entity.collideBoundingBox(slime, vec3, aABB, slime.level(), list);
-		boolean bool = slime.onGround() || vec3.y != vec32.y && vec3.y < 0F;
-		if (slime.maxUpStep() > 0F && bool && (vec3.x != vec32.x || vec3.z != vec32.z)) {
+		final List<VoxelShape> list = slime.level().getEntityCollisions(slime, aABB.expandTowards(vec3));
+		final Vec3 vec32 = vec3.lengthSqr() == 0D ? vec3 : Entity.collideBoundingBox(slime, vec3, aABB, slime.level(), list);
+		final boolean onGroundOrFalling = slime.onGround() || vec3.y != vec32.y && vec3.y < 0F;
+		if (slime.maxUpStep() > 0F && onGroundOrFalling && (vec3.x != vec32.x || vec3.z != vec32.z)) {
 			Vec3 vec35;
 			Vec3 vec33 = Entity.collideBoundingBox(slime, new Vec3(vec3.x, slime.maxUpStep(), vec3.z), aABB, slime.level(), list);
 			Vec3 vec34 = Entity.collideBoundingBox(slime, new Vec3(0F, slime.maxUpStep(), 0F), aABB.expandTowards(vec3.x, 0F, vec3.z), slime.level(), list);

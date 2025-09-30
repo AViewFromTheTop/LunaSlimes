@@ -35,11 +35,10 @@ public abstract class SlimeRendererMixin extends MobRenderer<Slime, SlimeRenderS
 		at = @At("TAIL")
 	)
 	public void lunaSlimes$extractRenderState(Slime slime, SlimeRenderState slimeRenderState, float f, CallbackInfo info) {
-		if (slimeRenderState instanceof SlimeRenderStateInterface renderStateInterface) {
-			renderStateInterface.lunaSlimes$setInWorld(((SlimeInterface) slime).lunaSlimes$isInWorld());
-			renderStateInterface.lunaSlimes$setWobble(LunaSlimesUtil.wobbleAnim(slime, f));
-			renderStateInterface.lunaSlimes$setSize(LunaSlimesUtil.getSlimeScale(slime, f));
-		}
+		if (!(slimeRenderState instanceof SlimeRenderStateInterface renderStateInterface)) return;
+		renderStateInterface.lunaSlimes$setInWorld(((SlimeInterface) slime).lunaSlimes$isInWorld());
+		renderStateInterface.lunaSlimes$setWobble(LunaSlimesUtil.wobbleAnim(slime, f));
+		renderStateInterface.lunaSlimes$setSize(LunaSlimesUtil.getSlimeScale(slime, f));
 	}
 
 	@WrapOperation(
@@ -51,20 +50,21 @@ public abstract class SlimeRendererMixin extends MobRenderer<Slime, SlimeRenderS
 		)
 	)
 	public void lunaSlimes$newScaling(PoseStack poseStack, float a, float b, float c, Operation<Void> operation, SlimeRenderState slimeRenderState, PoseStack poseStack2) {
-		if (slimeRenderState instanceof SlimeRenderStateInterface renderStateInterface && renderStateInterface.lunaSlimes$isInWorld()) {
-			float slimeSize = renderStateInterface.lunaSlimes$getSize();
-			Pair<Float, Float> wobble = renderStateInterface.lunaSlimes$getWobble();
-			float wobbleXZ = wobble.getFirst();
-			float wobbleY = wobble.getSecond();
-			poseStack.scale(wobbleXZ, wobbleY, wobbleXZ);
-			poseStack.translate(0F, -(2.05F - (wobbleY * 2.05F)), 0F);
-			float i = (slimeRenderState.squish * LunaSlimesConfigValueGetter.squishMultiplier()) / ((slimeSize) * 0.5F + 1F);
-
-			float j = 1F / (i + 1F);
-			operation.call(poseStack, j * slimeSize, 1F / j * slimeSize, j * slimeSize);
-		} else {
+		if (!(slimeRenderState instanceof SlimeRenderStateInterface renderStateInterface && renderStateInterface.lunaSlimes$isInWorld())) {
 			operation.call(poseStack, a, b, c);
+			return;
 		}
+
+		final float slimeSize = renderStateInterface.lunaSlimes$getSize();
+		final Pair<Float, Float> wobble = renderStateInterface.lunaSlimes$getWobble();
+		final float wobbleXZ = wobble.getFirst();
+		final float wobbleY = wobble.getSecond();
+		poseStack.scale(wobbleXZ, wobbleY, wobbleXZ);
+		poseStack.translate(0F, -(2.05F - (wobbleY * 2.05F)), 0F);
+		final float i = (slimeRenderState.squish * LunaSlimesConfigValueGetter.squishMultiplier()) / ((slimeSize) * 0.5F + 1F);
+
+		final float j = 1F / (i + 1F);
+		operation.call(poseStack, j * slimeSize, 1F / j * slimeSize, j * slimeSize);
 	}
 
 	@ModifyReturnValue(
@@ -72,16 +72,14 @@ public abstract class SlimeRendererMixin extends MobRenderer<Slime, SlimeRenderS
 		at = @At("RETURN")
 	)
 	public float lunaSlimes$newShadows(float original, SlimeRenderState slimeRenderState) {
-		if (LunaSlimesConfigValueGetter.newShadows() && slimeRenderState instanceof SlimeRenderStateInterface renderStateInterface) {
-			float slimeSize = renderStateInterface.lunaSlimes$getSize();
-			Pair<Float, Float> wobble = renderStateInterface.lunaSlimes$getWobble();
-			float wobbleXZ = wobble.getFirst() * 2F;
-			float size = ((slimeSize * 0.999F) * 0.75F) * wobbleXZ;
-			float squish = (slimeRenderState.squish * LunaSlimesConfigValueGetter.squishMultiplier()) / (size * 0.5F + 1F);
-			float j = (1F / (squish + 1F));
-			return 0.25F * (j * size);
-		}
-		return original;
+		if (!(LunaSlimesConfigValueGetter.newShadows() && slimeRenderState instanceof SlimeRenderStateInterface renderStateInterface)) return original;
+		final float slimeSize = renderStateInterface.lunaSlimes$getSize();
+		final Pair<Float, Float> wobble = renderStateInterface.lunaSlimes$getWobble();
+		final float wobbleXZ = wobble.getFirst() * 2F;
+		final float size = ((slimeSize * 0.999F) * 0.75F) * wobbleXZ;
+		final float squish = (slimeRenderState.squish * LunaSlimesConfigValueGetter.squishMultiplier()) / (size * 0.5F + 1F);
+		final float j = (1F / (squish + 1F));
+		return 0.25F * (j * size);
 	}
 
 }

@@ -2,6 +2,7 @@ package net.lunade.slime;
 
 import java.nio.file.Path;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.loader.api.FabricLoader;
 import net.lunade.slime.config.LunaSlimesConfig;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -19,7 +20,7 @@ public class LunaSlimes implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
-		LunaSlimesConfig.register();
+		if (FabricLoader.getInstance().isModLoaded("cloth-config") || FabricLoader.getInstance().isModLoaded("cloth_config")) LunaSlimesConfig.register();
 		Registry.register(BuiltInRegistries.SOUND_EVENT, ResourceLocation.tryBuild("lunaslimes", "entity.slime.merge"), SLIME_MERGE);
 		Registry.register(BuiltInRegistries.SOUND_EVENT, ResourceLocation.tryBuild("lunaslimes", "entity.slime.split"), SLIME_SPLIT);
 		Registry.register(BuiltInRegistries.SOUND_EVENT, ResourceLocation.tryBuild("lunaslimes", "entity.magmacube.merge"), MAGMA_MERGE);

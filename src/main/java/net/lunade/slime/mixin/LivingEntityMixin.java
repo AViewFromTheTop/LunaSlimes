@@ -23,37 +23,31 @@ public class LivingEntityMixin {
 
 	@Inject(method = "recreateFromPacket", at = @At("TAIL"))
 	public void luneSlimes$recreateFromPacket(ClientboundAddEntityPacket clientboundAddEntityPacket, CallbackInfo info) {
-		if (Entity.class.cast(this) instanceof Slime slime) {
-			((SlimeInterface) slime).lunaSlimes$setInWorld(true);
-		}
+		if (Entity.class.cast(this) instanceof Slime slime) ((SlimeInterface) slime).lunaSlimes$setInWorld(true);
 	}
 
 	@ModifyReturnValue(at = @At("RETURN"), method = "hurtServer")
 	public boolean lunaSlimes$hurtServer(boolean original) {
-		if (original && LivingEntity.class.cast(this) instanceof Slime slime) {
-			if (!slime.isTiny() && slime.isDeadOrDying() && LunaSlimesConfigValueGetter.useSplitting()) {
-				int split = LunaSlimesUtil.spawnSingleSlime(slime);
-				slime.setSize(slime.getSize() - split, true);
-				slime.deathTime = 0;
-			}
+		if (original && LivingEntity.class.cast(this) instanceof Slime slime && !slime.isTiny() && slime.isDeadOrDying() && LunaSlimesConfigValueGetter.useSplitting()) {
+			final int split = LunaSlimesUtil.spawnSingleSlime(slime);
+			slime.setSize(slime.getSize() - split, true);
+			slime.deathTime = 0;
 		}
 		return original;
 	}
 
 	@Inject(at = @At("HEAD"), method = "die", cancellable = true)
 	public void lunaSlimes$die(DamageSource damageSource, CallbackInfo info) {
-		LivingEntity entity = LivingEntity.class.cast(this);
+		final LivingEntity entity = LivingEntity.class.cast(this);
 		if (entity instanceof Slime slime) {
-			Optional<ResourceKey<DamageType>> damageType = damageSource.typeHolder().unwrapKey();
-			if (damageType.isPresent() && damageType.get() != DamageTypes.GENERIC_KILL && !slime.isTiny() && LunaSlimesConfigValueGetter.useSplitting()) {
-				info.cancel();
-			}
+			final Optional<ResourceKey<DamageType>> damageType = damageSource.typeHolder().unwrapKey();
+			if (damageType.isPresent() && damageType.get() != DamageTypes.GENERIC_KILL && !slime.isTiny() && LunaSlimesConfigValueGetter.useSplitting()) info.cancel();
 		}
 	}
 
 	@Inject(at = @At("HEAD"), method = "doPush")
 	public void lunaSlimes$doPush(Entity entity, CallbackInfo info) {
-		LivingEntity thisEntity = LivingEntity.class.cast(this);
+		final LivingEntity thisEntity = LivingEntity.class.cast(this);
 		if (thisEntity instanceof Slime && entity instanceof Slime slime2) {
 			LunaSlimesUtil.mergeSlimes(Slime.class.cast(this), slime2);
 		}
@@ -61,11 +55,9 @@ public class LivingEntityMixin {
 
 	@Inject(at = @At("HEAD"), method = "knockback", cancellable = true)
 	public void lunaSlimes$knockback(double d, double e, double f, CallbackInfo info) {
-		LivingEntity entity = LivingEntity.class.cast(this);
+		final LivingEntity entity = LivingEntity.class.cast(this);
 		if (entity instanceof Slime slime) {
-			if (slime.isTiny() && slime.isDeadOrDying() && LunaSlimesConfigValueGetter.deathAnim()) {
-				info.cancel();
-			}
+			if (slime.isTiny() && slime.isDeadOrDying() && LunaSlimesConfigValueGetter.deathAnim()) info.cancel();
 		}
 	}
 

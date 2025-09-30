@@ -11,7 +11,6 @@ import net.lunade.slime.impl.SlimeInterface;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -127,8 +126,8 @@ public class SlimeMixin implements SlimeInterface {
 
 	@Inject(at = @At("HEAD"), method = "tick")
 	public void lunaSlimes$tick(CallbackInfo info) {
-		Slime slime = Slime.class.cast(this);
-		SynchedEntityData entityData = slime.getEntityData();
+		final Slime slime = Slime.class.cast(this);
+		final SynchedEntityData entityData = slime.getEntityData();
 		this.lunaSlimes$setMergeCooldown(this.lunaSlimes$getMergeCooldown() - 1);
 		entityData.set(LUNASLIMES$PREV_WOBBLE_ANIM_PROGRESS, entityData.get(LUNASLIMES$WOBBLE_ANIM_PROGRESS));
 		entityData.set(LUNASLIMES$PREV_SIZE, entityData.get(LUNASLIMES$CURRENT_SIZE));
@@ -136,8 +135,8 @@ public class SlimeMixin implements SlimeInterface {
 		this.lunaSlimes$prevSize = entityData.get(LUNASLIMES$PREV_SIZE);
 
 		entityData.set(LUNASLIMES$WOBBLE_ANIM_PROGRESS, Math.max(0, entityData.get(LUNASLIMES$WOBBLE_ANIM_PROGRESS) - 1));
-		float currentSize = entityData.get(LUNASLIMES$CURRENT_SIZE);
-		float sizeDiff = slime.getSize() - currentSize;
+		final float currentSize = entityData.get(LUNASLIMES$CURRENT_SIZE);
+		final float sizeDiff = slime.getSize() - currentSize;
 		entityData.set(LUNASLIMES$CURRENT_SIZE, currentSize + sizeDiff * 0.25F);
 		this.lunaSlimes$wobbleAnim = entityData.get(LUNASLIMES$WOBBLE_ANIM_PROGRESS);
 		this.lunaSlimes$currentSize = entityData.get(LUNASLIMES$CURRENT_SIZE);
@@ -147,18 +146,17 @@ public class SlimeMixin implements SlimeInterface {
 			int array = this.lunaSlimes$landDelays.getInt(index);
 			array -= 1;
 			this.lunaSlimes$landDelays.set(index, array);
-			if (array <= 0) {
-				if (array <= -1) {
-					LunaSlimesUtil.spawnSlimeLandParticles(slime);
-					slime.playSound(slime.getSquishSound(), slime.getSoundVolume(), ((slime.getRandom().nextFloat() - slime.getRandom().nextFloat()) * 0.2F + 1.0F) / 0.8F);
-				} else {
-					slime.targetSquish = -0.5F;
-				}
+			if (array > 0) continue;
+			if (array <= -1) {
+				LunaSlimesUtil.spawnSlimeLandParticles(slime);
+				slime.playSound(slime.getSquishSound(), slime.getSoundVolume(), ((slime.getRandom().nextFloat() - slime.getRandom().nextFloat()) * 0.2F + 1.0F) / 0.8F);
+			} else {
+				slime.targetSquish = -0.5F;
 			}
 		}
 		this.lunaSlimes$landDelays.removeIf((integer -> integer <= -1));
 
-		if (!slime.level().isClientSide) entityData.set(LUNASLIMES$JUMP_ANTIC, this.lunaSlimes$jumpAntic);
+		if (!slime.level().isClientSide()) entityData.set(LUNASLIMES$JUMP_ANTIC, this.lunaSlimes$jumpAntic);
 
 		this.lunaSlimes$jumpAntic = Slime.class.cast(this).getEntityData().get(LUNASLIMES$JUMP_ANTIC);
 
@@ -213,7 +211,7 @@ public class SlimeMixin implements SlimeInterface {
 		)
 	)
 	public void lunaSlimes$oddHealth(AttributeInstance attributeInstance, double value, Operation<Void> operation) {
-		int sqrt = (int) Math.sqrt(value);
+		final int sqrt = (int) Math.sqrt(value);
 		operation.call(attributeInstance, sqrt % 2 == 0 ? value : sqrt);
 	}
 
@@ -240,8 +238,7 @@ public class SlimeMixin implements SlimeInterface {
 		return false;
 	}
 
-	@WrapWithCondition(
-		at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/monster/Slime;playSound(Lnet/minecraft/sounds/SoundEvent;FF)V"), method = "tick")
+	@WrapWithCondition(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/monster/Slime;playSound(Lnet/minecraft/sounds/SoundEvent;FF)V"), method = "tick")
 	public boolean lunaSlimes$stopSound(Slime slime, SoundEvent soundEvent, float a, float b) {
 		return false;
 	}
@@ -278,10 +275,8 @@ public class SlimeMixin implements SlimeInterface {
 	@Unique
 	@Override
 	public void lunaSlimes$playWobbleAnim() {
-		SynchedEntityData entityData = Slime.class.cast(this).getEntityData();
-		if (entityData.get(LUNASLIMES$WOBBLE_ANIM_PROGRESS) == 0) {
-			entityData.set(LUNASLIMES$WOBBLE_ANIM_PROGRESS, LUNASLIMES$WOBBLE_ANIM_LENGTH);
-		}
+		final SynchedEntityData entityData = Slime.class.cast(this).getEntityData();
+		if (entityData.get(LUNASLIMES$WOBBLE_ANIM_PROGRESS) == 0) entityData.set(LUNASLIMES$WOBBLE_ANIM_PROGRESS, LUNASLIMES$WOBBLE_ANIM_LENGTH);
 	}
 
 	@Unique
@@ -293,7 +288,7 @@ public class SlimeMixin implements SlimeInterface {
 	@Unique
 	@Override
 	public void lunaSlimes$cheatSize(float f) {
-		SynchedEntityData entityData = Slime.class.cast(this).getEntityData();
+		final SynchedEntityData entityData = Slime.class.cast(this).getEntityData();
 		entityData.set(LUNASLIMES$PREV_SIZE, f);
 		entityData.set(LUNASLIMES$CURRENT_SIZE, f);
 		this.lunaSlimes$prevSize = f;

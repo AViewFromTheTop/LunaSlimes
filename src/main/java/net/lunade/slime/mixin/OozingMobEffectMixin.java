@@ -21,9 +21,7 @@ public class OozingMobEffectMixin {
 		)
 	)
 	public boolean lunaSlimes$spawnSlimeOffspring(Level instance, Entity entity, Operation<Boolean> original) {
-		if (entity instanceof Slime slime) {
-			((SlimeInterface) slime).lunaSlimes$setMergeCooldown(100);
-		}
+		if (entity instanceof Slime slime) ((SlimeInterface) slime).lunaSlimes$setMergeCooldown(100);
 		return original.call(instance, entity);
 	}
 
