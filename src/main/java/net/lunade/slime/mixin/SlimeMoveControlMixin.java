@@ -21,12 +21,14 @@ public class SlimeMoveControlMixin {
 
 	@Inject(at = @At("TAIL"), method = "<init>")
 	public void lunaSlimes$init(Slime slime, CallbackInfo info) {
-		this.jumpDelay = ((SlimeInterface) slime).lunaSlimes$getSavedJumpDelay();
+		if (!(this.slime instanceof SlimeInterface slimeInterface)) return;
+		this.jumpDelay = slimeInterface.lunaSlimes$getSavedJumpDelay();
 	}
 
 	@Inject(at = @At("HEAD"), method = "tick")
 	public void lunaSlimes$tick(CallbackInfo info) {
-		final SlimeInterface slimeInterface = (SlimeInterface) this.slime;
+		if (!(this.slime instanceof SlimeInterface slimeInterface)) return;
+
 		slimeInterface.lunaSlimes$setJumpDelay(this.jumpDelay);
 		if (!LunaSlimesConfigValueGetter.jumpAntic()) {
 			slimeInterface.lunaSlimes$setJumpAntic(false);
@@ -51,7 +53,8 @@ public class SlimeMoveControlMixin {
 
 	@Inject(at = @At("TAIL"), method = "tick")
 	public void lunaSlimes$tickTail(CallbackInfo info) {
-		((SlimeInterface) this.slime).lunaSlimes$setJumpDelay(this.jumpDelay);
+		if (!(this.slime instanceof SlimeInterface slimeInterface)) return;
+		slimeInterface.lunaSlimes$setJumpDelay(this.jumpDelay);
 	}
 
 }

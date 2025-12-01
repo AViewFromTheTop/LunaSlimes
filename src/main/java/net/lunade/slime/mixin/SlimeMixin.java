@@ -84,7 +84,7 @@ public class SlimeMixin implements SlimeInterface {
 	@Shadow
 	public float targetSquish;
 
-	@Inject(at = @At("TAIL"), method = "defineSynchedData")
+	@Inject(method = "defineSynchedData", at = @At("TAIL"))
 	protected void lunaSlimes$defineSynchedData(SynchedEntityData.Builder builder, CallbackInfo info) {
 		builder.define(LUNASLIMES$PREV_WOBBLE_ANIM_PROGRESS, 0);
 		builder.define(LUNASLIMES$WOBBLE_ANIM_PROGRESS, 0);
@@ -93,9 +93,9 @@ public class SlimeMixin implements SlimeInterface {
 		builder.define(LUNASLIMES$JUMP_ANTIC, false);
 	}
 
-	@Inject(at = @At("TAIL"), method = "addAdditionalSaveData")
+	@Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
 	public void lunaSlimes$addAdditionalSaveData(ValueOutput output, CallbackInfo info) {
-		SynchedEntityData entityData = Slime.class.cast(this).getEntityData();
+		final SynchedEntityData entityData = Slime.class.cast(this).getEntityData();
 		output.putInt("PrevWobbleAnimProgress", entityData.get(LUNASLIMES$PREV_WOBBLE_ANIM_PROGRESS));
 		output.putInt("WobbleAnimProgress", entityData.get(LUNASLIMES$WOBBLE_ANIM_PROGRESS));
 		output.putFloat("PrevSize", entityData.get(LUNASLIMES$PREV_SIZE));
@@ -106,25 +106,26 @@ public class SlimeMixin implements SlimeInterface {
 		output.putIntArray("LandDelays", this.lunaSlimes$landDelays.toIntArray());
 	}
 
-	@Inject(at = @At("TAIL"), method = "readAdditionalSaveData")
+	@Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
 	public void lunaSlimes$readAdditionalSaveData(ValueInput input, CallbackInfo info) {
-		Slime slime = Slime.class.cast(this);
-		input.getInt("PrevWobbleAnimProgress").ifPresent(i -> slime.getEntityData().set(LUNASLIMES$PREV_WOBBLE_ANIM_PROGRESS, i));
-		input.getInt("WobbleAnimProgress").ifPresent(i -> slime.getEntityData().set(LUNASLIMES$WOBBLE_ANIM_PROGRESS, i));
-		slime.getEntityData().set(LUNASLIMES$PREV_SIZE, input.getFloatOr("PrevSize", 0F));
-		slime.getEntityData().set(LUNASLIMES$CURRENT_SIZE, input.getFloatOr("CurrentSize", 0F));
+		final Slime slime = Slime.class.cast(this);
+		final SynchedEntityData entityData = slime.getEntityData();
+		input.getInt("PrevWobbleAnimProgress").ifPresent(i -> entityData.set(LUNASLIMES$PREV_WOBBLE_ANIM_PROGRESS, i));
+		input.getInt("WobbleAnimProgress").ifPresent(i -> entityData.set(LUNASLIMES$WOBBLE_ANIM_PROGRESS, i));
+		entityData.set(LUNASLIMES$PREV_SIZE, input.getFloatOr("PrevSize", 0F));
+		entityData.set(LUNASLIMES$CURRENT_SIZE, input.getFloatOr("CurrentSize", 0F));
 		this.lunaSlimes$setMergeCooldown(input.getIntOr("MergeCooldown", 0));
 		this.lunaSlimes$jumpAntic = input.getBooleanOr("JumpAntic", false);
 		this.lunaSlimes$jumpDelay = input.getIntOr("SlimeJumpDelay", 0);
 		input.getIntArray("LandDelays").ifPresent(intArray -> this.lunaSlimes$landDelays = IntArrayList.wrap(intArray));
 	}
 
-	@Inject(at = @At("HEAD"), method = "push")
+	@Inject(method = "push", at = @At("HEAD"))
 	public void lunaSlimes$push(Entity entity, CallbackInfo info) {
-		if (entity instanceof Slime slime2) LunaSlimesUtil.mergeSlimes(Slime.class.cast(this), slime2);
+		if (entity instanceof Slime slime) LunaSlimesUtil.mergeSlimes(Slime.class.cast(this), slime);
 	}
 
-	@Inject(at = @At("HEAD"), method = "tick")
+	@Inject(method = "tick", at = @At("HEAD"))
 	public void lunaSlimes$tick(CallbackInfo info) {
 		final Slime slime = Slime.class.cast(this);
 		final SynchedEntityData entityData = slime.getEntityData();
@@ -154,54 +155,69 @@ public class SlimeMixin implements SlimeInterface {
 				slime.targetSquish = -0.5F;
 			}
 		}
-		this.lunaSlimes$landDelays.removeIf((integer -> integer <= -1));
+		this.lunaSlimes$landDelays.removeIf(integer -> integer <= -1);
 
-		if (!slime.level().isClientSide()) entityData.set(LUNASLIMES$JUMP_ANTIC, this.lunaSlimes$jumpAntic);
+		jumpAntic: {
+			if (!slime.level().isClientSide()) entityData.set(LUNASLIMES$JUMP_ANTIC, this.lunaSlimes$jumpAntic);
+			this.lunaSlimes$jumpAntic = Slime.class.cast(this).getEntityData().get(LUNASLIMES$JUMP_ANTIC);
 
-		this.lunaSlimes$jumpAntic = Slime.class.cast(this).getEntityData().get(LUNASLIMES$JUMP_ANTIC);
+			if (!LunaSlimesConfigValueGetter.jumpAntic()) break jumpAntic;
+			if (this.lunaSlimes$jumpSquishes <= 0) break jumpAntic;
 
-		if (LunaSlimesConfigValueGetter.jumpAntic()) {
-			if (this.lunaSlimes$jumpSquishes > 0) {
-				if (this.lunaSlimes$jumpSquishes == 3 && this.lunaSlimes$jumpAntic) {
-					LunaSlimesUtil.setSquish(slime, -0.05F);
-				} else if (this.lunaSlimes$jumpSquishes == 2 && this.lunaSlimes$jumpAntic) {
-					LunaSlimesUtil.setSquish(slime, -0.15F);
-				} else if (this.lunaSlimes$jumpSquishes == 1 && this.lunaSlimes$jumpAntic) {
-					LunaSlimesUtil.setSquish(slime, -0.3F);
-				}
-				--this.lunaSlimes$jumpSquishes;
+			if (this.lunaSlimes$jumpSquishes == 3 && this.lunaSlimes$jumpAntic) {
+				LunaSlimesUtil.setSquish(slime, -0.05F);
+			} else if (this.lunaSlimes$jumpSquishes == 2 && this.lunaSlimes$jumpAntic) {
+				LunaSlimesUtil.setSquish(slime, -0.15F);
+			} else if (this.lunaSlimes$jumpSquishes == 1 && this.lunaSlimes$jumpAntic) {
+				LunaSlimesUtil.setSquish(slime, -0.3F);
 			}
+			--this.lunaSlimes$jumpSquishes;
 		}
 	}
 
-	@Inject(at = @At(value = "FIELD", target = "Lnet/minecraft/world/entity/monster/Slime;targetSquish:F", ordinal = 1, shift = At.Shift.BEFORE), method = "tick")
+	@Inject(
+		method = "tick",
+		at = @At(
+			value = "FIELD",
+			target = "Lnet/minecraft/world/entity/monster/Slime;targetSquish:F",
+			ordinal = 1,
+			shift = At.Shift.BEFORE
+		)
+	)
 	public void lunaSlimes$captureSquish(CallbackInfo info) {
 		this.lunaSlimes$prevTargetSquish = this.targetSquish;
 		this.lunaSlimes$landDelays.add(1);
 	}
 
-	@Inject(at = @At(value = "FIELD", target = "Lnet/minecraft/world/entity/monster/Slime;targetSquish:F", ordinal = 1, shift = At.Shift.AFTER), method = "tick")
+	@Inject(
+		method = "tick",
+		at = @At(
+			value = "FIELD",
+			target = "Lnet/minecraft/world/entity/monster/Slime;targetSquish:F",
+			ordinal = 1,
+			shift = At.Shift.AFTER
+		)
+	)
 	public void lunaSlimes$undoSquish(CallbackInfo info) {
 		this.targetSquish = this.lunaSlimes$prevTargetSquish;
 	}
 
-	@Inject(at = @At("HEAD"), method = "finalizeSpawn")
+	@Inject(method = "finalizeSpawn", at = @At("HEAD"))
 	public void lunaSlimes$finalizeSpawn(
-		ServerLevelAccessor serverLevelAccessor, DifficultyInstance difficultyInstance, EntitySpawnReason entitySpawnReason, SpawnGroupData spawnGroupData, CallbackInfoReturnable<SpawnGroupData> cir
+		ServerLevelAccessor level, DifficultyInstance difficulty, EntitySpawnReason reason, SpawnGroupData data, CallbackInfoReturnable<SpawnGroupData> info
 	) {
 		this.lunaSlimes$playWobbleAnim();
-		if (entitySpawnReason != EntitySpawnReason.SPAWN_ITEM_USE
-			&& entitySpawnReason != EntitySpawnReason.MOB_SUMMONED
-			&& entitySpawnReason != EntitySpawnReason.BUCKET
-			&& entitySpawnReason != EntitySpawnReason.DISPENSER
-		) {
-			this.lunaSlimes$setMergeCooldown(LunaSlimesConfigValueGetter.spawnedMergeCooldown());
-		}
+		if (reason == EntitySpawnReason.SPAWN_ITEM_USE || reason == EntitySpawnReason.MOB_SUMMONED || reason == EntitySpawnReason.BUCKET || reason == EntitySpawnReason.DISPENSER) return;
+		this.lunaSlimes$setMergeCooldown(LunaSlimesConfigValueGetter.spawnedMergeCooldown());
 	}
 
 	@WrapOperation(
 		method = "setSize",
-		at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/ai/attributes/AttributeInstance;setBaseValue(D)V", ordinal = 0),
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/world/entity/ai/attributes/AttributeInstance;setBaseValue(D)V",
+			ordinal = 0
+		),
 		slice = @Slice(
 			from = @At(
 				value = "FIELD",
@@ -210,35 +226,59 @@ public class SlimeMixin implements SlimeInterface {
 			)
 		)
 	)
-	public void lunaSlimes$oddHealth(AttributeInstance attributeInstance, double value, Operation<Void> operation) {
+	public void lunaSlimes$oddHealth(AttributeInstance attribute, double value, Operation<Void> operation) {
 		final int sqrt = (int) Math.sqrt(value);
-		operation.call(attributeInstance, sqrt % 2 == 0 ? value : sqrt);
+		operation.call(attribute, sqrt % 2 == 0 ? value : sqrt);
 	}
 
-	@Inject(at = @At("HEAD"), method = "decreaseSquish", cancellable = true)
+	@Inject(method = "decreaseSquish", at = @At("HEAD"), cancellable = true)
 	public void lunaSlimes$decreaseSquish(CallbackInfo info) {
-		if ((this.lunaSlimes$jumpAntic && LunaSlimesConfigValueGetter.jumpAntic()) || !this.lunaSlimes$canSquish()) {
-			info.cancel();
-		}
+		if ((this.lunaSlimes$jumpAntic && LunaSlimesConfigValueGetter.jumpAntic()) || !this.lunaSlimes$canSquish()) info.cancel();
 	}
 
-	@Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Mob;tick()V", shift = At.Shift.BEFORE), method = "tick")
+	@Inject(
+		method = "tick",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/world/entity/Mob;tick()V",
+			shift = At.Shift.BEFORE
+		)
+	)
 	public void lunaSlimes$moveDecreaseSquish(CallbackInfo info) {
 		this.lunaSlimes$canSquish = true;
 		this.decreaseSquish();
 	}
 
-	@Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/monster/Slime;decreaseSquish()V", shift = At.Shift.BEFORE), method = "tick")
+	@Inject(
+		method = "tick",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/world/entity/monster/Slime;decreaseSquish()V",
+			shift = At.Shift.BEFORE
+		)
+	)
 	public void lunaSlimes$stopDecreaseSquish(CallbackInfo info) {
 		this.lunaSlimes$canSquish = false;
 	}
 
-	@WrapWithCondition(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;addParticle(Lnet/minecraft/core/particles/ParticleOptions;DDDDDD)V"), method = "tick")
+	@WrapWithCondition(
+		method = "tick",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/world/level/Level;addParticle(Lnet/minecraft/core/particles/ParticleOptions;DDDDDD)V"
+		)
+	)
 	public boolean lunaSlimes$stopParticles(Level level, ParticleOptions particleOptions, double a, double b, double c, double e, double f, double g) {
 		return false;
 	}
 
-	@WrapWithCondition(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/monster/Slime;playSound(Lnet/minecraft/sounds/SoundEvent;FF)V"), method = "tick")
+	@WrapWithCondition(
+		method = "tick",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/world/entity/monster/Slime;playSound(Lnet/minecraft/sounds/SoundEvent;FF)V"
+		)
+	)
 	public boolean lunaSlimes$stopSound(Slime slime, SoundEvent soundEvent, float a, float b) {
 		return false;
 	}
@@ -249,7 +289,7 @@ public class SlimeMixin implements SlimeInterface {
 		slime.setSilent(slime.isSilent());
 	}
 
-	@ModifyReturnValue(at = @At("RETURN"), method = "getParticleType")
+	@ModifyReturnValue(method = "getParticleType", at = @At("RETURN"))
 	public ParticleOptions lunaSlimes$getParticleType(ParticleOptions original) {
 		return LunaSlimesConfigValueGetter.slimeBlockParticles() ? LUNASLIMES$NEW_SLIME_PARTICLES : original;
 	}

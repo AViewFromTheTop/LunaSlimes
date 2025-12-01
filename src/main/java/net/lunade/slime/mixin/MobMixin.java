@@ -6,8 +6,8 @@ import net.lunade.slime.config.getter.LunaSlimesConfigValueGetter;
 import net.lunade.slime.impl.SlimeInterface;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityEvent;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.monster.MagmaCube;
@@ -24,20 +24,19 @@ public class MobMixin {
 
 	@Inject(at = @At("HEAD"), method = "handleEntityEvent")
 	public void lunaSlimes$handleEntityEvent(byte event, CallbackInfo info) {
-		if (Mob.class.cast(this) instanceof Slime slime && event == EntityEvent.TENDRILS_SHIVER && LunaSlimesConfigValueGetter.jumpAntic()) {
-			LunaSlimesUtil.setSquish(slime, -0.05F);
-			((SlimeInterface) slime).lunaSlimes$setJumpAnticTicks(3);
-		}
+		if (!(Mob.class.cast(this) instanceof Slime slime) || event != EntityEvent.TENDRILS_SHIVER || !LunaSlimesConfigValueGetter.jumpAntic()) return;
+		LunaSlimesUtil.setSquish(slime, -0.05F);
+		if (slime instanceof SlimeInterface slimeInterface) slimeInterface.lunaSlimes$setJumpAnticTicks(3);
 	}
 
 	@Inject(method = "getLootTable", at = @At("TAIL"), cancellable = true)
 	public void lunaSlimes$modifyMagmaCubeLootTable(CallbackInfoReturnable<Optional<ResourceKey<LootTable>>> info) {
 		if (!(Mob.class.cast(this) instanceof MagmaCube magmaCube)) return;
 		if (!LunaSlimesConfigValueGetter.useSplitting()) return;
-		final ResourceLocation resourceLocation = BuiltInRegistries.ENTITY_TYPE.getKey(magmaCube.getType());
+		final Identifier identifier = BuiltInRegistries.ENTITY_TYPE.getKey(magmaCube.getType());
 		final ResourceKey<LootTable> lootTable = ResourceKey.create(
 			Registries.LOOT_TABLE,
-			ResourceLocation.tryBuild("lunaslimes", "entities/" + resourceLocation.getPath())
+			Identifier.fromNamespaceAndPath("lunaslimes", "entities/" + identifier.getPath())
 		);
 		info.setReturnValue(Optional.of(lootTable));
 	}

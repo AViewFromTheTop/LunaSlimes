@@ -6,14 +6,12 @@ import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.resources.Identifier;
 import static net.lunade.slime.config.LunaSlimesConfig.text;
 import static net.lunade.slime.config.LunaSlimesConfig.tooltip;
-import net.minecraft.resources.ResourceLocation;
-import org.jetbrains.annotations.NotNull;
 
 @Config(name = "visuals_audio")
 public final class LunaSlimesVisualsAudioConfig implements ConfigData {
-
 	public boolean growAnim = true;
 	public boolean wobbleAnim = true;
 	public int squishMultiplier = 20;
@@ -27,11 +25,11 @@ public final class LunaSlimesVisualsAudioConfig implements ConfigData {
 	public boolean splitSounds = true;
 
 	@Environment(EnvType.CLIENT)
-	static void setupEntries(@NotNull ConfigCategory category, @NotNull ConfigEntryBuilder entryBuilder) {
-		var config = LunaSlimesConfig.get().visuals_audio;
-		category.setBackground(ResourceLocation.tryBuild("lunaslimes", "textures/config/visuals_audio.png"));
+	static void setupEntries(ConfigCategory category, ConfigEntryBuilder builder) {
+		final var config = LunaSlimesConfig.get().visuals_audio;
+		category.setBackground(Identifier.fromNamespaceAndPath("lunaslimes", "textures/config/visuals_audio.png"));
 
-		var growAnim = category.addEntry(entryBuilder.startBooleanToggle(text("grow_anim"), config.growAnim)
+		var growAnim = category.addEntry(builder.startBooleanToggle(text("grow_anim"), config.growAnim)
 			.setDefaultValue(true)
 			.setSaveConsumer(newValue -> config.growAnim = newValue)
 			.setYesNoTextSupplier(bool -> text("grow_anim." + bool))
@@ -39,7 +37,7 @@ public final class LunaSlimesVisualsAudioConfig implements ConfigData {
 			.build()
 		);
 
-		var wobbleAnim = category.addEntry(entryBuilder.startBooleanToggle(text("wobble_anim"), config.wobbleAnim)
+		var wobbleAnim = category.addEntry(builder.startBooleanToggle(text("wobble_anim"), config.wobbleAnim)
 			.setDefaultValue(true)
 			.setSaveConsumer(newValue -> config.wobbleAnim = newValue)
 			.setYesNoTextSupplier(bool -> text("wobble_anim." + bool))
@@ -47,7 +45,7 @@ public final class LunaSlimesVisualsAudioConfig implements ConfigData {
 			.build()
 		);
 
-		var squishMultiplier = category.addEntry(entryBuilder.startIntSlider(text("squish_multiplier"), config.squishMultiplier, 0, 50)
+		var squishMultiplier = category.addEntry(builder.startIntSlider(text("squish_multiplier"), config.squishMultiplier, 0, 50)
 			.setDefaultValue(20)
 			.setSaveConsumer(newValue -> config.squishMultiplier = newValue)
 			.setTooltip(tooltip("squish_multiplier"))
@@ -56,7 +54,7 @@ public final class LunaSlimesVisualsAudioConfig implements ConfigData {
 			.build()
 		);
 
-		var jumpAntic = category.addEntry(entryBuilder.startBooleanToggle(text("jump_antic"), config.jumpAntic)
+		var jumpAntic = category.addEntry(builder.startBooleanToggle(text("jump_antic"), config.jumpAntic)
 			.setDefaultValue(true)
 			.setSaveConsumer(newValue -> config.jumpAntic = newValue)
 			.setYesNoTextSupplier(bool -> text("jump_antic." + bool))
@@ -64,7 +62,7 @@ public final class LunaSlimesVisualsAudioConfig implements ConfigData {
 			.build()
 		);
 
-		var deathAnim = category.addEntry(entryBuilder.startBooleanToggle(text("death_anim"), config.deathAnim)
+		var deathAnim = category.addEntry(builder.startBooleanToggle(text("death_anim"), config.deathAnim)
 			.setDefaultValue(true)
 			.setSaveConsumer(newValue -> config.deathAnim = newValue)
 			.setYesNoTextSupplier(bool -> text("death_anim." + bool))
@@ -72,7 +70,7 @@ public final class LunaSlimesVisualsAudioConfig implements ConfigData {
 			.build()
 		);
 
-		var newShadows = category.addEntry(entryBuilder.startBooleanToggle(text("new_shadows"), config.newShadows)
+		var newShadows = category.addEntry(builder.startBooleanToggle(text("new_shadows"), config.newShadows)
 			.setDefaultValue(true)
 			.setSaveConsumer(newValue -> config.newShadows = newValue)
 			.setYesNoTextSupplier(bool -> text("new_shadows." + bool))
@@ -80,7 +78,7 @@ public final class LunaSlimesVisualsAudioConfig implements ConfigData {
 			.build()
 		);
 
-		var particles = category.addEntry(entryBuilder.startBooleanToggle(text("particles"), config.particles)
+		var particles = category.addEntry(builder.startBooleanToggle(text("particles"), config.particles)
 			.setDefaultValue(true)
 			.setSaveConsumer(newValue -> config.particles = newValue)
 			.setYesNoTextSupplier(bool -> text("particles." + bool))
@@ -88,7 +86,7 @@ public final class LunaSlimesVisualsAudioConfig implements ConfigData {
 			.build()
 		);
 
-		var glowingMagma = category.addEntry(entryBuilder.startBooleanToggle(text("glowing_magma"), config.glowingMagma)
+		var glowingMagma = category.addEntry(builder.startBooleanToggle(text("glowing_magma"), config.glowingMagma)
 			.setDefaultValue(true)
 			.setSaveConsumer(newValue -> config.glowingMagma = newValue)
 			.setYesNoTextSupplier(bool -> text("glowing_magma." + bool))
@@ -96,7 +94,7 @@ public final class LunaSlimesVisualsAudioConfig implements ConfigData {
 			.build()
 		);
 
-		var slimeBlockParticles = category.addEntry(entryBuilder.startBooleanToggle(text("slime_block_particles"), config.slimeBlockParticles)
+		var slimeBlockParticles = category.addEntry(builder.startBooleanToggle(text("slime_block_particles"), config.slimeBlockParticles)
 			.setDefaultValue(true)
 			.setSaveConsumer(newValue -> config.slimeBlockParticles = newValue)
 			.setYesNoTextSupplier(bool -> text("slime_block_particles." + bool))
@@ -104,7 +102,7 @@ public final class LunaSlimesVisualsAudioConfig implements ConfigData {
 			.build()
 		);
 
-		var mergeSounds = category.addEntry(entryBuilder.startBooleanToggle(text("merge_sounds"), config.mergeSounds)
+		var mergeSounds = category.addEntry(builder.startBooleanToggle(text("merge_sounds"), config.mergeSounds)
 			.setDefaultValue(true)
 			.setSaveConsumer(newValue -> config.mergeSounds = newValue)
 			.setYesNoTextSupplier(bool -> text("merge_sounds." + bool))
@@ -112,7 +110,7 @@ public final class LunaSlimesVisualsAudioConfig implements ConfigData {
 			.build()
 		);
 
-		var splitSounds = category.addEntry(entryBuilder.startBooleanToggle(text("split_sounds"), config.splitSounds)
+		var splitSounds = category.addEntry(builder.startBooleanToggle(text("split_sounds"), config.splitSounds)
 			.setDefaultValue(true)
 			.setSaveConsumer(newValue -> config.splitSounds = newValue)
 			.setYesNoTextSupplier(bool -> text("split_sounds." + bool))

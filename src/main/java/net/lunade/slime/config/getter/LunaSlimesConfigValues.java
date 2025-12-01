@@ -5,7 +5,6 @@ import net.lunade.slime.config.LunaSlimesGameplayConfig;
 import net.lunade.slime.config.LunaSlimesVisualsAudioConfig;
 
 public class LunaSlimesConfigValues {
-
 	private static final LunaSlimesVisualsAudioConfig VISUALS_AUDIO = LunaSlimesConfig.get().visuals_audio;
 	private static final LunaSlimesGameplayConfig GAMEPLAY = LunaSlimesConfig.get().gameplay;
 

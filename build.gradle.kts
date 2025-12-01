@@ -14,7 +14,7 @@ buildscript {
 }
 
 plugins {
-    id("fabric-loom") version("1.11-SNAPSHOT")
+    id("fabric-loom") version("1.13-SNAPSHOT")
     id("org.quiltmc.gradle.licenser") version("+")
     id("org.ajoberstar.grgit") version("+")
     id("com.modrinth.minotaur") version("+")
@@ -23,6 +23,7 @@ plugins {
     idea
     `java-library`
     java
+    checkstyle
 }
 
 val githubActions: Boolean = System.getenv("GITHUB_ACTIONS") == "true"
@@ -66,6 +67,11 @@ loom {
         // When enabled, injected interfaces from dependencies will be applied.
         enableDependencyInterfaceInjection.set(false)
     }
+}
+
+checkstyle {
+    configFile = rootProject.file("checkstyle.xml")
+    toolVersion = "10.20.2"
 }
 
 val includeModImplementation by configurations.creating

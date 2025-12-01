@@ -11,7 +11,7 @@ import net.lunade.slime.LunaSlimesUtil;
 import net.lunade.slime.config.getter.LunaSlimesConfigValueGetter;
 import net.lunade.slime.impl.SlimeInterface;
 import net.lunade.slime.impl.client.SlimeRenderStateInterface;
-import net.minecraft.client.model.SlimeModel;
+import net.minecraft.client.model.monster.slime.SlimeModel;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.SlimeRenderer;
@@ -34,8 +34,8 @@ public abstract class SlimeRendererMixin extends MobRenderer<Slime, SlimeRenderS
 		method = "extractRenderState(Lnet/minecraft/world/entity/monster/Slime;Lnet/minecraft/client/renderer/entity/state/SlimeRenderState;F)V",
 		at = @At("TAIL")
 	)
-	public void lunaSlimes$extractRenderState(Slime slime, SlimeRenderState slimeRenderState, float f, CallbackInfo info) {
-		if (!(slimeRenderState instanceof SlimeRenderStateInterface renderStateInterface)) return;
+	public void lunaSlimes$extractRenderState(Slime slime, SlimeRenderState renderState, float f, CallbackInfo info) {
+		if (!(renderState instanceof SlimeRenderStateInterface renderStateInterface)) return;
 		renderStateInterface.lunaSlimes$setInWorld(((SlimeInterface) slime).lunaSlimes$isInWorld());
 		renderStateInterface.lunaSlimes$setWobble(LunaSlimesUtil.wobbleAnim(slime, f));
 		renderStateInterface.lunaSlimes$setSize(LunaSlimesUtil.getSlimeScale(slime, f));
@@ -49,8 +49,8 @@ public abstract class SlimeRendererMixin extends MobRenderer<Slime, SlimeRenderS
 			ordinal = 1
 		)
 	)
-	public void lunaSlimes$newScaling(PoseStack poseStack, float a, float b, float c, Operation<Void> operation, SlimeRenderState slimeRenderState, PoseStack poseStack2) {
-		if (!(slimeRenderState instanceof SlimeRenderStateInterface renderStateInterface && renderStateInterface.lunaSlimes$isInWorld())) {
+	public void lunaSlimes$newScaling(PoseStack poseStack, float a, float b, float c, Operation<Void> operation, SlimeRenderState renderState) {
+		if (!(renderState instanceof SlimeRenderStateInterface renderStateInterface && renderStateInterface.lunaSlimes$isInWorld())) {
 			operation.call(poseStack, a, b, c);
 			return;
 		}
@@ -61,7 +61,7 @@ public abstract class SlimeRendererMixin extends MobRenderer<Slime, SlimeRenderS
 		final float wobbleY = wobble.getSecond();
 		poseStack.scale(wobbleXZ, wobbleY, wobbleXZ);
 		poseStack.translate(0F, -(2.05F - (wobbleY * 2.05F)), 0F);
-		final float i = (slimeRenderState.squish * LunaSlimesConfigValueGetter.squishMultiplier()) / ((slimeSize) * 0.5F + 1F);
+		final float i = (renderState.squish * LunaSlimesConfigValueGetter.squishMultiplier()) / ((slimeSize) * 0.5F + 1F);
 
 		final float j = 1F / (i + 1F);
 		operation.call(poseStack, j * slimeSize, 1F / j * slimeSize, j * slimeSize);
@@ -71,13 +71,13 @@ public abstract class SlimeRendererMixin extends MobRenderer<Slime, SlimeRenderS
 		method = "getShadowRadius(Lnet/minecraft/client/renderer/entity/state/SlimeRenderState;)F",
 		at = @At("RETURN")
 	)
-	public float lunaSlimes$newShadows(float original, SlimeRenderState slimeRenderState) {
-		if (!(LunaSlimesConfigValueGetter.newShadows() && slimeRenderState instanceof SlimeRenderStateInterface renderStateInterface)) return original;
+	public float lunaSlimes$newShadows(float original, SlimeRenderState renderState) {
+		if (!(LunaSlimesConfigValueGetter.newShadows() && renderState instanceof SlimeRenderStateInterface renderStateInterface)) return original;
 		final float slimeSize = renderStateInterface.lunaSlimes$getSize();
 		final Pair<Float, Float> wobble = renderStateInterface.lunaSlimes$getWobble();
 		final float wobbleXZ = wobble.getFirst() * 2F;
 		final float size = ((slimeSize * 0.999F) * 0.75F) * wobbleXZ;
-		final float squish = (slimeRenderState.squish * LunaSlimesConfigValueGetter.squishMultiplier()) / (size * 0.5F + 1F);
+		final float squish = (renderState.squish * LunaSlimesConfigValueGetter.squishMultiplier()) / (size * 0.5F + 1F);
 		final float j = (1F / (squish + 1F));
 		return 0.25F * (j * size);
 	}

@@ -7,11 +7,10 @@ import net.lunade.slime.config.LunaSlimesConfig;
 import net.lunade.slime.config.frozenlib.LunaSlimesGameplayFrozenConfig;
 import net.lunade.slime.config.frozenlib.LunaSlimesVisualsAudioFrozenConfig;
 import net.minecraft.client.gui.screens.Screen;
-import org.jetbrains.annotations.NotNull;
 
 public class LunaSlimesFrozenConfigGui extends PartitioningSerializer.GlobalData {
 
-	public static Screen buildScreen(@NotNull Screen parent) {
+	public static Screen buildScreen(Screen parent) {
 		var configBuilder = ConfigBuilder.create().setParentScreen(parent).setTitle(LunaSlimesConfig.text("component.title"));
 		configBuilder.setSavingRunnable(() -> {
 			LunaSlimesGameplayFrozenConfig.INSTANCE.save();

@@ -14,7 +14,7 @@ import net.lunade.slime.config.getter.LunaSlimesConfigValueGetter;
 import net.lunade.slime.impl.SlimeInterface;
 import net.lunade.slime.impl.client.SlimeRenderStateInterface;
 import net.lunade.slime.render.MagmaCubeLayer;
-import net.minecraft.client.model.LavaSlimeModel;
+import net.minecraft.client.model.monster.slime.MagmaCubeModel;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MagmaCubeRenderer;
 import net.minecraft.client.renderer.entity.MobRenderer;
@@ -29,13 +29,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Environment(EnvType.CLIENT)
 @Mixin(MagmaCubeRenderer.class)
-public abstract class MagmaCubeRendererMixin extends MobRenderer<MagmaCube, SlimeRenderState, LavaSlimeModel> {
+public abstract class MagmaCubeRendererMixin extends MobRenderer<MagmaCube, SlimeRenderState, MagmaCubeModel> {
 
-	public MagmaCubeRendererMixin(EntityRendererProvider.Context context, LavaSlimeModel entityModel, float f) {
+	public MagmaCubeRendererMixin(EntityRendererProvider.Context context, MagmaCubeModel entityModel, float f) {
 		super(context, entityModel, f);
 	}
 
-	@Inject(at = @At("TAIL"), method = "<init>")
+	@Inject(method = "<init>", at = @At("TAIL"))
 	public void lunaSlimes$init(EntityRendererProvider.Context context, CallbackInfo info) {
 		final MagmaCubeRenderer renderer = MagmaCubeRenderer.class.cast(this);
 		renderer.addLayer(new MagmaCubeLayer(renderer));
@@ -45,27 +45,30 @@ public abstract class MagmaCubeRendererMixin extends MobRenderer<MagmaCube, Slim
 		method = "extractRenderState(Lnet/minecraft/world/entity/monster/MagmaCube;Lnet/minecraft/client/renderer/entity/state/SlimeRenderState;F)V",
 		at = @At("TAIL")
 	)
-	public void lunaSlimes$extractRenderState(MagmaCube magmaCube, SlimeRenderState slimeRenderState, float f, CallbackInfo info) {
-		if (!(slimeRenderState instanceof SlimeRenderStateInterface renderStateInterface)) return;
+	public void lunaSlimes$extractRenderState(MagmaCube magmaCube, SlimeRenderState renderState, float f, CallbackInfo info) {
+		if (!(renderState instanceof SlimeRenderStateInterface renderStateInterface)) return;
 		renderStateInterface.lunaSlimes$setInWorld(((SlimeInterface) magmaCube).lunaSlimes$isInWorld());
 		renderStateInterface.lunaSlimes$setWobble(LunaSlimesUtil.wobbleAnim(magmaCube, f));
 		renderStateInterface.lunaSlimes$setSize(LunaSlimesUtil.getSlimeScale(magmaCube, f));
 	}
 
-	@Inject(at = @At("HEAD"), method = "scale(Lnet/minecraft/client/renderer/entity/state/SlimeRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;)V")
+	@Inject(
+		method = "scale(Lnet/minecraft/client/renderer/entity/state/SlimeRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;)V",
+		at = @At("HEAD")
+	)
 	public void lunaSlimes$anims(
-		SlimeRenderState slimeRenderState, PoseStack poseStack, CallbackInfo info,
+		SlimeRenderState renderState, PoseStack poseStack, CallbackInfo info,
 		@Share("lunaSlimes$squash") LocalFloatRef squash,
 		@Share("lunaSlimes$stretch") LocalFloatRef stretch
 	) {
-		if (!(slimeRenderState instanceof SlimeRenderStateInterface renderStateInterface)) return;
+		if (!(renderState instanceof SlimeRenderStateInterface renderStateInterface)) return;
 		final Pair<Float, Float> wobble = renderStateInterface.lunaSlimes$getWobble();
 		final float wobbleXZ = wobble.getFirst();
 		final float wobbleY = wobble.getSecond();
 		poseStack.scale(wobbleXZ, wobbleY, wobbleXZ);
 		poseStack.translate(0.0F, -(2.05F - (wobbleY * 2.05F)), 0F);
 		final float size = renderStateInterface.lunaSlimes$getSize();
-		final float squishValue = slimeRenderState.squish * LunaSlimesConfigValueGetter.squishMultiplier();
+		final float squishValue = renderState.squish * LunaSlimesConfigValueGetter.squishMultiplier();
 
 		final float g = squishValue / ((size) * 0.5F + 1F);
 		final float sq = (1F / (g + 1F));
@@ -82,11 +85,11 @@ public abstract class MagmaCubeRendererMixin extends MobRenderer<MagmaCube, Slim
 		)
 	)
 	public void lunaSlimes$setScaleArgs(
-		PoseStack poseStack, float a, float b, float c, Operation<Void> operation, SlimeRenderState slimeRenderState,
+		PoseStack poseStack, float a, float b, float c, Operation<Void> operation, SlimeRenderState renderState,
 		@Share("lunaSlimes$squash") LocalFloatRef squash,
 		@Share("lunaSlimes$stretch") LocalFloatRef stretch
 	) {
-		if (slimeRenderState instanceof SlimeRenderStateInterface renderStateInterface && renderStateInterface.lunaSlimes$isInWorld()) {
+		if (renderState instanceof SlimeRenderStateInterface renderStateInterface && renderStateInterface.lunaSlimes$isInWorld()) {
 			final float x = squash.get() * renderStateInterface.lunaSlimes$getSize();
 			operation.call(poseStack, x, stretch.get(), x);
 		} else {
@@ -98,20 +101,20 @@ public abstract class MagmaCubeRendererMixin extends MobRenderer<MagmaCube, Slim
 		method = "getShadowRadius(Lnet/minecraft/client/renderer/entity/state/SlimeRenderState;)F",
 		at = @At("RETURN")
 	)
-	public float lunaSlimes$newShadows(float original, SlimeRenderState slimeRenderState) {
-		if (!(LunaSlimesConfigValueGetter.newShadows() && slimeRenderState instanceof SlimeRenderStateInterface renderStateInterface)) return original;
+	public float lunaSlimes$newShadows(float original, SlimeRenderState renderState) {
+		if (!(LunaSlimesConfigValueGetter.newShadows() && renderState instanceof SlimeRenderStateInterface renderStateInterface)) return original;
 		final float slimeSize = renderStateInterface.lunaSlimes$getSize();
 		final Pair<Float, Float> wobble = renderStateInterface.lunaSlimes$getWobble();
 		final float wobbleXZ = wobble.getFirst() * 2F;
 		final float size = ((slimeSize * 0.999F) * 0.75F) * wobbleXZ;
-		final float squish = (slimeRenderState.squish * LunaSlimesConfigValueGetter.squishMultiplier()) / (size * 0.5F + 1F);
+		final float squish = (renderState.squish * LunaSlimesConfigValueGetter.squishMultiplier()) / (size * 0.5F + 1F);
 		final float j = (1F / (squish + 1F));
 		return 0.25F * (j * size);
 	}
 
 	@ModifyReturnValue(
-		at = @At("RETURN"),
-		method = "getBlockLightLevel(Lnet/minecraft/world/entity/monster/MagmaCube;Lnet/minecraft/core/BlockPos;)I"
+		method = "getBlockLightLevel(Lnet/minecraft/world/entity/monster/MagmaCube;Lnet/minecraft/core/BlockPos;)I",
+		at = @At("RETURN")
 	)
 	public int lunaSlimes$getBlockLightLevel(int original, MagmaCube magmaCube, BlockPos pos) {
 		if (!LunaSlimesConfigValueGetter.glowingMagma()) return original;

@@ -8,7 +8,6 @@ import net.frozenblock.lib.config.api.sync.annotation.EntrySyncData;
 import net.lunade.slime.LunaSlimes;
 
 public final class LunaSlimesGameplayFrozenConfig {
-
 	public static final Config<LunaSlimesGameplayFrozenConfig> INSTANCE = ConfigRegistry.register(
 		new JsonConfig<>(
 			"lunaslimes",
@@ -41,8 +40,7 @@ public final class LunaSlimesGameplayFrozenConfig {
 	}
 
 	public static LunaSlimesGameplayFrozenConfig get(boolean real) {
-		if (real)
-			return INSTANCE.instance();
+		if (real) return INSTANCE.instance();
 		return INSTANCE.config();
 	}
 

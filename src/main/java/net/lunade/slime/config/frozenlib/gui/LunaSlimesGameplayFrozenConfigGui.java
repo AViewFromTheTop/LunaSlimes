@@ -8,27 +8,27 @@ import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.clothconfig.FrozenClothConfig;
 import net.lunade.slime.config.LunaSlimesConfig;
 import net.lunade.slime.config.frozenlib.LunaSlimesGameplayFrozenConfig;
-import net.minecraft.resources.ResourceLocation;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.resources.Identifier;
 
 @Environment(EnvType.CLIENT)
 public final class LunaSlimesGameplayFrozenConfigGui {
+
 	private LunaSlimesGameplayFrozenConfigGui() {
 		throw new UnsupportedOperationException("GameplayFrozenConfigGui contains only static declarations.");
 	}
 
-	public static void setupEntries(@NotNull ConfigCategory category, @NotNull ConfigEntryBuilder entryBuilder) {
-		var config = LunaSlimesGameplayFrozenConfig.get(true);
-		var modifiedConfig = LunaSlimesGameplayFrozenConfig.getWithSync();
-		Class<? extends LunaSlimesGameplayFrozenConfig> clazz = config.getClass();
-		Config<?> configInstance = LunaSlimesGameplayFrozenConfig.INSTANCE;
-		var defaultConfig = LunaSlimesGameplayFrozenConfig.INSTANCE.defaultInstance();
+	public static void setupEntries(ConfigCategory category, ConfigEntryBuilder builder) {
+		final var config = LunaSlimesGameplayFrozenConfig.get(true);
+		final var modifiedConfig = LunaSlimesGameplayFrozenConfig.getWithSync();
+		final Class<? extends LunaSlimesGameplayFrozenConfig> clazz = config.getClass();
+		final Config<?> configInstance = LunaSlimesGameplayFrozenConfig.INSTANCE;
+		final var defaultConfig = LunaSlimesGameplayFrozenConfig.INSTANCE.defaultInstance();
 
-		category.setBackground(ResourceLocation.tryBuild("lunaslimes", "textures/config/gameplay.png"));
+		category.setBackground(Identifier.fromNamespaceAndPath("lunaslimes", "textures/config/gameplay.png"));
 
 		var maxSize = category.addEntry(
 			FrozenClothConfig.syncedEntry(
-				entryBuilder.startIntSlider(LunaSlimesConfig.text("max_size"), modifiedConfig.maxSize, 1, 127)
+				builder.startIntSlider(LunaSlimesConfig.text("max_size"), modifiedConfig.maxSize, 1, 127)
 					.setDefaultValue(defaultConfig.maxSize)
 					.setSaveConsumer(newValue -> config.maxSize = newValue)
 					.setTooltip(LunaSlimesConfig.tooltip("max_size"))
@@ -43,7 +43,7 @@ public final class LunaSlimesGameplayFrozenConfigGui {
 
 		var mergeCooldown = category.addEntry(
 			FrozenClothConfig.syncedEntry(
-				entryBuilder.startIntSlider(LunaSlimesConfig.text("merge_cooldown"), modifiedConfig.mergeCooldown, 0, 500)
+				builder.startIntSlider(LunaSlimesConfig.text("merge_cooldown"), modifiedConfig.mergeCooldown, 0, 500)
 					.setDefaultValue(defaultConfig.mergeCooldown)
 					.setSaveConsumer(newValue -> config.mergeCooldown = newValue)
 					.setTooltip(LunaSlimesConfig.tooltip("merge_cooldown"))
@@ -58,7 +58,7 @@ public final class LunaSlimesGameplayFrozenConfigGui {
 
 		var onSplitCooldown = category.addEntry(
 			FrozenClothConfig.syncedEntry(
-				entryBuilder.startIntSlider(LunaSlimesConfig.text("on_split_cooldown"), modifiedConfig.onSplitCooldown, 0, 500)
+				builder.startIntSlider(LunaSlimesConfig.text("on_split_cooldown"), modifiedConfig.onSplitCooldown, 0, 500)
 					.setDefaultValue(defaultConfig.onSplitCooldown)
 					.setSaveConsumer(newValue -> config.onSplitCooldown = newValue)
 					.setTooltip(LunaSlimesConfig.tooltip("on_split_cooldown"))
@@ -73,7 +73,7 @@ public final class LunaSlimesGameplayFrozenConfigGui {
 
 		var splitCooldown = category.addEntry(
 			FrozenClothConfig.syncedEntry(
-				entryBuilder.startIntSlider(LunaSlimesConfig.text("split_cooldown"), modifiedConfig.splitCooldown, 0, 500)
+				builder.startIntSlider(LunaSlimesConfig.text("split_cooldown"), modifiedConfig.splitCooldown, 0, 500)
 					.setDefaultValue(defaultConfig.splitCooldown)
 					.setSaveConsumer(newValue -> config.splitCooldown = newValue)
 					.setTooltip(LunaSlimesConfig.tooltip("split_cooldown"))
@@ -88,7 +88,7 @@ public final class LunaSlimesGameplayFrozenConfigGui {
 
 		var spawnedMergeCooldown = category.addEntry(
 			FrozenClothConfig.syncedEntry(
-				entryBuilder.startIntSlider(LunaSlimesConfig.text("spawned_merge_cooldown"), modifiedConfig.spawnedMergeCooldown, 0, 500)
+				builder.startIntSlider(LunaSlimesConfig.text("spawned_merge_cooldown"), modifiedConfig.spawnedMergeCooldown, 0, 500)
 					.setDefaultValue(defaultConfig.spawnedMergeCooldown)
 					.setSaveConsumer(newValue -> config.spawnedMergeCooldown = newValue)
 					.setTooltip(LunaSlimesConfig.tooltip("spawned_merge_cooldown"))
@@ -103,7 +103,7 @@ public final class LunaSlimesGameplayFrozenConfigGui {
 
 		var useSplitting = category.addEntry(
 			FrozenClothConfig.syncedEntry(
-				entryBuilder.startBooleanToggle(LunaSlimesConfig.text("use_splitting"), modifiedConfig.useSplitting)
+				builder.startBooleanToggle(LunaSlimesConfig.text("use_splitting"), modifiedConfig.useSplitting)
 					.setDefaultValue(defaultConfig.useSplitting)
 					.setSaveConsumer(newValue -> config.useSplitting = newValue)
 					.setYesNoTextSupplier(bool -> LunaSlimesConfig.text("use_splitting." + bool))
