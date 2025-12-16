@@ -47,10 +47,19 @@
     "option.lunaslimes.max_size": "Limit rozmiaru szlamów",
     "tooltip.lunaslimes.max_size": "Największy rozmiar jaki mogą osiągnąć łączące się szlamy.\nUstawienie na 1 wyłączy łączenie się szlamów.",
     "option.lunaslimes.merge_cooldown": "Czas przerwy w scalaniu się",
-    "tooltip.lunaslimes.merge_cooldown": "Czas jaki szlam musi przeczekać zanim będzie się \nmógł ponownie scalić z innym szlamem.\nWartość mierzona w tickach gry",
+    "tooltip.lunaslimes.merge_cooldown": "Czas jaki szlam musi przeczekać zanim będzie się \nmógł ponownie scalić z innym szlamem.\nWartość mierzona w tickach gry.",
     "option.lunaslimes.on_split_cooldown": "Czas przerwy w ponownym scalaniu się",
     "tooltip.lunaslimes.on_split_cooldown": "Czas jaki szlami musi przeczekać po podziale aby móc się ponownie scalić.\nWartość mierzona w tickach gry.",
     "option.lunaslimes.split_cooldown": "Czas przerwy scalania się nowych szlamów",
     "tooltip.lunaslimes.split_cooldown": "Czas jaki szlamy powstały wskutek podziału musi przeczekać przed scalaniem.\nWartość mierzona w tickach gry.",
-    "option.lunaslimes.spawned_merge_cooldown": "Czas przerwy scalania się nowych szlamów"
+    "option.lunaslimes.spawned_merge_cooldown": "Czas przerwy scalania się nowych szlamów",
+    "tooltip.lunaslimes.spawned_merge_cooldown": "Czas jaki pojawiające sie naturalnie szlamy muszą przeczekać przed scaleniem się.\nWartość mierzona w tickach gry.",
+    "subtitles.entity.slime.merge": "Scalanie szlamów",
+    "subtitles.entity.magma_cube.merge": "Scalanie kostek magmy",
+    "option.lunaslimes.use_splitting": "Nowe dzielenie się szlamów",
+    "option.lunaslimes.use_splitting.false": "Wyłącz",
+    "option.lunaslimes.use_splitting.true": "Włącz",
+    "tooltip.lunaslimes.use_splitting": "Szlamy korzystać będą z nowego systemu podziału.",
+    "subtitles.entity.slime.split": "Szlam się rozpada",
+    "subtitles.entity.magma_cube.split": "Kostka magmy się rozpada"
 }
