@@ -120,14 +120,14 @@ public class LunaSlimesUtil {
 		final int size = slime.getSize();
 		final double horizontalSpread = slime.getBbWidth() / 4F;
 		final double verticalSpread = slime.getBbHeight() / 4F;
-		level.sendParticles(slime.getParticleType(), slime.getX(), slime.getY(0.6666666666666666D), slime.getZ(), level.random.nextInt(size * 6, size * 12), horizontalSpread, verticalSpread, horizontalSpread, 0.05D);
+		level.sendParticles(slime.getParticleType(), slime.getX(), slime.getY(0.6666666666666666D), slime.getZ(), level.getRandom().nextInt(size * 6, size * 12), horizontalSpread, verticalSpread, horizontalSpread, 0.05D);
 	}
 
 	public static void spawnSlimeLandParticles(Slime slime) {
 		if (!(slime.level() instanceof ServerLevel level)) return;
 		final int size = slime.getSize();
 		final double horizontalSpread = slime.getBbWidth() / 3.5F;
-		level.sendParticles(slime.getParticleType(), slime.getX(), slime.getY(), slime.getZ(), level.random.nextInt(size * 6, size * 8), horizontalSpread, 0F, horizontalSpread, 0.05D);
+		level.sendParticles(slime.getParticleType(), slime.getX(), slime.getY(), slime.getZ(), level.getRandom().nextInt(size * 6, size * 8), horizontalSpread, 0F, horizontalSpread, 0.05D);
 	}
 
 	public static float getSlimeScale(Slime slime, float partialTick) {

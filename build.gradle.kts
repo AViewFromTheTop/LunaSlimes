@@ -14,7 +14,7 @@ buildscript {
 }
 
 plugins {
-    id("fabric-loom") version("1.14-SNAPSHOT")
+    id("net.fabricmc.fabric-loom") version("1.15-SNAPSHOT")
     id("org.quiltmc.gradle.licenser") version("+")
     id("org.ajoberstar.grgit") version("+")
     id("com.modrinth.minotaur") version("+")
@@ -74,19 +74,14 @@ checkstyle {
     toolVersion = "10.20.2"
 }
 
-val includeModImplementation by configurations.creating
 val includeImplementation by configurations.creating
 
 configurations {
     include {
         extendsFrom(includeImplementation)
-        extendsFrom(includeModImplementation)
     }
     implementation {
         extendsFrom(includeImplementation)
-    }
-    modImplementation {
-        extendsFrom(includeModImplementation)
     }
 }
 
@@ -132,24 +127,18 @@ repositories {
 dependencies {
     // To change the versions, see the gradle.properties file
     minecraft("com.mojang:minecraft:$minecraft_version")
-    mappings(loom.layered {
-        // please annoy treetrain if this doesnt work
-        //mappings("org.quiltmc:quilt-mappings:$quilt_mappings:intermediary-v2")
-        officialMojangMappings {
-            nameSyntheticMembers = false
-        }
-    })
-    modImplementation("net.fabricmc:fabric-loader:$loader_version")
-    modImplementation("net.fabricmc.fabric-api:fabric-api:$fabric_api_version")
+
+    implementation("net.fabricmc:fabric-loader:$loader_version")
+    implementation("net.fabricmc.fabric-api:fabric-api:$fabric_api_version")
 
     // Mod Menu
-    modCompileOnly("com.terraformersmc:modmenu:$modmenu_version")
+    compileOnly("com.terraformersmc:modmenu:$modmenu_version")
 
     // FrozenLib
-    modCompileOnly("maven.modrinth:frozenlib:$frozenlib_version")
+    compileOnly("maven.modrinth:frozenlib:$frozenlib_version")
 
     // Cloth Config
-    modCompileOnly("me.shedaniel.cloth:cloth-config-fabric:$cloth_config_version") {
+    compileOnly("me.shedaniel.cloth:cloth-config-fabric:$cloth_config_version") {
         exclude(group = "net.fabricmc.fabric-api")
         exclude(group = "com.terraformersmc")
     }
@@ -160,7 +149,7 @@ tasks {
         val properties = mapOf(
             "mod_id" to mod_id,
             "version" to version,
-            "minecraft_version" to "~1.21-",//minecraft_version,
+            "minecraft_version" to "~26.1-",//minecraft_version,
 
             "fabric_api_version" to ">=$fabric_api_version",
             "frozenlib_version" to ">=${frozenlib_version.split('-').firstOrNull()}-"
@@ -208,8 +197,8 @@ tasks {
 
     withType(JavaCompile::class) {
         options.encoding = "UTF-8"
-        // Minecraft 1.20.5 (24w14a) upwards uses Java 21.
-        options.release.set(21)
+        // Minecraft 26.1 (26.1-snapshot-1) upwards uses Java 25.
+        options.release.set(25)
         options.isFork = true
         options.isIncremental = true
     }
@@ -223,13 +212,13 @@ val applyLicenses: Task by tasks
 val test: Task by tasks
 val runClient: Task by tasks
 
-val remapJar: Task by tasks
+val jar: Task by tasks
 val sourcesJar: Task by tasks
 val javadocJar: Task by tasks
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21
+    sourceCompatibility = JavaVersion.VERSION_25
+    targetCompatibility = JavaVersion.VERSION_25
 
     // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
     // if it is present.

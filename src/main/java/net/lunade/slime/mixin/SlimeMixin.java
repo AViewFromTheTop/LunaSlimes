@@ -283,7 +283,7 @@ public class SlimeMixin implements SlimeInterface {
 		return false;
 	}
 
-	@Inject(method = "method_63653", at = @At("HEAD"))
+	@Inject(method = "lambda$remove$0", at = @At("HEAD"))
 	public void lunaSlimes$beforeSpawnNewSlime(int i, float f, float g, Slime slime, CallbackInfo info) {
 		((SlimeInterface) slime).lunaSlimes$setMergeCooldown(Math.max(LunaSlimesConfigValueGetter.onSplitCooldown(), LunaSlimesConfigValueGetter.splitCooldown()) * 2);
 		slime.setSilent(slime.isSilent());

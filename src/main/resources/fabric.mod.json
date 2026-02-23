@@ -30,7 +30,7 @@
   "depends": {
     "fabric-api": "*",
     "minecraft": "*",
-    "java": ">=21"
+    "java": ">=25"
   },
   "suggests": {
     "cloth-config": "*",
