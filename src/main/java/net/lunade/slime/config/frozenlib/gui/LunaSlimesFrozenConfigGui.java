@@ -13,8 +13,8 @@ public class LunaSlimesFrozenConfigGui extends PartitioningSerializer.GlobalData
 	public static Screen buildScreen(Screen parent) {
 		var configBuilder = ConfigBuilder.create().setParentScreen(parent).setTitle(LunaSlimesConfig.text("component.title"));
 		configBuilder.setSavingRunnable(() -> {
-			LunaSlimesGameplayFrozenConfig.INSTANCE.save();
-			LunaSlimesVisualsAudioFrozenConfig.INSTANCE.save();
+			LunaSlimesGameplayFrozenConfig.CONFIG.save();
+			LunaSlimesVisualsAudioFrozenConfig.CONFIG.save();
 		});
 
 		ConfigEntryBuilder entryBuilder = configBuilder.entryBuilder();

@@ -30,7 +30,6 @@ val githubActions: Boolean = System.getenv("GITHUB_ACTIONS") == "true"
 val licenseChecks: Boolean = githubActions
 
 val minecraft_version: String by project
-val quilt_mappings: String by project
 val loader_version: String by project
 
 val mod_id: String by project
@@ -65,7 +64,7 @@ loom {
     accessWidenerPath.set(file("src/main/resources/$mod_id.accesswidener"))
     interfaceInjection {
         // When enabled, injected interfaces from dependencies will be applied.
-        enableDependencyInterfaceInjection.set(false)
+        enableDependencyInterfaceInjection.set(true)
     }
 }
 
@@ -117,6 +116,12 @@ repositories {
             includeGroup("com.jamieswhiteshirt")
         }
     }
+    maven("https://maven.frozenblock.net/release") {
+        name = "FrozenBlock"
+    }
+    maven("https://maven.frozenblock.net/snapshot") {
+        name = "FrozenBlock Snapshot"
+    }
 
     flatDir {
         dirs("libs")
@@ -135,7 +140,8 @@ dependencies {
     compileOnly("com.terraformersmc:modmenu:$modmenu_version")
 
     // FrozenLib
-    compileOnly("maven.modrinth:frozenlib:$frozenlib_version")
+    compileOnly("net.frozenblock:frozenlib:$frozenlib_version")
+    //compileOnly("maven.modrinth:frozenlib:$frozenlib_version")
 
     // Cloth Config
     compileOnly("me.shedaniel.cloth:cloth-config-fabric:$cloth_config_version") {

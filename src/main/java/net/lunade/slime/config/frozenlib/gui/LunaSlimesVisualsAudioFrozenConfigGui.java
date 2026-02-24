@@ -19,166 +19,105 @@ public final class LunaSlimesVisualsAudioFrozenConfigGui {
 	}
 
 	public static void setupEntries(ConfigCategory category, ConfigEntryBuilder builder) {
-		final var config = LunaSlimesVisualsAudioFrozenConfig.get(true);
-		final var modifiedConfig = LunaSlimesVisualsAudioFrozenConfig.getWithSync();
-		final Class<? extends LunaSlimesVisualsAudioFrozenConfig> clazz = config.getClass();
-		final Config<?> configInstance = LunaSlimesVisualsAudioFrozenConfig.INSTANCE;
-		final var defaultConfig = LunaSlimesVisualsAudioFrozenConfig.INSTANCE.defaultInstance();
-
 		category.setBackground(Identifier.fromNamespaceAndPath("lunaslimes", "textures/config/visuals_audio.png"));
 
 		var growAnim = category.addEntry(
 			FrozenClothConfig.syncedEntry(
-				builder.startBooleanToggle(text("grow_anim"), modifiedConfig.growAnim)
-					.setDefaultValue(defaultConfig.growAnim)
-					.setSaveConsumer(newValue -> config.growAnim = newValue)
+				builder.startBooleanToggle(text("grow_anim"), LunaSlimesVisualsAudioFrozenConfig.growAnim.getWithSync())
 					.setYesNoTextSupplier(bool -> text("grow_anim." + bool))
-					.setTooltip(tooltip("grow_anim"))
-					.build(),
-				clazz,
-				"growAnim",
-				configInstance
+					.setTooltip(tooltip("grow_anim")),
+				LunaSlimesVisualsAudioFrozenConfig.growAnim
 			)
 		);
 
 		var wobbleAnim = category.addEntry(
 			FrozenClothConfig.syncedEntry(
-				builder.startBooleanToggle(text("wobble_anim"), modifiedConfig.wobbleAnim)
-					.setDefaultValue(defaultConfig.wobbleAnim)
-					.setSaveConsumer(newValue -> config.wobbleAnim = newValue)
+				builder.startBooleanToggle(text("wobble_anim"), LunaSlimesVisualsAudioFrozenConfig.wobbleAnim.getWithSync())
 					.setYesNoTextSupplier(bool -> text("wobble_anim." + bool))
-					.setTooltip(tooltip("wobble_anim"))
-					.build(),
-				clazz,
-				"wobbleAnim",
-				configInstance
+					.setTooltip(tooltip("wobble_anim")),
+				LunaSlimesVisualsAudioFrozenConfig.wobbleAnim
 			)
 		);
 
 		var squishMultiplier = category.addEntry(
 			FrozenClothConfig.syncedEntry(
-				builder.startIntSlider(text("squish_multiplier"), modifiedConfig.squishMultiplier, 0, 50)
-					.setDefaultValue(defaultConfig.squishMultiplier)
-					.setSaveConsumer(newValue -> config.squishMultiplier = newValue)
+				builder.startIntSlider(text("squish_multiplier"), LunaSlimesVisualsAudioFrozenConfig.squishMultiplier.getWithSync(), 0, 50)
 					.setTooltip(tooltip("squish_multiplier"))
 					.setMin(0)
-					.setMax(50)
-					.build(),
-				clazz,
-				"squishMultiplier",
-				configInstance
+					.setMax(50),
+				LunaSlimesVisualsAudioFrozenConfig.squishMultiplier
 			)
 		);
 
 		var jumpAntic = category.addEntry(
 			FrozenClothConfig.syncedEntry(
-				builder.startBooleanToggle(text("jump_antic"), modifiedConfig.jumpAntic)
-					.setDefaultValue(defaultConfig.jumpAntic)
-					.setSaveConsumer(newValue -> config.jumpAntic = newValue)
+				builder.startBooleanToggle(text("jump_antic"), LunaSlimesVisualsAudioFrozenConfig.jumpAntic.getWithSync())
 					.setYesNoTextSupplier(bool -> text("jump_antic." + bool))
-					.setTooltip(tooltip("jump_antic"))
-					.build(),
-				clazz,
-				"jumpAntic",
-				configInstance
+					.setTooltip(tooltip("jump_antic")),
+				LunaSlimesVisualsAudioFrozenConfig.jumpAntic
 			)
 		);
 
 		var deathAnim = category.addEntry(
 			FrozenClothConfig.syncedEntry(
-				builder.startBooleanToggle(text("death_anim"), modifiedConfig.deathAnim)
-					.setDefaultValue(defaultConfig.deathAnim)
-					.setSaveConsumer(newValue -> config.deathAnim = newValue)
+				builder.startBooleanToggle(text("death_anim"), LunaSlimesVisualsAudioFrozenConfig.deathAnim.getWithSync())
 					.setYesNoTextSupplier(bool -> text("death_anim." + bool))
-					.setTooltip(tooltip("death_anim"))
-					.build(),
-				clazz,
-				"deathAnim",
-				configInstance
+					.setTooltip(tooltip("death_anim")),
+				LunaSlimesVisualsAudioFrozenConfig.deathAnim
 			)
 		);
 
 		var newShadows = category.addEntry(
 			FrozenClothConfig.syncedEntry(
-				builder.startBooleanToggle(text("new_shadows"), modifiedConfig.newShadows)
-					.setDefaultValue(defaultConfig.newShadows)
-					.setSaveConsumer(newValue -> config.newShadows = newValue)
+				builder.startBooleanToggle(text("new_shadows"), LunaSlimesVisualsAudioFrozenConfig.newShadows.getWithSync())
 					.setYesNoTextSupplier(bool -> text("new_shadows." + bool))
-					.setTooltip(tooltip("new_shadows"))
-					.build(),
-				clazz,
-				"newShadows",
-				configInstance
+					.setTooltip(tooltip("new_shadows")),
+				LunaSlimesVisualsAudioFrozenConfig.newShadows
 			)
 		);
 
 		var particles = category.addEntry(
 			FrozenClothConfig.syncedEntry(
-				builder.startBooleanToggle(text("particles"), modifiedConfig.particles)
-					.setDefaultValue(defaultConfig.particles)
-					.setSaveConsumer(newValue -> config.particles = newValue)
+				builder.startBooleanToggle(text("particles"), LunaSlimesVisualsAudioFrozenConfig.particles.getWithSync())
 					.setYesNoTextSupplier(bool -> text("particles." + bool))
-					.setTooltip(tooltip("particles"))
-					.build(),
-				clazz,
-				"particles",
-				configInstance
+					.setTooltip(tooltip("particles")),
+				LunaSlimesVisualsAudioFrozenConfig.particles
 			)
 		);
 
 		var glowingMagma = category.addEntry(
 			FrozenClothConfig.syncedEntry(
-				builder.startBooleanToggle(text("glowing_magma"), modifiedConfig.glowingMagma)
-					.setDefaultValue(defaultConfig.glowingMagma)
-					.setSaveConsumer(newValue -> config.glowingMagma = newValue)
+				builder.startBooleanToggle(text("glowing_magma"), LunaSlimesVisualsAudioFrozenConfig.glowingMagma.getWithSync())
 					.setYesNoTextSupplier(bool -> text("glowing_magma." + bool))
-					.setTooltip(tooltip("glowing_magma"))
-					.build(),
-				clazz,
-				"glowingMagma",
-				configInstance
+					.setTooltip(tooltip("glowing_magma")),
+				LunaSlimesVisualsAudioFrozenConfig.glowingMagma
 			)
 		);
 
 		var slimeBlockParticles = category.addEntry(
 			FrozenClothConfig.syncedEntry(
-				builder.startBooleanToggle(text("slime_block_particles"), modifiedConfig.slimeBlockParticles)
-					.setDefaultValue(defaultConfig.slimeBlockParticles)
-					.setSaveConsumer(newValue -> config.slimeBlockParticles = newValue)
+				builder.startBooleanToggle(text("slime_block_particles"), LunaSlimesVisualsAudioFrozenConfig.slimeBlockParticles.getWithSync())
 					.setYesNoTextSupplier(bool -> text("slime_block_particles." + bool))
-					.setTooltip(tooltip("slime_block_particles"))
-					.build(),
-				clazz,
-				"slimeBlockParticles",
-				configInstance
+					.setTooltip(tooltip("slime_block_particles")),
+				LunaSlimesVisualsAudioFrozenConfig.slimeBlockParticles
 			)
 		);
 
 		var mergeSounds = category.addEntry(
 			FrozenClothConfig.syncedEntry(
-				builder.startBooleanToggle(text("merge_sounds"), modifiedConfig.mergeSounds)
-					.setDefaultValue(defaultConfig.mergeSounds)
-					.setSaveConsumer(newValue -> config.mergeSounds = newValue)
+				builder.startBooleanToggle(text("merge_sounds"), LunaSlimesVisualsAudioFrozenConfig.mergeSounds.getWithSync())
 					.setYesNoTextSupplier(bool -> text("merge_sounds." + bool))
-					.setTooltip(tooltip("merge_sounds"))
-					.build(),
-				clazz,
-				"mergeSounds",
-				configInstance
+					.setTooltip(tooltip("merge_sounds")),
+				LunaSlimesVisualsAudioFrozenConfig.mergeSounds
 			)
 		);
 
 		var splitSounds = category.addEntry(
 			FrozenClothConfig.syncedEntry(
-				builder.startBooleanToggle(text("split_sounds"), modifiedConfig.splitSounds)
-					.setDefaultValue(defaultConfig.splitSounds)
-					.setSaveConsumer(newValue -> config.splitSounds = newValue)
+				builder.startBooleanToggle(text("split_sounds"), LunaSlimesVisualsAudioFrozenConfig.splitSounds.getWithSync())
 					.setYesNoTextSupplier(bool -> text("split_sounds." + bool))
-					.setTooltip(tooltip("split_sounds"))
-					.build(),
-				clazz,
-				"splitSounds",
-				configInstance
+					.setTooltip(tooltip("split_sounds")),
+				LunaSlimesVisualsAudioFrozenConfig.splitSounds
 			)
 		);
 
