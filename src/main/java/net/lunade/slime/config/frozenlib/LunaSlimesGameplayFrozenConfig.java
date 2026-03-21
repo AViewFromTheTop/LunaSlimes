@@ -14,15 +14,10 @@ public final class LunaSlimesGameplayFrozenConfig {
 		ConfigSettings.JSON
 	);
 
-	public static final ConfigEntry<Integer> maxSize = CONFIG.entry("maxSize", EntryType.INT, 4);
-
-	public static final ConfigEntry<Integer> mergeCooldown = CONFIG.entry("mergeCooldown", EntryType.INT, 0);
-
-	public static final ConfigEntry<Integer> onSplitCooldown = CONFIG.entry("onSplitCooldown", EntryType.INT, 100);
-
-	public static final ConfigEntry<Integer> splitCooldown = CONFIG.entry("splitCooldown", EntryType.INT, 0);
-
-	public static final ConfigEntry<Integer> spawnedMergeCooldown = CONFIG.entry("spawnedMergeCooldown", EntryType.INT, 0);
-
-	public static final ConfigEntry<Boolean> useSplitting = CONFIG.entry("useSplitting", EntryType.BOOL, true);
+	public static final ConfigEntry<Integer> MAX_SIZE = CONFIG.entry("maxSize", EntryType.INT, 4);
+	public static final ConfigEntry<Integer> MERGE_COOLDOWN = CONFIG.entry("mergeCooldown", EntryType.INT, 0);
+	public static final ConfigEntry<Integer> ON_SPLIT_COOLDOWN = CONFIG.entry("onSplitCooldown", EntryType.INT, 100);
+	public static final ConfigEntry<Integer> SPLIT_COOLDOWN = CONFIG.entry("splitCooldown", EntryType.INT, 0);
+	public static final ConfigEntry<Integer> SPAWNED_MERGE_COOLDOWN = CONFIG.entry("spawnedMergeCooldown", EntryType.INT, 0);
+	public static final ConfigEntry<Boolean> USE_SPLITTING = CONFIG.entry("useSplitting", EntryType.BOOL, true);
 }
