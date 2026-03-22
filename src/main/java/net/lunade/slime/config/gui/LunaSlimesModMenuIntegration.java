@@ -1,20 +1,20 @@
-package net.lunade.slime;
+package net.lunade.slime.config.gui;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.lunade.slime.config.LunaSlimesClothScreenBuilder;
+import net.frozenblock.lib.FrozenBools;
 import net.minecraft.client.gui.screens.Screen;
 import org.jetbrains.annotations.Contract;
 
 @Environment(EnvType.CLIENT)
-public final class LunaSlimesModMenu implements ModMenuApi {
+public final class LunaSlimesModMenuIntegration implements ModMenuApi {
 
 	@Contract(pure = true)
 	@Override
 	public ConfigScreenFactory<Screen> getModConfigScreenFactory() {
-		if (LunaSlimesConstants.HAS_CLOTH_CONFIG) return LunaSlimesClothScreenBuilder.buildScreen();
+		if (FrozenBools.HAS_CLOTH_CONFIG) return LunaSlimesConfigGui::buildScreen;
 		return screen -> null;
 	}
 

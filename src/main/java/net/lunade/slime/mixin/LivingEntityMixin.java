@@ -3,7 +3,8 @@ package net.lunade.slime.mixin;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import java.util.Optional;
 import net.lunade.slime.LunaSlimesUtil;
-import net.lunade.slime.config.getter.LunaSlimesConfigValueGetter;
+import net.lunade.slime.config.frozenlib.LunaSlimesGameplayConfig;
+import net.lunade.slime.config.frozenlib.LunaSlimesVisualsAudioConfig;
 import net.lunade.slime.impl.SlimeInterface;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.resources.ResourceKey;
@@ -28,7 +29,7 @@ public class LivingEntityMixin {
 
 	@ModifyReturnValue(method = "hurtServer", at = @At("RETURN"))
 	public boolean lunaSlimes$hurtServer(boolean original) {
-		if (original && LivingEntity.class.cast(this) instanceof Slime slime && !slime.isTiny() && slime.isDeadOrDying() && LunaSlimesConfigValueGetter.useSplitting()) {
+		if (original && LivingEntity.class.cast(this) instanceof Slime slime && !slime.isTiny() && slime.isDeadOrDying() && LunaSlimesGameplayConfig.USE_SPLITTING.get()) {
 			final int split = LunaSlimesUtil.spawnSingleSlime(slime);
 			slime.setSize(slime.getSize() - split, true);
 			slime.deathTime = 0;
@@ -40,7 +41,7 @@ public class LivingEntityMixin {
 	public void lunaSlimes$die(DamageSource source, CallbackInfo info) {
 		if (!(LivingEntity.class.cast(this) instanceof Slime slime)) return;
 		final Optional<ResourceKey<DamageType>> type = source.typeHolder().unwrapKey();
-		if (type.isPresent() && type.get() != DamageTypes.GENERIC_KILL && !slime.isTiny() && LunaSlimesConfigValueGetter.useSplitting()) info.cancel();
+		if (type.isPresent() && type.get() != DamageTypes.GENERIC_KILL && !slime.isTiny() && LunaSlimesGameplayConfig.USE_SPLITTING.get()) info.cancel();
 	}
 
 	@Inject(method = "doPush", at = @At("HEAD"))
@@ -50,9 +51,9 @@ public class LivingEntityMixin {
 	}
 
 	@Inject(method = "knockback", at = @At("HEAD"), cancellable = true)
-	public void lunaSlimes$knockback(double d, double e, double f, CallbackInfo info) {
+	public void lunaSlimes$knockback(double power, double xd, double zd, CallbackInfo info) {
 		if (!(LivingEntity.class.cast(this) instanceof Slime slime)) return;
-		if (slime.isTiny() && slime.isDeadOrDying() && LunaSlimesConfigValueGetter.deathAnim()) info.cancel();
+		if (slime.isTiny() && slime.isDeadOrDying() && LunaSlimesVisualsAudioConfig.DEATH_ANIM.get()) info.cancel();
 	}
 
 }

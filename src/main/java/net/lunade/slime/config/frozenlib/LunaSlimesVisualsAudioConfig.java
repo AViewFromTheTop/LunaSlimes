@@ -8,7 +8,7 @@ import net.frozenblock.lib.config.v2.registry.ID;
 import net.frozenblock.lib.shadow.blue.endless.jankson.JsonElement;
 import net.lunade.slime.LunaSlimesConstants;
 
-public final class LunaSlimesVisualsAudioFrozenConfig {
+public final class LunaSlimesVisualsAudioConfig {
 	public static final ConfigData<JsonElement> CONFIG = ConfigData.createAndRegister(
 		ID.of(LunaSlimesConstants.MOD_ID, "visuals_audio"),
 		ConfigSettings.JSON

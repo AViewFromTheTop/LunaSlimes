@@ -10,10 +10,10 @@ import com.mojang.datafixers.util.Pair;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.lunade.slime.LunaSlimesUtil;
-import net.lunade.slime.config.getter.LunaSlimesConfigValueGetter;
+import net.lunade.slime.client.LunaSlimesRenderStateDataKeys;
+import net.lunade.slime.client.renderer.entity.layers.MagmaCubeGlowingLayer;
+import net.lunade.slime.config.frozenlib.LunaSlimesVisualsAudioConfig;
 import net.lunade.slime.impl.SlimeInterface;
-import net.lunade.slime.impl.client.SlimeRenderStateInterface;
-import net.lunade.slime.render.MagmaCubeLayer;
 import net.minecraft.client.model.monster.slime.MagmaCubeModel;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MagmaCubeRenderer;
@@ -23,6 +23,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.monster.MagmaCube;
 import net.minecraft.world.level.LightLayer;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -31,44 +32,45 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(MagmaCubeRenderer.class)
 public abstract class MagmaCubeRendererMixin extends MobRenderer<MagmaCube, SlimeRenderState, MagmaCubeModel> {
 
-	public MagmaCubeRendererMixin(EntityRendererProvider.Context context, MagmaCubeModel entityModel, float f) {
-		super(context, entityModel, f);
+	@Unique
+	private static final Pair<Float, Float> LUNASLIMES$FALLBACK_WOBBLE = Pair.of(1F, 1F);
+
+	public MagmaCubeRendererMixin(EntityRendererProvider.Context context, MagmaCubeModel model, float shadow) {
+		super(context, model, shadow);
 	}
 
 	@Inject(method = "<init>", at = @At("TAIL"))
 	public void lunaSlimes$init(EntityRendererProvider.Context context, CallbackInfo info) {
 		final MagmaCubeRenderer renderer = MagmaCubeRenderer.class.cast(this);
-		renderer.addLayer(new MagmaCubeLayer(renderer));
+		renderer.addLayer(new MagmaCubeGlowingLayer(renderer));
 	}
 
 	@Inject(
 		method = "extractRenderState(Lnet/minecraft/world/entity/monster/MagmaCube;Lnet/minecraft/client/renderer/entity/state/SlimeRenderState;F)V",
 		at = @At("TAIL")
 	)
-	public void lunaSlimes$extractRenderState(MagmaCube magmaCube, SlimeRenderState renderState, float f, CallbackInfo info) {
-		if (!(renderState instanceof SlimeRenderStateInterface renderStateInterface)) return;
-		renderStateInterface.lunaSlimes$setInWorld(((SlimeInterface) magmaCube).lunaSlimes$isInWorld());
-		renderStateInterface.lunaSlimes$setWobble(LunaSlimesUtil.wobbleAnim(magmaCube, f));
-		renderStateInterface.lunaSlimes$setSize(LunaSlimesUtil.getSlimeScale(magmaCube, f));
+	public void lunaSlimes$extractRenderState(MagmaCube magmaCube, SlimeRenderState renderState, float partialTicks, CallbackInfo info) {
+		renderState.setData(LunaSlimesRenderStateDataKeys.IN_WORLD, ((SlimeInterface)magmaCube).lunaSlimes$isInWorld());
+		renderState.setData(LunaSlimesRenderStateDataKeys.WOBBLE, LunaSlimesUtil.wobbleAnim(magmaCube, partialTicks));
+		renderState.setData(LunaSlimesRenderStateDataKeys.SIZE, LunaSlimesUtil.getSlimeScale(magmaCube, partialTicks));
 	}
 
 	@Inject(
 		method = "scale(Lnet/minecraft/client/renderer/entity/state/SlimeRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;)V",
 		at = @At("HEAD")
 	)
-	public void lunaSlimes$anims(
+	public void lunaSlimes$scale(
 		SlimeRenderState renderState, PoseStack poseStack, CallbackInfo info,
 		@Share("lunaSlimes$squash") LocalFloatRef squash,
 		@Share("lunaSlimes$stretch") LocalFloatRef stretch
 	) {
-		if (!(renderState instanceof SlimeRenderStateInterface renderStateInterface)) return;
-		final Pair<Float, Float> wobble = renderStateInterface.lunaSlimes$getWobble();
+		final Pair<Float, Float> wobble = renderState.getDataOrDefault(LunaSlimesRenderStateDataKeys.WOBBLE, LUNASLIMES$FALLBACK_WOBBLE);
 		final float wobbleXZ = wobble.getFirst();
 		final float wobbleY = wobble.getSecond();
 		poseStack.scale(wobbleXZ, wobbleY, wobbleXZ);
 		poseStack.translate(0.0F, -(2.05F - (wobbleY * 2.05F)), 0F);
-		final float size = renderStateInterface.lunaSlimes$getSize();
-		final float squishValue = renderState.squish * LunaSlimesConfigValueGetter.squishMultiplier();
+		final float size = renderState.getDataOrDefault(LunaSlimesRenderStateDataKeys.SIZE, 0F);
+		final float squishValue = renderState.squish * (LunaSlimesVisualsAudioConfig.SQUISH_MULTIPLIER.get() * 0.1F);
 
 		final float g = squishValue / ((size) * 0.5F + 1F);
 		final float sq = (1F / (g + 1F));
@@ -89,8 +91,8 @@ public abstract class MagmaCubeRendererMixin extends MobRenderer<MagmaCube, Slim
 		@Share("lunaSlimes$squash") LocalFloatRef squash,
 		@Share("lunaSlimes$stretch") LocalFloatRef stretch
 	) {
-		if (renderState instanceof SlimeRenderStateInterface renderStateInterface && renderStateInterface.lunaSlimes$isInWorld()) {
-			final float x = squash.get() * renderStateInterface.lunaSlimes$getSize();
+		if (renderState.getDataOrDefault(LunaSlimesRenderStateDataKeys.IN_WORLD, false)) {
+			final float x = squash.get() * renderState.getDataOrDefault(LunaSlimesRenderStateDataKeys.SIZE, 1F);
 			operation.call(poseStack, x, stretch.get(), x);
 		} else {
 			operation.call(poseStack, a, b, c);
@@ -102,12 +104,12 @@ public abstract class MagmaCubeRendererMixin extends MobRenderer<MagmaCube, Slim
 		at = @At("RETURN")
 	)
 	public float lunaSlimes$newShadows(float original, SlimeRenderState renderState) {
-		if (!(LunaSlimesConfigValueGetter.newShadows() && renderState instanceof SlimeRenderStateInterface renderStateInterface)) return original;
-		final float slimeSize = renderStateInterface.lunaSlimes$getSize();
-		final Pair<Float, Float> wobble = renderStateInterface.lunaSlimes$getWobble();
+		if (!LunaSlimesVisualsAudioConfig.NEW_SHADOWS.get()) return original;
+		final float slimeSize = renderState.getDataOrDefault(LunaSlimesRenderStateDataKeys.SIZE, 1F);
+		final Pair<Float, Float> wobble = renderState.getDataOrDefault(LunaSlimesRenderStateDataKeys.WOBBLE, LUNASLIMES$FALLBACK_WOBBLE);
 		final float wobbleXZ = wobble.getFirst() * 2F;
 		final float size = ((slimeSize * 0.999F) * 0.75F) * wobbleXZ;
-		final float squish = (renderState.squish * LunaSlimesConfigValueGetter.squishMultiplier()) / (size * 0.5F + 1F);
+		final float squish = (renderState.squish * (LunaSlimesVisualsAudioConfig.SQUISH_MULTIPLIER.get() * 0.1F)) / (size * 0.5F + 1F);
 		final float j = (1F / (squish + 1F));
 		return 0.25F * (j * size);
 	}
@@ -117,8 +119,8 @@ public abstract class MagmaCubeRendererMixin extends MobRenderer<MagmaCube, Slim
 		at = @At("RETURN")
 	)
 	public int lunaSlimes$getBlockLightLevel(int original, MagmaCube magmaCube, BlockPos pos) {
-		if (!LunaSlimesConfigValueGetter.glowingMagma()) return original;
-		return magmaCube.isOnFire() ? original : magmaCube.level().getBrightness(LightLayer.BLOCK, pos);
+		if (!LunaSlimesVisualsAudioConfig.GLOWING_MAGMA.get() || magmaCube.isOnFire()) return original;
+		return magmaCube.level().getBrightness(LightLayer.BLOCK, pos);
 	}
 
 }

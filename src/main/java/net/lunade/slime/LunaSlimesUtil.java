@@ -2,8 +2,11 @@ package net.lunade.slime;
 
 import com.mojang.datafixers.util.Pair;
 import java.util.List;
-import net.lunade.slime.config.getter.LunaSlimesConfigValueGetter;
+import net.lunade.slime.config.frozenlib.LunaSlimesGameplayConfig;
+import net.lunade.slime.config.frozenlib.LunaSlimesVisualsAudioConfig;
 import net.lunade.slime.impl.SlimeInterface;
+import net.lunade.slime.registry.LunaSlimesAttachmentTypes;
+import net.lunade.slime.registry.LunaSlimesSounds;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
@@ -21,17 +24,14 @@ public class LunaSlimesUtil {
 
 	public static void mergeSlimes(Slime slime1, Slime slime2) {
 		final EntityType<? extends Slime> entityType = slime1.getType();
-		if (slime2.getType() != entityType || !slime1.isAlive() || !slime2.isAlive()) return;
+		if (!slime2.is(entityType) || !slime1.isAlive() || !slime2.isAlive()) return;
 		if (!(slime1 instanceof SlimeInterface slimeInterface1) || !(slime2 instanceof SlimeInterface slimeInterface2)) return;
 
 		final int thisSize = slime1.getSize();
 		final int otherSize = slime2.getSize();
-
 		if (thisSize < otherSize && thisSize != otherSize) return;
-		if (thisSize > LunaSlimesConfigValueGetter.maxSize() - 1) return;
-		if (thisSize > LunaSlimesConfigValueGetter.maxSize() - 1) return;
-		if (slimeInterface1.lunaSlimes$getMergeCooldown() > 0) return;
-		if (slimeInterface2.lunaSlimes$getMergeCooldown() > 0) return;
+		if (thisSize > LunaSlimesGameplayConfig.MAX_SIZE.get() - 1 || otherSize > LunaSlimesGameplayConfig.MAX_SIZE.get() - 1) return;
+		if (slime1.getAttachedOrCreate(LunaSlimesAttachmentTypes.MERGE_COOLDOWN) > 0 || slime2.getAttachedOrCreate(LunaSlimesAttachmentTypes.MERGE_COOLDOWN) > 0) return;
 
 		final EntityDimensions oldDimensions = getDimensionsForSize(slime1, thisSize);
 		final EntityDimensions inflated = getDimensionsForSize(slime1, thisSize + 1);
@@ -43,12 +43,12 @@ public class LunaSlimesUtil {
 		if (horizontalCollision || verticalCollision) return;
 
 		slime1.setSize(thisSize + 1, true);
-		slimeInterface1.lunaSlimes$setMergeCooldown(LunaSlimesConfigValueGetter.mergeCooldown());
+		slime1.setAttached(LunaSlimesAttachmentTypes.MERGE_COOLDOWN, LunaSlimesGameplayConfig.MERGE_COOLDOWN.get());
 		slimeInterface1.lunaSlimes$playWobbleAnim();
-		if (LunaSlimesConfigValueGetter.mergeSounds()) {
+		if (LunaSlimesVisualsAudioConfig.MERGE_SOUNDS.get()) {
 			final RandomSource random = slime1.getRandom();
 			slime1.playSound(
-				entityType == EntityType.MAGMA_CUBE ? LunaSlimes.MAGMA_MERGE : LunaSlimes.SLIME_MERGE,
+				entityType == EntityType.MAGMA_CUBE ? LunaSlimesSounds.MAGMACUBE_MERGE : LunaSlimesSounds.SLIME_MERGE,
 				slime1.getSoundVolume(),
 				1F + (random.nextFloat() - random.nextFloat()) * 0.4F
 			);
@@ -97,16 +97,16 @@ public class LunaSlimesUtil {
 		slime.setTicksFrozen(origin.getTicksFrozen());
 		slime.setDeltaMovement(origin.getDeltaMovement());
 
-		originInterface.lunaSlimes$setMergeCooldown(LunaSlimesConfigValueGetter.onSplitCooldown());
-		slimeInterface.lunaSlimes$setMergeCooldown(LunaSlimesConfigValueGetter.splitCooldown());
+		origin.setAttached(LunaSlimesAttachmentTypes.MERGE_COOLDOWN, LunaSlimesGameplayConfig.ON_SPLIT_COOLDOWN.get());
+		slime.setAttached(LunaSlimesAttachmentTypes.MERGE_COOLDOWN, LunaSlimesGameplayConfig.SPLIT_COOLDOWN.get());
 		originInterface.lunaSlimes$playWobbleAnim();
 		slimeInterface.lunaSlimes$playWobbleAnim();
 		LunaSlimesUtil.spawnSlimeParticles(origin);
 
 		origin.level().addFreshEntity(slime);
-		if (LunaSlimesConfigValueGetter.splitSounds()) {
+		if (LunaSlimesVisualsAudioConfig.SPLIT_SOUNDS.get()) {
 			slime.playSound(
-				entityType == EntityType.MAGMA_CUBE ? LunaSlimes.MAGMA_SPLIT : LunaSlimes.SLIME_SPLIT,
+				entityType == EntityType.MAGMA_CUBE ? LunaSlimesSounds.MAGMACUBE_SPLIT : LunaSlimesSounds.SLIME_SPLIT,
 				slime.getSoundVolume(),
 				1F + (random.nextFloat() - random.nextFloat()) * 0.4F
 			);
@@ -116,7 +116,7 @@ public class LunaSlimesUtil {
 	}
 
 	public static void spawnSlimeParticles(Slime slime) {
-		if (!(slime.level() instanceof ServerLevel level) || !LunaSlimesConfigValueGetter.particles()) return;
+		if (!(slime.level() instanceof ServerLevel level) || !LunaSlimesVisualsAudioConfig.PARTICLES.get()) return;
 		final int size = slime.getSize();
 		final double horizontalSpread = slime.getBbWidth() / 4F;
 		final double verticalSpread = slime.getBbHeight() / 4F;
@@ -130,14 +130,14 @@ public class LunaSlimesUtil {
 		level.sendParticles(slime.getParticleType(), slime.getX(), slime.getY(), slime.getZ(), level.getRandom().nextInt(size * 6, size * 8), horizontalSpread, 0F, horizontalSpread, 0.05D);
 	}
 
-	public static float getSlimeScale(Slime slime, float partialTick) {
+	public static float getSlimeScale(Slime slime, float partialTicks) {
 		if (!(slime instanceof SlimeInterface slimeInterface)) return slime.getSize();
-		return (LunaSlimesConfigValueGetter.growAnim() ? slimeInterface.lunaSlimes$getSizeScale(partialTick) : slime.getSize())
-			* slimeInterface.lunaSlimes$getDeathProgress(partialTick);
+		return (LunaSlimesVisualsAudioConfig.GROW_ANIM.get() ? slimeInterface.lunaSlimes$getSizeScale(partialTicks) : slime.getSize())
+			* slimeInterface.lunaSlimes$getDeathProgress(partialTicks);
 	}
 
 	public static float getSlimeWobbleAnimProgress(Slime slime, float partialTick) {
-		if (!(slime instanceof SlimeInterface slimeInterface) || !LunaSlimesConfigValueGetter.wobbleAnim()) return 0F;
+		if (!(slime instanceof SlimeInterface slimeInterface) || !LunaSlimesVisualsAudioConfig.WOBBLE_ANIM.get()) return 0F;
 		return slimeInterface.lunaSlimes$wobbleAnimProgress(partialTick);
 	}
 

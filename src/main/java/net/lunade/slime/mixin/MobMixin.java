@@ -2,7 +2,8 @@ package net.lunade.slime.mixin;
 
 import java.util.Optional;
 import net.lunade.slime.LunaSlimesUtil;
-import net.lunade.slime.config.getter.LunaSlimesConfigValueGetter;
+import net.lunade.slime.config.frozenlib.LunaSlimesGameplayConfig;
+import net.lunade.slime.config.frozenlib.LunaSlimesVisualsAudioConfig;
 import net.lunade.slime.impl.SlimeInterface;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -24,7 +25,7 @@ public class MobMixin {
 
 	@Inject(at = @At("HEAD"), method = "handleEntityEvent")
 	public void lunaSlimes$handleEntityEvent(byte event, CallbackInfo info) {
-		if (!(Mob.class.cast(this) instanceof Slime slime) || event != EntityEvent.TENDRILS_SHIVER || !LunaSlimesConfigValueGetter.jumpAntic()) return;
+		if (!(Mob.class.cast(this) instanceof Slime slime) || event != EntityEvent.TENDRILS_SHIVER || !LunaSlimesVisualsAudioConfig.JUMP_ANTIC.get()) return;
 		LunaSlimesUtil.setSquish(slime, -0.05F);
 		if (slime instanceof SlimeInterface slimeInterface) slimeInterface.lunaSlimes$setJumpAnticTicks(3);
 	}
@@ -32,7 +33,7 @@ public class MobMixin {
 	@Inject(method = "getLootTable", at = @At("TAIL"), cancellable = true)
 	public void lunaSlimes$modifyMagmaCubeLootTable(CallbackInfoReturnable<Optional<ResourceKey<LootTable>>> info) {
 		if (!(Mob.class.cast(this) instanceof MagmaCube magmaCube)) return;
-		if (!LunaSlimesConfigValueGetter.useSplitting()) return;
+		if (!LunaSlimesGameplayConfig.USE_SPLITTING.get()) return;
 		final Identifier identifier = BuiltInRegistries.ENTITY_TYPE.getKey(magmaCube.getType());
 		final ResourceKey<LootTable> lootTable = ResourceKey.create(
 			Registries.LOOT_TABLE,

@@ -61,7 +61,7 @@ val datagen by sourceSets.registering {
 loom {
     runtimeOnlyLog4j.set(true)
 
-    accessWidenerPath.set(file("src/main/resources/$mod_id.accesswidener"))
+    accessWidenerPath.set(file("src/main/resources/$mod_id.classtweaker"))
     interfaceInjection {
         // When enabled, injected interfaces from dependencies will be applied.
         enableDependencyInterfaceInjection.set(true)
@@ -140,8 +140,8 @@ dependencies {
     compileOnly("com.terraformersmc:modmenu:$modmenu_version")
 
     // FrozenLib
-    compileOnly("net.frozenblock:frozenlib:$frozenlib_version")
-    //compileOnly("maven.modrinth:frozenlib:$frozenlib_version")
+    //api("net.frozenblock:frozenlib:$frozenlib_version")
+    api("maven.modrinth:frozenlib:$frozenlib_version")
 
     // Cloth Config
     compileOnly("me.shedaniel.cloth:cloth-config-fabric:$cloth_config_version") {
@@ -170,10 +170,11 @@ tasks {
                 "**/lang/*.json",
                 "**/.cache/*",
                 "**/*.accesswidener",
+                "**/*.classtweaker",
                 "**/*.nbt",
                 "**/*.png",
                 "**/*.ogg",
-                "**/*.mixins.json"
+                "**/*.mixins.json",
             )
         ) {
             expand(properties)

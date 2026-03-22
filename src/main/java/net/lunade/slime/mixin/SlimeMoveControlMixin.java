@@ -1,7 +1,8 @@
 package net.lunade.slime.mixin;
 
-import net.lunade.slime.config.getter.LunaSlimesConfigValueGetter;
-import net.lunade.slime.impl.SlimeInterface;
+import net.lunade.slime.config.frozenlib.LunaSlimesVisualsAudioConfig;
+import net.lunade.slime.registry.LunaSlimesAttachmentTypes;
+import net.minecraft.world.entity.EntityEvent;
 import net.minecraft.world.entity.monster.Slime;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -21,40 +22,36 @@ public class SlimeMoveControlMixin {
 
 	@Inject(at = @At("TAIL"), method = "<init>")
 	public void lunaSlimes$init(Slime slime, CallbackInfo info) {
-		if (!(this.slime instanceof SlimeInterface slimeInterface)) return;
-		this.jumpDelay = slimeInterface.lunaSlimes$getSavedJumpDelay();
+		this.jumpDelay = slime.getAttachedOrCreate(LunaSlimesAttachmentTypes.JUMP_DELAY);
 	}
 
 	@Inject(at = @At("HEAD"), method = "tick")
 	public void lunaSlimes$tick(CallbackInfo info) {
-		if (!(this.slime instanceof SlimeInterface slimeInterface)) return;
-
-		slimeInterface.lunaSlimes$setJumpDelay(this.jumpDelay);
-		if (!LunaSlimesConfigValueGetter.jumpAntic()) {
-			slimeInterface.lunaSlimes$setJumpAntic(false);
+		this.slime.setAttached(LunaSlimesAttachmentTypes.JUMP_DELAY, this.jumpDelay);
+		if (!LunaSlimesVisualsAudioConfig.JUMP_ANTIC.get()) {
+			this.slime.setAttached(LunaSlimesAttachmentTypes.JUMP_ANTIC, false);
 			return;
 		}
 
 		final boolean antic = this.slime.onGround() && !this.slime.isInWater();
 		if (this.jumpDelay == 3 && antic) {
-			this.slime.level().broadcastEntityEvent(slime, (byte) 61);
+			this.slime.level().broadcastEntityEvent(slime, EntityEvent.TENDRILS_SHIVER);
 			this.slime.targetSquish = -0.05F;
-			slimeInterface.lunaSlimes$setJumpAntic(true);
+			this.slime.setAttached(LunaSlimesAttachmentTypes.JUMP_ANTIC, true);
 		} else if (this.jumpDelay == 2 && antic) {
 			this.slime.targetSquish = -0.15F;
-			slimeInterface.lunaSlimes$setJumpAntic(true);
+			this.slime.setAttached(LunaSlimesAttachmentTypes.JUMP_ANTIC, true);
 		} else if (this.jumpDelay == 1 && antic) {
 			this.slime.targetSquish = -0.3F;
-			slimeInterface.lunaSlimes$setJumpAntic(true);
+			this.slime.setAttached(LunaSlimesAttachmentTypes.JUMP_ANTIC, true);
 		} else {
-			slimeInterface.lunaSlimes$setJumpAntic(false);
+			this.slime.setAttached(LunaSlimesAttachmentTypes.JUMP_ANTIC, false);
 		}
 	}
 
 	@Inject(at = @At("TAIL"), method = "tick")
 	public void lunaSlimes$tickTail(CallbackInfo info) {
-		if (!(this.slime instanceof SlimeInterface slimeInterface)) return;
-		slimeInterface.lunaSlimes$setJumpDelay(this.jumpDelay);
+		this.slime.setAttached(LunaSlimesAttachmentTypes.JUMP_DELAY, this.jumpDelay);
 	}
 
 }
