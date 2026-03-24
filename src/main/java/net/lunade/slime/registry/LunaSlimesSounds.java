@@ -30,8 +30,6 @@ public final class LunaSlimesSounds {
 	public static final SoundEvent MAGMACUBE_MERGE = register("entity.magmacube.merge");
 	public static final SoundEvent MAGMACUBE_SPLIT = register("entity.magmacube.split");
 
-
-
 	private LunaSlimesSounds() {
 		throw new UnsupportedOperationException("LunaSlimesSounds contains only static declarations.");
 	}
