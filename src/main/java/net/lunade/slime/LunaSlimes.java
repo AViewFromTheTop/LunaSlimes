@@ -2,6 +2,8 @@ package net.lunade.slime;
 
 import net.fabricmc.loader.api.ModContainer;
 import net.frozenblock.lib.entrypoint.api.FrozenModInitializer;
+import net.lunade.slime.config.frozenlib.LunaSlimesGameplayConfig;
+import net.lunade.slime.config.frozenlib.LunaSlimesVisualsAudioConfig;
 import net.lunade.slime.registry.LunaSlimesAttachmentTypes;
 import net.lunade.slime.registry.LunaSlimesSounds;
 
@@ -15,6 +17,8 @@ public final class LunaSlimes extends FrozenModInitializer {
 	public void onInitialize(String modId, ModContainer container) {
 		LunaSlimesSounds.init();
 		LunaSlimesAttachmentTypes.init();
+		LunaSlimesGameplayConfig.CONFIG.load(true);
+		LunaSlimesVisualsAudioConfig.CONFIG.load(true);
 	}
 
 }
