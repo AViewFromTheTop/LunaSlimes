@@ -28,6 +28,7 @@ pluginManagement {
 rootProject.name = "Luna Slimes"
 
 localRepository("cloth-config", "me.shedaniel.cloth:cloth-config-fabric", kotlin = false, enabled = false)
+localRepository("FrozenLib", "maven.modrinth:frozenlib", kotlin = true, enabled = true)
 
 fun localRepository(repo: String, dependencySub: String, kotlin: Boolean, enabled: Boolean) {
     if (!enabled) return

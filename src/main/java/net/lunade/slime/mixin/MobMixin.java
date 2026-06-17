@@ -4,7 +4,7 @@ import java.util.Optional;
 import net.lunade.slime.LunaSlimesUtil;
 import net.lunade.slime.config.frozenlib.LunaSlimesGameplayConfig;
 import net.lunade.slime.config.frozenlib.LunaSlimesVisualsAudioConfig;
-import net.lunade.slime.impl.SlimeInterface;
+import net.lunade.slime.impl.AbstractCubeMobInterface;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
@@ -27,7 +27,7 @@ public class MobMixin {
 	public void lunaSlimes$handleEntityEvent(byte event, CallbackInfo info) {
 		if (!(Mob.class.cast(this) instanceof AbstractCubeMob cube) || event != EntityEvent.TENDRILS_SHIVER || !LunaSlimesVisualsAudioConfig.JUMP_ANTIC.get()) return;
 		LunaSlimesUtil.setSquish(cube, -0.05F);
-		if (cube instanceof SlimeInterface slimeInterface) slimeInterface.lunaSlimes$setJumpAnticTicks(3);
+		if (cube instanceof AbstractCubeMobInterface abstractCubeMobInterface) abstractCubeMobInterface.lunaSlimes$setJumpAnticTicks(3);
 	}
 
 	@Inject(method = "getLootTable", at = @At("TAIL"), cancellable = true)

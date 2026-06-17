@@ -7,7 +7,7 @@ import it.unimi.dsi.fastutil.ints.IntArrayList;
 import net.lunade.slime.LunaSlimesUtil;
 import net.lunade.slime.config.frozenlib.LunaSlimesGameplayConfig;
 import net.lunade.slime.config.frozenlib.LunaSlimesVisualsAudioConfig;
-import net.lunade.slime.impl.SlimeInterface;
+import net.lunade.slime.impl.AbstractCubeMobInterface;
 import net.lunade.slime.registry.LunaSlimesAttachmentTypes;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.sounds.SoundEvent;
@@ -18,7 +18,6 @@ import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.monster.cubemob.AbstractCubeMob;
-import net.minecraft.world.entity.monster.cubemob.Slime;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.storage.ValueInput;
@@ -32,7 +31,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(AbstractCubeMob.class)
-public class AbstractCubeMobMixin implements SlimeInterface {
+public class AbstractCubeMobMixin implements AbstractCubeMobInterface {
 	@Unique
 	private static final int LUNASLIMES$WOBBLE_ANIM_LENGTH = 10;
 
@@ -66,7 +65,7 @@ public class AbstractCubeMobMixin implements SlimeInterface {
 
 	@Inject(method = "push", at = @At("HEAD"))
 	public void lunaSlimes$push(Entity entity, CallbackInfo info) {
-		if (entity instanceof AbstractCubeMob cube) LunaSlimesUtil.mergeCubes(Slime.class.cast(this), cube);
+		if (entity instanceof AbstractCubeMob cube) LunaSlimesUtil.mergeCubes(AbstractCubeMob.class.cast(this), cube);
 	}
 
 	@Inject(method = "tick", at = @At("HEAD"))
@@ -149,7 +148,7 @@ public class AbstractCubeMobMixin implements SlimeInterface {
 	) {
 		this.lunaSlimes$playWobbleAnim();
 		if (spawnReason == EntitySpawnReason.SPAWN_ITEM_USE || spawnReason == EntitySpawnReason.MOB_SUMMONED || spawnReason == EntitySpawnReason.BUCKET || spawnReason == EntitySpawnReason.DISPENSER) return;
-		Slime.class.cast(this).setAttached(LunaSlimesAttachmentTypes.MERGE_COOLDOWN, LunaSlimesGameplayConfig.SPAWNED_MERGE_COOLDOWN.get());
+		AbstractCubeMob.class.cast(this).setAttached(LunaSlimesAttachmentTypes.MERGE_COOLDOWN, LunaSlimesGameplayConfig.SPAWNED_MERGE_COOLDOWN.get());
 	}
 
 	@WrapOperation(
@@ -167,9 +166,9 @@ public class AbstractCubeMobMixin implements SlimeInterface {
 
 	@Inject(method = "decreaseSquish", at = @At("HEAD"), cancellable = true)
 	public void lunaSlimes$decreaseSquish(CallbackInfo info) {
-		final Slime slime = Slime.class.cast(this);
-		final boolean jumpAntic = slime.getAttachedOrCreate(LunaSlimesAttachmentTypes.JUMP_ANTIC) && LunaSlimesVisualsAudioConfig.JUMP_ANTIC.get();
-		if (jumpAntic || !slime.getAttachedOrCreate(LunaSlimesAttachmentTypes.CAN_SQUISH)) info.cancel();
+		final AbstractCubeMob cubeMob = AbstractCubeMob.class.cast(this);
+		final boolean jumpAntic = cubeMob.getAttachedOrCreate(LunaSlimesAttachmentTypes.JUMP_ANTIC) && LunaSlimesVisualsAudioConfig.JUMP_ANTIC.get();
+		if (jumpAntic || !cubeMob.getAttachedOrCreate(LunaSlimesAttachmentTypes.CAN_SQUISH)) info.cancel();
 	}
 
 	@Inject(
@@ -181,7 +180,7 @@ public class AbstractCubeMobMixin implements SlimeInterface {
 		)
 	)
 	public void lunaSlimes$moveDecreaseSquish(CallbackInfo info) {
-		Slime.class.cast(this).setAttached(LunaSlimesAttachmentTypes.CAN_SQUISH, true);
+		AbstractCubeMob.class.cast(this).setAttached(LunaSlimesAttachmentTypes.CAN_SQUISH, true);
 		this.decreaseSquish();
 	}
 
@@ -194,7 +193,7 @@ public class AbstractCubeMobMixin implements SlimeInterface {
 		)
 	)
 	public void lunaSlimes$stopDecreaseSquish(CallbackInfo info) {
-		Slime.class.cast(this).setAttached(LunaSlimesAttachmentTypes.CAN_SQUISH, false);
+		AbstractCubeMob.class.cast(this).setAttached(LunaSlimesAttachmentTypes.CAN_SQUISH, false);
 	}
 
 	@WrapWithCondition(
@@ -232,7 +231,7 @@ public class AbstractCubeMobMixin implements SlimeInterface {
 			Mth.lerp(
 				partialTicks,
 				this.lunaSlimes$prevWobbleAnim,
-				Slime.class.cast(this).getAttachedOrCreate(LunaSlimesAttachmentTypes.WOBBLE_ANIM_PROGRESS)
+				AbstractCubeMob.class.cast(this).getAttachedOrCreate(LunaSlimesAttachmentTypes.WOBBLE_ANIM_PROGRESS)
 			) / LUNASLIMES$WOBBLE_ANIM_LENGTH
 		);
 	}
@@ -240,21 +239,21 @@ public class AbstractCubeMobMixin implements SlimeInterface {
 	@Unique
 	@Override
 	public void lunaSlimes$playWobbleAnim() {
-		final Slime slime = Slime.class.cast(this);
-		if (slime.getAttachedOrCreate(LunaSlimesAttachmentTypes.WOBBLE_ANIM_PROGRESS) != 0) return;
-		slime.setAttached(LunaSlimesAttachmentTypes.WOBBLE_ANIM_PROGRESS, LUNASLIMES$WOBBLE_ANIM_LENGTH);
+		final AbstractCubeMob cubeMob = AbstractCubeMob.class.cast(this);
+		if (cubeMob.getAttachedOrCreate(LunaSlimesAttachmentTypes.WOBBLE_ANIM_PROGRESS) != 0) return;
+		cubeMob.setAttached(LunaSlimesAttachmentTypes.WOBBLE_ANIM_PROGRESS, LUNASLIMES$WOBBLE_ANIM_LENGTH);
 	}
 
 	@Unique
 	@Override
 	public float lunaSlimes$getSizeScale(float partialTicks) {
-		return Mth.lerp(partialTicks, this.lunaSlimes$prevSize, Slime.class.cast(this).getAttachedOrCreate(LunaSlimesAttachmentTypes.SIZE));
+		return Mth.lerp(partialTicks, this.lunaSlimes$prevSize, AbstractCubeMob.class.cast(this).getAttachedOrCreate(LunaSlimesAttachmentTypes.SIZE));
 	}
 
 	@Unique
 	@Override
 	public void lunaSlimes$cheatSize(float size) {
-		Slime.class.cast(this).setAttached(LunaSlimesAttachmentTypes.SIZE, size);
+		AbstractCubeMob.class.cast(this).setAttached(LunaSlimesAttachmentTypes.SIZE, size);
 		this.lunaSlimes$prevSize = size;
 	}
 
@@ -267,8 +266,8 @@ public class AbstractCubeMobMixin implements SlimeInterface {
 	@Unique
 	@Override
 	public float lunaSlimes$getDeathProgress(float partialTicks) {
-		return LunaSlimesVisualsAudioConfig.DEATH_ANIM.get() && Slime.class.cast(this).isDeadOrDying()
-			? ((20F - Mth.lerp(partialTicks, this.lunaSlimes$prevDeathTime, (Slime.class.cast(this).deathTime))) / 20F)
+		return LunaSlimesVisualsAudioConfig.DEATH_ANIM.get() && AbstractCubeMob.class.cast(this).isDeadOrDying()
+			? ((20F - Mth.lerp(partialTicks, this.lunaSlimes$prevDeathTime, (AbstractCubeMob.class.cast(this).deathTime))) / 20F)
 			: 1F;
 	}
 

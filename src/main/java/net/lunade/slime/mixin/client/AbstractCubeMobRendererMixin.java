@@ -11,7 +11,7 @@ import net.fabricmc.api.Environment;
 import net.lunade.slime.LunaSlimesUtil;
 import net.lunade.slime.client.LunaSlimesRenderStateDataKeys;
 import net.lunade.slime.config.frozenlib.LunaSlimesVisualsAudioConfig;
-import net.lunade.slime.impl.SlimeInterface;
+import net.lunade.slime.impl.AbstractCubeMobInterface;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.entity.AbstractCubeMobRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -40,7 +40,7 @@ public abstract class AbstractCubeMobRendererMixin<T extends AbstractCubeMob, S 
 		at = @At("TAIL")
 	)
 	public void lunaSlimes$extractRenderState(T entity, S state, float partialTicks, CallbackInfo info) {
-		state.setData(LunaSlimesRenderStateDataKeys.IN_WORLD, ((SlimeInterface)entity).lunaSlimes$isInWorld());
+		state.setData(LunaSlimesRenderStateDataKeys.IN_WORLD, ((AbstractCubeMobInterface)entity).lunaSlimes$isInWorld());
 		state.setData(LunaSlimesRenderStateDataKeys.WOBBLE, LunaSlimesUtil.wobbleAnim(entity, partialTicks));
 		state.setData(LunaSlimesRenderStateDataKeys.SIZE, LunaSlimesUtil.getCubeScale(entity, partialTicks));
 	}

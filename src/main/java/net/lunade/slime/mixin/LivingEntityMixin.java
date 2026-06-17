@@ -5,7 +5,7 @@ import java.util.Optional;
 import net.lunade.slime.LunaSlimesUtil;
 import net.lunade.slime.config.frozenlib.LunaSlimesGameplayConfig;
 import net.lunade.slime.config.frozenlib.LunaSlimesVisualsAudioConfig;
-import net.lunade.slime.impl.SlimeInterface;
+import net.lunade.slime.impl.AbstractCubeMobInterface;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.damagesource.DamageSource;
@@ -25,7 +25,7 @@ public class LivingEntityMixin {
 
 	@Inject(method = "recreateFromPacket", at = @At("TAIL"))
 	public void luneSlimes$recreateFromPacket(ClientboundAddEntityPacket packet, CallbackInfo info) {
-		if (LivingEntity.class.cast(this) instanceof SlimeInterface slimeInterface) slimeInterface.lunaSlimes$setInWorld(true);
+		if (LivingEntity.class.cast(this) instanceof AbstractCubeMobInterface abstractCubeMobInterface) abstractCubeMobInterface.lunaSlimes$setInWorld(true);
 	}
 
 	@ModifyReturnValue(method = "hurtServer", at = @At("RETURN"))
@@ -51,8 +51,8 @@ public class LivingEntityMixin {
 		LunaSlimesUtil.mergeCubes(cube, cube2);
 	}
 
-	@Inject(method = "knockback", at = @At("HEAD"), cancellable = true)
-	public void lunaSlimes$knockback(double power, double xd, double zd, CallbackInfo info) {
+	@Inject(method = "knockback(DDDLnet/minecraft/world/damagesource/DamageSource;FZ)V", at = @At("HEAD"), cancellable = true)
+	public void lunaSlimes$knockback(double power, double xd, double zd, DamageSource source, float damage, boolean comesFromEffect, CallbackInfo info) {
 		if (!(LivingEntity.class.cast(this) instanceof AbstractCubeMob cube)) return;
 		if (cube.isTiny() && cube.isDeadOrDying() && LunaSlimesVisualsAudioConfig.DEATH_ANIM.get()) info.cancel();
 	}

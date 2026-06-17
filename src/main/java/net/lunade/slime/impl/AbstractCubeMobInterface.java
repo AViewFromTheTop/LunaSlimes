@@ -1,6 +1,6 @@
 package net.lunade.slime.impl;
 
-public interface SlimeInterface {
+public interface AbstractCubeMobInterface {
 	float lunaSlimes$wobbleAnimProgress(float partialTicks);
 	void lunaSlimes$playWobbleAnim();
 	float lunaSlimes$getSizeScale(float partialTicks);

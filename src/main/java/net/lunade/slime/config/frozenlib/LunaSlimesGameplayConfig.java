@@ -5,7 +5,7 @@ import net.frozenblock.lib.config.v2.config.ConfigSettings;
 import net.frozenblock.lib.config.v2.entry.ConfigEntry;
 import net.frozenblock.lib.config.v2.entry.EntryType;
 import net.frozenblock.lib.config.v2.registry.ID;
-import net.frozenblock.lib.shadow.blue.endless.jankson.JsonElement;
+import blue.endless.jankson.JsonElement;
 import net.lunade.slime.LunaSlimesConstants;
 
 public final class LunaSlimesGameplayConfig {

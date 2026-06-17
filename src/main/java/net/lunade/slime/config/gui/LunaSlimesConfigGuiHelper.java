@@ -20,7 +20,7 @@ package net.lunade.slime.config.gui;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import me.shedaniel.clothconfig2.gui.entries.BooleanListEntry;
 import me.shedaniel.clothconfig2.gui.entries.IntegerSliderEntry;
-import net.frozenblock.lib.config.clothconfig.FrozenClothConfig;
+import net.frozenblock.lib.config.clothconfig.FrozenLibClothConfigGuiHelper;
 import net.frozenblock.lib.config.v2.entry.ConfigEntry;
 import static net.lunade.slime.LunaSlimesConstants.text;
 import static net.lunade.slime.LunaSlimesConstants.tooltip;
@@ -45,7 +45,7 @@ public final class LunaSlimesConfigGuiHelper {
 	}
 
 	public static IntegerSliderEntry intSliderEntry(ConfigEntryBuilder builder, String key, ConfigEntry<Integer> configEntry, int min, int max) {
-		return FrozenClothConfig.syncedEntry(
+		return FrozenLibClothConfigGuiHelper.syncedEntry(
 			builder.startIntSlider(text(key), configEntry.get(), min, max).setTooltip(tooltip(key)),
 			configEntry
 		);
@@ -56,7 +56,7 @@ public final class LunaSlimesConfigGuiHelper {
 	}
 
 	public static BooleanListEntry booleanEntry(ConfigEntryBuilder builder, Component name, ConfigEntry<Boolean> configEntry, Component... tooltip) {
-		return FrozenClothConfig.syncedEntry(
+		return FrozenLibClothConfigGuiHelper.syncedEntry(
 			builder.startBooleanToggle(name, configEntry.get()).setTooltip(tooltip),
 			configEntry
 		);

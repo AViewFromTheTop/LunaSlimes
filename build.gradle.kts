@@ -14,7 +14,7 @@ buildscript {
 }
 
 plugins {
-    id("net.fabricmc.fabric-loom") version("1.15-SNAPSHOT")
+    id("net.fabricmc.fabric-loom") version("1.17-SNAPSHOT")
     id("org.quiltmc.gradle.licenser") version("+")
     id("org.ajoberstar.grgit") version("+")
     id("com.modrinth.minotaur") version("+")
