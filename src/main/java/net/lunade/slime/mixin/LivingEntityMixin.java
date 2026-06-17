@@ -13,7 +13,8 @@ import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.monster.Slime;
+import net.minecraft.world.entity.monster.cubemob.AbstractCubeMob;
+import net.minecraft.world.entity.monster.cubemob.Slime;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -23,37 +24,37 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class LivingEntityMixin {
 
 	@Inject(method = "recreateFromPacket", at = @At("TAIL"))
-	public void luneSlimes$recreateFromPacket(ClientboundAddEntityPacket clientboundAddEntityPacket, CallbackInfo info) {
+	public void luneSlimes$recreateFromPacket(ClientboundAddEntityPacket packet, CallbackInfo info) {
 		if (LivingEntity.class.cast(this) instanceof SlimeInterface slimeInterface) slimeInterface.lunaSlimes$setInWorld(true);
 	}
 
 	@ModifyReturnValue(method = "hurtServer", at = @At("RETURN"))
 	public boolean lunaSlimes$hurtServer(boolean original) {
-		if (original && LivingEntity.class.cast(this) instanceof Slime slime && !slime.isTiny() && slime.isDeadOrDying() && LunaSlimesGameplayConfig.USE_SPLITTING.get()) {
-			final int split = LunaSlimesUtil.spawnSingleSlime(slime);
-			slime.setSize(slime.getSize() - split, true);
-			slime.deathTime = 0;
+		if (original && LivingEntity.class.cast(this) instanceof AbstractCubeMob cube && !cube.isTiny() && cube.isDeadOrDying() && LunaSlimesGameplayConfig.USE_SPLITTING.get()) {
+			final int split = LunaSlimesUtil.spawnSingleCube(cube);
+			cube.setSize(cube.getSize() - split, true);
+			cube.deathTime = 0;
 		}
 		return original;
 	}
 
 	@Inject(method = "die", at = @At("HEAD"), cancellable = true)
 	public void lunaSlimes$die(DamageSource source, CallbackInfo info) {
-		if (!(LivingEntity.class.cast(this) instanceof Slime slime)) return;
+		if (!(LivingEntity.class.cast(this) instanceof AbstractCubeMob cube)) return;
 		final Optional<ResourceKey<DamageType>> type = source.typeHolder().unwrapKey();
-		if (type.isPresent() && type.get() != DamageTypes.GENERIC_KILL && !slime.isTiny() && LunaSlimesGameplayConfig.USE_SPLITTING.get()) info.cancel();
+		if (type.isPresent() && type.get() != DamageTypes.GENERIC_KILL && !cube.isTiny() && LunaSlimesGameplayConfig.USE_SPLITTING.get()) info.cancel();
 	}
 
 	@Inject(method = "doPush", at = @At("HEAD"))
 	public void lunaSlimes$doPush(Entity entity, CallbackInfo info) {
-		if (!(LivingEntity.class.cast(this) instanceof Slime) || !(entity instanceof Slime slime2)) return;
-		LunaSlimesUtil.mergeSlimes(Slime.class.cast(this), slime2);
+		if (!(LivingEntity.class.cast(this) instanceof AbstractCubeMob cube) || !(entity instanceof Slime cube2)) return;
+		LunaSlimesUtil.mergeCubes(cube, cube2);
 	}
 
 	@Inject(method = "knockback", at = @At("HEAD"), cancellable = true)
 	public void lunaSlimes$knockback(double power, double xd, double zd, CallbackInfo info) {
-		if (!(LivingEntity.class.cast(this) instanceof Slime slime)) return;
-		if (slime.isTiny() && slime.isDeadOrDying() && LunaSlimesVisualsAudioConfig.DEATH_ANIM.get()) info.cancel();
+		if (!(LivingEntity.class.cast(this) instanceof AbstractCubeMob cube)) return;
+		if (cube.isTiny() && cube.isDeadOrDying() && LunaSlimesVisualsAudioConfig.DEATH_ANIM.get()) info.cancel();
 	}
 
 }

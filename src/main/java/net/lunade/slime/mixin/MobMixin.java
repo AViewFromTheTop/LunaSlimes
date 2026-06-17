@@ -11,8 +11,8 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.EntityEvent;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.monster.MagmaCube;
-import net.minecraft.world.entity.monster.Slime;
+import net.minecraft.world.entity.monster.cubemob.AbstractCubeMob;
+import net.minecraft.world.entity.monster.cubemob.MagmaCube;
 import net.minecraft.world.level.storage.loot.LootTable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -25,9 +25,9 @@ public class MobMixin {
 
 	@Inject(at = @At("HEAD"), method = "handleEntityEvent")
 	public void lunaSlimes$handleEntityEvent(byte event, CallbackInfo info) {
-		if (!(Mob.class.cast(this) instanceof Slime slime) || event != EntityEvent.TENDRILS_SHIVER || !LunaSlimesVisualsAudioConfig.JUMP_ANTIC.get()) return;
-		LunaSlimesUtil.setSquish(slime, -0.05F);
-		if (slime instanceof SlimeInterface slimeInterface) slimeInterface.lunaSlimes$setJumpAnticTicks(3);
+		if (!(Mob.class.cast(this) instanceof AbstractCubeMob cube) || event != EntityEvent.TENDRILS_SHIVER || !LunaSlimesVisualsAudioConfig.JUMP_ANTIC.get()) return;
+		LunaSlimesUtil.setSquish(cube, -0.05F);
+		if (cube instanceof SlimeInterface slimeInterface) slimeInterface.lunaSlimes$setJumpAnticTicks(3);
 	}
 
 	@Inject(method = "getLootTable", at = @At("TAIL"), cancellable = true)

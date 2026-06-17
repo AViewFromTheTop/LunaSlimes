@@ -137,7 +137,7 @@ dependencies {
     implementation("net.fabricmc.fabric-api:fabric-api:$fabric_api_version")
 
     // Mod Menu
-    compileOnly("com.terraformersmc:modmenu:$modmenu_version")
+    compileOnly("maven.modrinth:modmenu:$modmenu_version")
 
     // FrozenLib
     //api("net.frozenblock:frozenlib:$frozenlib_version")

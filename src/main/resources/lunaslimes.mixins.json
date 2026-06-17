@@ -4,16 +4,17 @@
   "package": "net.lunade.slime.mixin",
   "compatibilityLevel": "JAVA_17",
   "client": [
-    "client.MagmaCubeRendererMixin",
-    "client.SlimeRendererMixin",
+    "client.AbstractCubeMobRendererMixin",
+    "client.MagmaCubeRendererMixin"
   ],
   "mixins": [
+    "AbstractCubeMobMixin",
     "LivingEntityMixin",
     "MagmaCubeMixin",
     "MobMixin",
     "OozingMobEffectMixin",
     "SlimeMixin",
-    "SlimeMoveControlMixin"
+    "CubeMobMoveControlMixin"
   ],
   "injectors": {
     "defaultRequire": 1
