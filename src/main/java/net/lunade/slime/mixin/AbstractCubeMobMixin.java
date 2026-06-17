@@ -16,10 +16,8 @@ import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.SpawnGroupData;
-import net.minecraft.world.entity.SulfurCubeArchetypes;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.monster.cubemob.AbstractCubeMob;
-import net.minecraft.world.entity.monster.cubemob.SulfurCube;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.storage.ValueInput;
@@ -205,7 +203,7 @@ public class AbstractCubeMobMixin implements AbstractCubeMobInterface {
 			target = "Lnet/minecraft/world/level/Level;addParticle(Lnet/minecraft/core/particles/ParticleOptions;DDDDDD)V"
 		)
 	)
-	public boolean lunaSlimes$stopParticles(Level level, ParticleOptions options, double x, double y, double z, double xd, double yd, double zd) {
+	public boolean lunaSlimes$stopParticles(Level level, ParticleOptions particle, double x, double y, double z, double xd, double yd, double zd) {
 		return false;
 	}
 
@@ -221,9 +219,12 @@ public class AbstractCubeMobMixin implements AbstractCubeMobInterface {
 	}
 
 	@Inject(method = "lambda$remove$0", at = @At("HEAD"))
-	public void lunaSlimes$beforeSpawnNewSlime(int i, float f, float g, AbstractCubeMob cube, CallbackInfo info) {
-		cube.setAttached(LunaSlimesAttachmentTypes.MERGE_COOLDOWN, Math.max(LunaSlimesGameplayConfig.ON_SPLIT_COOLDOWN.get(), LunaSlimesGameplayConfig.SPLIT_COOLDOWN.get()) * 2);
-		cube.setSilent(cube.isSilent());
+	public void lunaSlimes$beforeSpawnNewCubeMob(int halfSize, float xd, float zd, AbstractCubeMob cubeMob, CallbackInfo info) {
+		cubeMob.setAttached(
+			LunaSlimesAttachmentTypes.MERGE_COOLDOWN,
+			Math.max(LunaSlimesGameplayConfig.ON_SPLIT_COOLDOWN.get(), LunaSlimesGameplayConfig.SPLIT_COOLDOWN.get()) * 2
+		);
+		cubeMob.setSilent(cubeMob.isSilent());
 	}
 
 	@Unique
@@ -286,7 +287,5 @@ public class AbstractCubeMobMixin implements AbstractCubeMobInterface {
 	}
 
 	@Shadow
-	public void decreaseSquish() {
-	}
-
+	public void decreaseSquish() {}
 }

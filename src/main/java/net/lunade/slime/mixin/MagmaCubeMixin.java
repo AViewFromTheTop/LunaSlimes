@@ -17,5 +17,4 @@ public class MagmaCubeMixin {
 		final boolean jumpAntic = magmaCube.getAttachedOrCreate(LunaSlimesAttachmentTypes.JUMP_ANTIC) && LunaSlimesVisualsAudioConfig.JUMP_ANTIC.get();
 		if (jumpAntic|| !magmaCube.getAttachedOrCreate(LunaSlimesAttachmentTypes.CAN_SQUISH)) info.cancel();
 	}
-
 }

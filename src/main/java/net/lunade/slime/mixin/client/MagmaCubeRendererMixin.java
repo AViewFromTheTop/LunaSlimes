@@ -40,5 +40,4 @@ public abstract class MagmaCubeRendererMixin extends MobRenderer<MagmaCube, Slim
 		if (!LunaSlimesVisualsAudioConfig.GLOWING_MAGMA.get() || entity.isOnFire()) return original;
 		return entity.level().getBrightness(LightLayer.BLOCK, blockPos);
 	}
-
 }

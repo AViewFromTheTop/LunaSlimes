@@ -13,11 +13,11 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.cubemob.AbstractCubeMob;
-import net.minecraft.world.entity.monster.cubemob.Slime;
 import net.minecraft.world.entity.monster.cubemob.SulfurCube;
+import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -32,16 +32,28 @@ public class LivingEntityMixin {
 	}
 
 	@ModifyReturnValue(method = "hurtServer", at = @At("RETURN"))
-	public boolean lunaSlimes$hurtServer(boolean original, ServerLevel level, DamageSource source) {
-		if (original && LivingEntity.class.cast(this) instanceof AbstractCubeMob cube && !cube.isTiny() && cube.isDeadOrDying() && LunaSlimesGameplayConfig.USE_SPLITTING.get()) {
-			final int split = LunaSlimesUtil.spawnSingleCube(cube);
-			cube.setSize(cube.getSize() - split, true);
-			cube.deathTime = 0;
+	public boolean lunaSlimes$triggerSplitOnDeath(boolean original, ServerLevel level, DamageSource source) {
+		if (original
+			&& LivingEntity.class.cast(this) instanceof AbstractCubeMob cubeMob
+			&& !cubeMob.isTiny()
+			&& cubeMob.isDeadOrDying()
+			&& LunaSlimesGameplayConfig.USE_SPLITTING.get()
+		) {
+			final int split = LunaSlimesUtil.spawnSingleCube(cubeMob);
+			cubeMob.setSize(cubeMob.getSize() - split, true);
+			cubeMob.deathTime = 0;
 
-			if (cube instanceof SulfurCube sulfur) {
-				sulfur.dropPreservedEquipment(level);
+			if (cubeMob.shouldDropLoot(level)) {
+				cubeMob.dropCustomDeathLoot(level, source, cubeMob.lastHurtByPlayerMemoryTime > 0);
+			} else if (cubeMob instanceof SulfurCube) {
+				for (EquipmentSlot slot : EquipmentSlot.VALUES) {
+					cubeMob.setItemSlot(slot, ItemStack.EMPTY);
+				}
 			}
+
+			cubeMob.dropEquipment(level);
 		}
+
 		return original;
 	}
 
@@ -54,7 +66,7 @@ public class LivingEntityMixin {
 
 	@Inject(method = "doPush", at = @At("HEAD"))
 	public void lunaSlimes$doPush(Entity entity, CallbackInfo info) {
-		if (!(LivingEntity.class.cast(this) instanceof AbstractCubeMob cube) || !(entity instanceof Slime cube2)) return;
+		if (!(LivingEntity.class.cast(this) instanceof AbstractCubeMob cube) || !(entity instanceof AbstractCubeMob cube2)) return;
 		LunaSlimesUtil.mergeCubes(cube, cube2);
 	}
 
@@ -63,5 +75,4 @@ public class LivingEntityMixin {
 		if (!(LivingEntity.class.cast(this) instanceof AbstractCubeMob cube)) return;
 		if (cube.isTiny() && cube.isDeadOrDying() && LunaSlimesVisualsAudioConfig.DEATH_ANIM.get()) info.cancel();
 	}
-
 }

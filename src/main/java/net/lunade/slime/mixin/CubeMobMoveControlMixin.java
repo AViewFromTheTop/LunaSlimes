@@ -26,7 +26,7 @@ public class CubeMobMoveControlMixin<T extends AbstractCubeMob> {
 	}
 
 	@Inject(at = @At("HEAD"), method = "tick")
-	public void lunaSlimes$tick(CallbackInfo info) {
+	public void lunaSlimes$startTick(CallbackInfo info) {
 		this.lunaSlimes$cube.setAttached(LunaSlimesAttachmentTypes.JUMP_DELAY, this.jumpDelay);
 		if (!LunaSlimesVisualsAudioConfig.JUMP_ANTIC.get()) {
 			this.lunaSlimes$cube.setAttached(LunaSlimesAttachmentTypes.JUMP_ANTIC, false);
@@ -50,8 +50,7 @@ public class CubeMobMoveControlMixin<T extends AbstractCubeMob> {
 	}
 
 	@Inject(at = @At("TAIL"), method = "tick")
-	public void lunaSlimes$tickTail(CallbackInfo info) {
+	public void lunaSlimes$endTick(CallbackInfo info) {
 		this.lunaSlimes$cube.setAttached(LunaSlimesAttachmentTypes.JUMP_DELAY, this.jumpDelay);
 	}
-
 }

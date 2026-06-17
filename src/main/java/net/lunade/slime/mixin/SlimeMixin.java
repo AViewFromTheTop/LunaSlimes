@@ -20,5 +20,4 @@ public class SlimeMixin {
 	public ParticleOptions lunaSlimes$getParticleType(ParticleOptions original) {
 		return LunaSlimesVisualsAudioConfig.SLIME_BLOCK_PARTICLES.get() ? LUNASLIMES$NEW_SLIME_PARTICLES : original;
 	}
-
 }
