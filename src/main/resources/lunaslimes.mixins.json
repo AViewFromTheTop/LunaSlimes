@@ -5,16 +5,17 @@
   "compatibilityLevel": "JAVA_17",
   "client": [
     "client.AbstractCubeMobRendererMixin",
-    "client.MagmaCubeRendererMixin"
+    "client.MagmaCubeRendererMixin",
+    "client.SulfurCubeRendererMixin"
   ],
   "mixins": [
     "AbstractCubeMobMixin",
+    "CubeMobMoveControlMixin",
     "LivingEntityMixin",
     "MagmaCubeMixin",
     "MobMixin",
     "OozingMobEffectMixin",
-    "SlimeMixin",
-    "CubeMobMoveControlMixin"
+    "SlimeMixin"
   ],
   "injectors": {
     "defaultRequire": 1

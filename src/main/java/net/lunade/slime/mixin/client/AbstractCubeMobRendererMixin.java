@@ -10,6 +10,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.lunade.slime.LunaSlimesUtil;
 import net.lunade.slime.client.LunaSlimesRenderStateDataKeys;
+import net.lunade.slime.client.LunaSlimesRenderUtil;
 import net.lunade.slime.config.frozenlib.LunaSlimesVisualsAudioConfig;
 import net.lunade.slime.impl.AbstractCubeMobInterface;
 import net.minecraft.client.model.EntityModel;
@@ -27,9 +28,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Environment(EnvType.CLIENT)
 @Mixin(AbstractCubeMobRenderer.class)
 public abstract class AbstractCubeMobRendererMixin<T extends AbstractCubeMob, S extends SlimeRenderState, M extends EntityModel<? super S>> extends MobRenderer<T, S, M> {
-
-	@Unique
-	private static final Pair<Float, Float> LUNASLIMES$FALLBACK_WOBBLE = Pair.of(1F, 1F);
 
 	public AbstractCubeMobRendererMixin(EntityRendererProvider.Context context, M model, float shadow) {
 		super(context, model, shadow);
@@ -57,21 +55,7 @@ public abstract class AbstractCubeMobRendererMixin<T extends AbstractCubeMob, S 
 		PoseStack poseStack, float xScale, float yScale, float zScale, Operation<Void> operation,
 		@Local(argsOnly = true) SlimeRenderState state
 	) {
-		if (!state.getDataOrDefault(LunaSlimesRenderStateDataKeys.IN_WORLD, false)) {
-			operation.call(poseStack, xScale, yScale, zScale);
-			return;
-		}
-
-		final float slimeSize = state.getDataOrDefault(LunaSlimesRenderStateDataKeys.SIZE, 1F);
-		final Pair<Float, Float> wobble = state.getDataOrDefault(LunaSlimesRenderStateDataKeys.WOBBLE, LUNASLIMES$FALLBACK_WOBBLE);
-		final float wobbleXZ = wobble.getFirst();
-		final float wobbleY = wobble.getSecond();
-		poseStack.scale(wobbleXZ, wobbleY, wobbleXZ);
-		poseStack.translate(0F, -(2.05F - (wobbleY * 2.05F)), 0F);
-		final float i = (state.squish * (LunaSlimesVisualsAudioConfig.SQUISH_MULTIPLIER.get() * 0.1F)) / ((slimeSize) * 0.5F + 1F);
-
-		final float j = 1F / (i + 1F);
-		operation.call(poseStack, j * slimeSize, 1F / j * slimeSize, j * slimeSize);
+		LunaSlimesRenderUtil.newScaling(poseStack, xScale, yScale, zScale, operation, state);
 	}
 
 	@ModifyReturnValue(
@@ -81,7 +65,7 @@ public abstract class AbstractCubeMobRendererMixin<T extends AbstractCubeMob, S 
 	public float lunaSlimes$newShadows(float original, SlimeRenderState state) {
 		if (!LunaSlimesVisualsAudioConfig.NEW_SHADOWS.get()) return original;
 		final float slimeSize = state.getDataOrDefault(LunaSlimesRenderStateDataKeys.SIZE, 1F);
-		final Pair<Float, Float> wobble = state.getDataOrDefault(LunaSlimesRenderStateDataKeys.WOBBLE, LUNASLIMES$FALLBACK_WOBBLE);
+		final Pair<Float, Float> wobble = state.getDataOrDefault(LunaSlimesRenderStateDataKeys.WOBBLE, LunaSlimesRenderUtil.FALLBACK_WOBBLE);
 		final float wobbleXZ = wobble.getFirst() * 2F;
 		final float size = ((slimeSize * 0.999F) * 0.75F) * wobbleXZ;
 		final float squish = (state.squish * (LunaSlimesVisualsAudioConfig.SQUISH_MULTIPLIER.get() * 0.1F)) / (size * 0.5F + 1F);
