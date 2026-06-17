@@ -8,13 +8,16 @@ import net.lunade.slime.config.frozenlib.LunaSlimesVisualsAudioConfig;
 import net.lunade.slime.impl.AbstractCubeMobInterface;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.cubemob.AbstractCubeMob;
 import net.minecraft.world.entity.monster.cubemob.Slime;
+import net.minecraft.world.entity.monster.cubemob.SulfurCube;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -29,11 +32,15 @@ public class LivingEntityMixin {
 	}
 
 	@ModifyReturnValue(method = "hurtServer", at = @At("RETURN"))
-	public boolean lunaSlimes$hurtServer(boolean original) {
+	public boolean lunaSlimes$hurtServer(boolean original, ServerLevel level, DamageSource source) {
 		if (original && LivingEntity.class.cast(this) instanceof AbstractCubeMob cube && !cube.isTiny() && cube.isDeadOrDying() && LunaSlimesGameplayConfig.USE_SPLITTING.get()) {
 			final int split = LunaSlimesUtil.spawnSingleCube(cube);
 			cube.setSize(cube.getSize() - split, true);
 			cube.deathTime = 0;
+
+			if (cube instanceof SulfurCube sulfur) {
+				sulfur.dropPreservedEquipment(level);
+			}
 		}
 		return original;
 	}
