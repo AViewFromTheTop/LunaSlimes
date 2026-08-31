@@ -1,0 +1,25 @@
+{
+  "required": true,
+  "minVersion": "0.8.5",
+  "package": "net.lunade.slime.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "client": [
+    "client.AbstractCubeMobRendererMixin",
+    "client.MagmaCubeRendererMixin",
+    "client.SulfurCubeRendererMixin"
+  ],
+  "mixins": [
+    "AbstractCubeMobMixin",
+    "CubeMobMoveControlMixin",
+    "LivingEntityInvoker",
+    "LivingEntityMixin",
+    "MagmaCubeMixin",
+    "MobInvoker",
+    "MobMixin",
+    "OozingMobEffectMixin",
+    "SlimeMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

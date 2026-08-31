@@ -31,5 +31,14 @@ bin/
 # fabric
 
 run/
+/fabric/run
 /remappedSrc/
 /src/main/generated/.cache
+/common/src/generated/resources/.cache
+
+# java
+
+hs_err_*.log
+replay_*.log
+*.hprof
+*.jfr

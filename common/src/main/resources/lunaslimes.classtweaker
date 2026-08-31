@@ -1,0 +1,19 @@
+classTweaker v1 official
+
+accessible class net/minecraft/world/effect/OozingMobEffect
+accessible method net/minecraft/world/entity/Entity collide (Lnet/minecraft/world/phys/Vec3;)Lnet/minecraft/world/phys/Vec3;
+accessible field net/minecraft/world/entity/LivingEntity lastHurtByPlayerMemoryTime I
+accessible method net/minecraft/world/entity/monster/cubemob/AbstractCubeMob getParticleType ()Lnet/minecraft/core/particles/ParticleOptions;
+accessible method net/minecraft/world/entity/monster/cubemob/Slime getParticleType ()Lnet/minecraft/core/particles/ParticleOptions;
+accessible method net/minecraft/world/entity/monster/cubemob/MagmaCube getParticleType ()Lnet/minecraft/core/particles/ParticleOptions;
+accessible method net/minecraft/world/entity/monster/cubemob/SulfurCube getParticleType ()Lnet/minecraft/core/particles/ParticleOptions;
+accessible method net/minecraft/world/entity/monster/cubemob/AbstractCubeMob decreaseSquish ()V
+accessible method net/minecraft/world/entity/monster/cubemob/MagmaCube decreaseSquish ()V
+accessible method net/minecraft/world/entity/monster/cubemob/AbstractCubeMob getSoundVolume ()F
+accessible method net/minecraft/world/entity/monster/cubemob/AbstractCubeMob getSquishSound ()Lnet/minecraft/sounds/SoundEvent;
+accessible method net/minecraft/world/entity/monster/cubemob/Slime getSquishSound ()Lnet/minecraft/sounds/SoundEvent;
+accessible method net/minecraft/world/entity/monster/cubemob/MagmaCube getSquishSound ()Lnet/minecraft/sounds/SoundEvent;
+accessible method net/minecraft/world/entity/monster/cubemob/SulfurCube getSquishSound ()Lnet/minecraft/sounds/SoundEvent;
+accessible class net/minecraft/world/entity/monster/cubemob/AbstractCubeMob$CubeMobMoveControl
+accessible method net/minecraft/client/renderer/entity/LivingEntityRenderer addLayer (Lnet/minecraft/client/renderer/entity/layers/RenderLayer;)Z
+accessible field net/minecraft/client/renderer/entity/EntityRenderer shadowRadius F
