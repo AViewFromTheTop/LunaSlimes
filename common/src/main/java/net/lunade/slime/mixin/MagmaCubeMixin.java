@@ -1,7 +1,7 @@
 package net.lunade.slime.mixin;
 
-import net.lunade.slime.config.frozenlib.LunaSlimesVisualsAudioConfig;
-import net.lunade.slime.registry.LunaSlimesAttachmentTypes;
+import net.lunade.slime.config.frozenlib.LSVisualsAudioConfig;
+import net.lunade.slime.registry.LSAttachmentTypes;
 import net.minecraft.world.entity.monster.cubemob.MagmaCube;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -14,7 +14,7 @@ public class MagmaCubeMixin {
 	@Inject(method = "decreaseSquish", at = @At("HEAD"), cancellable = true)
 	public void lunaSlimes$decreaseSquish(CallbackInfo info) {
 		final MagmaCube magmaCube = MagmaCube.class.cast(this);
-		final boolean jumpAntic = magmaCube.frozenLib$getAttachedOrCreate(LunaSlimesAttachmentTypes.JUMP_ANTIC) && LunaSlimesVisualsAudioConfig.JUMP_ANTIC.get();
-		if (jumpAntic|| !magmaCube.frozenLib$getAttachedOrCreate(LunaSlimesAttachmentTypes.CAN_SQUISH)) info.cancel();
+		final boolean jumpAntic = LSAttachmentTypes.JUMP_ANTIC.getAttachedOrCreate(magmaCube) && LSVisualsAudioConfig.JUMP_ANTIC.get();
+		if (jumpAntic|| !LSAttachmentTypes.CAN_SQUISH.getAttachedOrCreate(magmaCube)) info.cancel();
 	}
 }

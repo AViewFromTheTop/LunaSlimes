@@ -96,15 +96,38 @@ java {
 fun getModVersion(): String {
     var version = "$mod_version-mc$minecraft_version"
 
-    if (!release) {
+    if (!release)
         version += "-unstable"
-    }
 
     return version
+}
+
+val changelogText = run {
+    val split = rootProject.file("CHANGELOG.md").readText().split("-----------------")
+    check(split.size == 2) { "Malformed changelog" }
+    split[1].trim()
 }
 
 upload {
     maven {
         name.set("lunaslimes-neoforge")
+    }
+
+    forEach {
+        changelog.set(changelogText)
+    }
+
+    curseforge {
+        dependencies {
+            required("frozenlib")
+            optional("cloth-config")
+        }
+    }
+
+    modrinth {
+        dependencies {
+            required("frozenlib")
+            optional("cloth-config")
+        }
     }
 }

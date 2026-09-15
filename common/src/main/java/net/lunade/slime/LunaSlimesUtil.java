@@ -2,11 +2,11 @@ package net.lunade.slime;
 
 import com.mojang.datafixers.util.Pair;
 import java.util.List;
-import net.lunade.slime.config.frozenlib.LunaSlimesGameplayConfig;
-import net.lunade.slime.config.frozenlib.LunaSlimesVisualsAudioConfig;
+import net.lunade.slime.config.frozenlib.LSGameplayConfig;
+import net.lunade.slime.config.frozenlib.LSVisualsAudioConfig;
 import net.lunade.slime.impl.AbstractCubeMobInterface;
-import net.lunade.slime.registry.LunaSlimesAttachmentTypes;
-import net.lunade.slime.registry.LunaSlimesSounds;
+import net.lunade.slime.registry.LSAttachmentTypes;
+import net.lunade.slime.registry.LSSoundEvents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -22,7 +22,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class LunaSlimesUtil {
+public final class LunaSlimesUtil {
 
 	public static void mergeCubes(AbstractCubeMob cube1, AbstractCubeMob cube2) {
 		final EntityType<? extends AbstractCubeMob> entityType = cube1.getType();
@@ -32,8 +32,8 @@ public class LunaSlimesUtil {
 		final int thisSize = cube1.getSize();
 		final int otherSize = cube2.getSize();
 		if (thisSize < otherSize && thisSize != otherSize) return;
-		if (thisSize > LunaSlimesGameplayConfig.MAX_SIZE.get() - 1 || otherSize > LunaSlimesGameplayConfig.MAX_SIZE.get() - 1) return;
-		if (cube1.frozenLib$getAttachedOrCreate(LunaSlimesAttachmentTypes.MERGE_COOLDOWN) > 0 || cube2.frozenLib$getAttachedOrCreate(LunaSlimesAttachmentTypes.MERGE_COOLDOWN) > 0) return;
+		if (thisSize > LSGameplayConfig.MAX_SIZE.get() - 1 || otherSize > LSGameplayConfig.MAX_SIZE.get() - 1) return;
+		if (cube1.frozenLib$getAttachedOrCreate(LSAttachmentTypes.MERGE_COOLDOWN) > 0 || cube2.frozenLib$getAttachedOrCreate(LSAttachmentTypes.MERGE_COOLDOWN) > 0) return;
 
 		final EntityDimensions oldDimensions = getDimensionsForSize(cube1, thisSize);
 		final EntityDimensions inflated = getDimensionsForSize(cube1, thisSize + 1);
@@ -45,12 +45,12 @@ public class LunaSlimesUtil {
 		if (horizontalCollision || verticalCollision) return;
 
 		cube1.setSize(thisSize + 1, true);
-		cube1.frozenLib$setAttached(LunaSlimesAttachmentTypes.MERGE_COOLDOWN, LunaSlimesGameplayConfig.MERGE_COOLDOWN.get());
+		cube1.frozenLib$setAttached(LSAttachmentTypes.MERGE_COOLDOWN, LSGameplayConfig.MERGE_COOLDOWN.get());
 		abstractCubeMobInterface1.lunaSlimes$playWobbleAnim();
-		if (LunaSlimesVisualsAudioConfig.MERGE_SOUNDS.get()) {
+		if (LSVisualsAudioConfig.MERGE_SOUNDS.get()) {
 			final RandomSource random = cube1.getRandom();
 			cube1.playSound(
-				entityType == EntityTypes.MAGMA_CUBE ? LunaSlimesSounds.MAGMACUBE_MERGE.get() : LunaSlimesSounds.SLIME_MERGE.get(),
+				entityType == EntityTypes.MAGMA_CUBE ? LSSoundEvents.MAGMACUBE_MERGE.get() : LSSoundEvents.SLIME_MERGE.get(),
 				cube1.getSoundVolume(),
 				1F + (random.nextFloat() - random.nextFloat()) * 0.4F
 			);
@@ -99,20 +99,20 @@ public class LunaSlimesUtil {
 		cube.setTicksFrozen(origin.getTicksFrozen());
 		cube.setDeltaMovement(origin.getDeltaMovement());
 
-		origin.frozenLib$setAttached(LunaSlimesAttachmentTypes.MERGE_COOLDOWN, LunaSlimesGameplayConfig.ON_SPLIT_COOLDOWN.get());
-		cube.frozenLib$setAttached(LunaSlimesAttachmentTypes.MERGE_COOLDOWN, LunaSlimesGameplayConfig.SPLIT_COOLDOWN.get());
+		origin.frozenLib$setAttached(LSAttachmentTypes.MERGE_COOLDOWN, LSGameplayConfig.ON_SPLIT_COOLDOWN.get());
+		cube.frozenLib$setAttached(LSAttachmentTypes.MERGE_COOLDOWN, LSGameplayConfig.SPLIT_COOLDOWN.get());
 		originInterface.lunaSlimes$playWobbleAnim();
 		abstractCubeMobInterface.lunaSlimes$playWobbleAnim();
 		LunaSlimesUtil.spawnCubeParticles(origin);
 
 		origin.level().addFreshEntity(cube);
-		if (LunaSlimesVisualsAudioConfig.SPLIT_SOUNDS.get()) {
+		if (LSVisualsAudioConfig.SPLIT_SOUNDS.get()) {
 			cube.playSound(
 				entityType == EntityTypes.MAGMA_CUBE
-					? LunaSlimesSounds.MAGMACUBE_SPLIT.get()
+					? LSSoundEvents.MAGMACUBE_SPLIT.get()
 					: entityType == EntityTypes.SULFUR_CUBE
 					  ? SoundEvents.SULFUR_CUBE_DEATH
-					  : LunaSlimesSounds.SLIME_SPLIT.get(),
+					  : LSSoundEvents.SLIME_SPLIT.get(),
 				cube.getSoundVolume(),
 				1F + (random.nextFloat() - random.nextFloat()) * 0.4F
 			);
@@ -122,7 +122,7 @@ public class LunaSlimesUtil {
 	}
 
 	public static void spawnCubeParticles(AbstractCubeMob cube) {
-		if (!(cube.level() instanceof ServerLevel level) || !LunaSlimesVisualsAudioConfig.PARTICLES.get()) return;
+		if (!(cube.level() instanceof ServerLevel level) || !LSVisualsAudioConfig.PARTICLES.get()) return;
 		final int size = cube.getSize();
 		final double horizontalSpread = cube.getBbWidth() / 4F;
 		final double verticalSpread = cube.getBbHeight() / 4F;
@@ -138,17 +138,17 @@ public class LunaSlimesUtil {
 
 	public static float getCubeScale(AbstractCubeMob cube, float partialTicks) {
 		if (!(cube instanceof AbstractCubeMobInterface abstractCubeMobInterface)) return cube.getSize();
-		return (LunaSlimesVisualsAudioConfig.GROW_ANIM.get() ? abstractCubeMobInterface.lunaSlimes$getSizeScale(partialTicks) : cube.getSize())
+		return (LSVisualsAudioConfig.GROW_ANIM.get() ? abstractCubeMobInterface.lunaSlimes$getSizeScale(partialTicks) : cube.getSize())
 			* abstractCubeMobInterface.lunaSlimes$getDeathProgress(partialTicks);
 	}
 
-	public static float getCubeWobbleAnimProgress(AbstractCubeMob cube, float partialTick) {
-		if (!(cube instanceof AbstractCubeMobInterface abstractCubeMobInterface) || !LunaSlimesVisualsAudioConfig.WOBBLE_ANIM.get()) return 0F;
-		return abstractCubeMobInterface.lunaSlimes$wobbleAnimProgress(partialTick);
+	public static float getCubeWobbleAnimProgress(AbstractCubeMob cube, float partialTicks) {
+		if (!(cube instanceof AbstractCubeMobInterface abstractCubeMobInterface) || !LSVisualsAudioConfig.WOBBLE_ANIM.get()) return 0F;
+		return abstractCubeMobInterface.lunaSlimes$wobbleAnimProgress(partialTicks);
 	}
 
-	public static Pair<Float, Float> wobbleAnim(AbstractCubeMob cube, float partialTick) {
-		final float cosWobble = (float) Math.cos((((LunaSlimesUtil.getCubeWobbleAnimProgress(cube, partialTick) + (0.0955F * Math.PI)) * Math.PI) * 5F));
+	public static Pair<Float, Float> wobbleAnim(AbstractCubeMob cube, float partialTicks) {
+		final float cosWobble = (float) Math.cos((((getCubeWobbleAnimProgress(cube, partialTicks) + (0.0955F * Math.PI)) * Math.PI) * 5F));
 		return Pair.of((cosWobble * 0.1F) + 1F, -(cosWobble * 0.025F) + 1F);
 	}
 
@@ -182,4 +182,5 @@ public class LunaSlimesUtil {
 		return collide;
 	}
 
+	private LunaSlimesUtil() {}
 }

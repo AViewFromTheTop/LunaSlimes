@@ -7,6 +7,6 @@ public interface AbstractCubeMobInterface {
 	void lunaSlimes$cheatSize(float size);
 	void lunaSlimes$setJumpAnticTicks(int jumpAnticTicks);
 	float lunaSlimes$getDeathProgress(float partialTicks);
-	void lunaSlimes$setInWorld(boolean inWorld);
-	boolean lunaSlimes$isInWorld();
+	void lunaSlimes$setInLevel(boolean inWorld);
+	boolean lunaSlimes$isInLevel();
 }

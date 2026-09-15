@@ -1,9 +1,10 @@
 package net.lunade.slime.mixin;
 
 import java.util.Optional;
+import net.lunade.slime.LSConstants;
 import net.lunade.slime.LunaSlimesUtil;
-import net.lunade.slime.config.frozenlib.LunaSlimesGameplayConfig;
-import net.lunade.slime.config.frozenlib.LunaSlimesVisualsAudioConfig;
+import net.lunade.slime.config.frozenlib.LSGameplayConfig;
+import net.lunade.slime.config.frozenlib.LSVisualsAudioConfig;
 import net.lunade.slime.impl.AbstractCubeMobInterface;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -25,7 +26,7 @@ public class MobMixin {
 
 	@Inject(at = @At("HEAD"), method = "handleEntityEvent")
 	public void lunaSlimes$handleEntityEvent(byte id, CallbackInfo info) {
-		if (!(Mob.class.cast(this) instanceof AbstractCubeMob cube) || id != EntityEvent.TENDRILS_SHIVER || !LunaSlimesVisualsAudioConfig.JUMP_ANTIC.get()) return;
+		if (!(Mob.class.cast(this) instanceof AbstractCubeMob cube) || id != EntityEvent.TENDRILS_SHIVER || !LSVisualsAudioConfig.JUMP_ANTIC.get()) return;
 		LunaSlimesUtil.setSquish(cube, -0.05F);
 		if (cube instanceof AbstractCubeMobInterface abstractCubeMobInterface) abstractCubeMobInterface.lunaSlimes$setJumpAnticTicks(3);
 	}
@@ -33,13 +34,13 @@ public class MobMixin {
 	@Inject(method = "getLootTable", at = @At("TAIL"), cancellable = true)
 	public void lunaSlimes$modifyMagmaCubeLootTable(CallbackInfoReturnable<Optional<ResourceKey<LootTable>>> info) {
 		if (!(Mob.class.cast(this).is(EntityTypes.MAGMA_CUBE))) return;
-		if (!LunaSlimesGameplayConfig.USE_SPLITTING.get()) return;
-		final Identifier identifier = BuiltInRegistries.ENTITY_TYPE.getKey(EntityTypes.MAGMA_CUBE);
+		if (!LSGameplayConfig.USE_SPLITTING.get()) return;
+
+		final Identifier id = BuiltInRegistries.ENTITY_TYPE.getKey(EntityTypes.MAGMA_CUBE);
 		final ResourceKey<LootTable> lootTable = ResourceKey.create(
 			Registries.LOOT_TABLE,
-			Identifier.fromNamespaceAndPath("lunaslimes", "entities/" + identifier.getPath())
+			LSConstants.id("entities/" + id.getPath())
 		);
 		info.setReturnValue(Optional.of(lootTable));
 	}
-
 }

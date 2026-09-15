@@ -22,11 +22,13 @@ import me.shedaniel.clothconfig2.gui.entries.BooleanListEntry;
 import me.shedaniel.clothconfig2.gui.entries.IntegerSliderEntry;
 import net.frozenblock.lib.config.clothconfig.FrozenLibClothConfigGuiHelper;
 import net.frozenblock.lib.config.v2.entry.ConfigEntry;
-import static net.lunade.slime.LunaSlimesConstants.text;
-import static net.lunade.slime.LunaSlimesConstants.tooltip;
+import static net.lunade.slime.LSConstants.text;
+import static net.lunade.slime.LSConstants.tooltip;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.network.chat.Component;
 
-public final class LunaSlimesConfigGuiHelper {
+@ClientOnly
+public final class LSConfigGuiHelper {
 
 	public static IntegerSliderEntry zeroToFiveHundredEntry(ConfigEntryBuilder builder, String key, ConfigEntry<Integer> configEntry) {
 		return intSliderEntry(builder, key, configEntry, 0, 500);
@@ -61,4 +63,6 @@ public final class LunaSlimesConfigGuiHelper {
 			configEntry
 		);
 	}
+
+	private LSConfigGuiHelper() {}
 }

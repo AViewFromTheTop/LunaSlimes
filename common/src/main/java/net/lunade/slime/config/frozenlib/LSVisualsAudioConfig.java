@@ -6,11 +6,11 @@ import net.frozenblock.lib.config.v2.config.ConfigSettings;
 import net.frozenblock.lib.config.v2.entry.ConfigEntry;
 import net.frozenblock.lib.config.v2.entry.EntryType;
 import net.frozenblock.lib.config.v2.registry.ID;
-import net.lunade.slime.LunaSlimesConstants;
+import net.lunade.slime.LSConstants;
 
-public final class LunaSlimesVisualsAudioConfig {
+public final class LSVisualsAudioConfig {
 	public static final ConfigData<JsonElement> CONFIG = ConfigData.createAndRegister(
-		ID.of(LunaSlimesConstants.MOD_ID, "visuals_audio"),
+		ID.of(LSConstants.id("visuals_audio")),
 		ConfigSettings.JSON
 	);
 
@@ -25,4 +25,6 @@ public final class LunaSlimesVisualsAudioConfig {
 	public static final ConfigEntry<Boolean> SLIME_BLOCK_PARTICLES = CONFIG.entry("slimeBlockParticles", EntryType.BOOL, true);
 	public static final ConfigEntry<Boolean> MERGE_SOUNDS = CONFIG.entry("mergeSounds", EntryType.BOOL, true);
 	public static final ConfigEntry<Boolean> SPLIT_SOUNDS = CONFIG.entry("splitSounds", EntryType.BOOL, true);
+
+	private LSVisualsAudioConfig() {}
 }

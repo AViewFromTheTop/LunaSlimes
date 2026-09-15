@@ -14,7 +14,7 @@ config="lunaslimes.mixins.json"
     logoFile="assets/lunaslimes/textures/lunaslimes.png"
     authors="Lunade/AViewFromTheTop"
     description='''
-Improves Slimes and makes them configurable.
+Improves Slimes with new configurable features.
     '''
 
 [[ dependencies.lunaslimes ]]

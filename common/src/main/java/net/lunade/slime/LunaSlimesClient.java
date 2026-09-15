@@ -8,4 +8,6 @@ public final class LunaSlimesClient {
 	public static void init() {}
 
 	public static void setup() {}
+
+	private LunaSlimesClient() {}
 }

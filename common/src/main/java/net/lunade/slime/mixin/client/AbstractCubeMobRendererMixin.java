@@ -7,9 +7,9 @@ import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Pair;
 import net.lunade.slime.LunaSlimesUtil;
-import net.lunade.slime.client.LunaSlimesRenderStateDataKeys;
-import net.lunade.slime.client.LunaSlimesRenderUtil;
-import net.lunade.slime.config.frozenlib.LunaSlimesVisualsAudioConfig;
+import net.lunade.slime.client.LSRenderStateDataKeys;
+import net.lunade.slime.client.LSRenderUtils;
+import net.lunade.slime.config.frozenlib.LSVisualsAudioConfig;
 import net.lunade.slime.impl.AbstractCubeMobInterface;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.model.EntityModel;
@@ -37,9 +37,9 @@ public abstract class AbstractCubeMobRendererMixin<T extends AbstractCubeMob, S 
 		at = @At("TAIL")
 	)
 	public void lunaSlimes$extractRenderState(T entity, S state, float partialTicks, CallbackInfo info) {
-		state.frozenLib$setData(LunaSlimesRenderStateDataKeys.IN_WORLD, ((AbstractCubeMobInterface)entity).lunaSlimes$isInWorld());
-		state.frozenLib$setData(LunaSlimesRenderStateDataKeys.WOBBLE, LunaSlimesUtil.wobbleAnim(entity, partialTicks));
-		state.frozenLib$setData(LunaSlimesRenderStateDataKeys.SIZE, LunaSlimesUtil.getCubeScale(entity, partialTicks));
+		state.frozenLib$setData(LSRenderStateDataKeys.IN_WORLD, ((AbstractCubeMobInterface)entity).lunaSlimes$isInLevel());
+		state.frozenLib$setData(LSRenderStateDataKeys.WOBBLE, LunaSlimesUtil.wobbleAnim(entity, partialTicks));
+		state.frozenLib$setData(LSRenderStateDataKeys.SIZE, LunaSlimesUtil.getCubeScale(entity, partialTicks));
 	}
 
 	@WrapOperation(
@@ -54,7 +54,7 @@ public abstract class AbstractCubeMobRendererMixin<T extends AbstractCubeMob, S 
 		PoseStack poseStack, float xScale, float yScale, float zScale, Operation<Void> operation,
 		@Local(argsOnly = true) SlimeRenderState state
 	) {
-		LunaSlimesRenderUtil.applyWobbleAndSquish(poseStack, xScale, yScale, zScale, operation, state, false);
+		LSRenderUtils.applyWobbleAndSquish(poseStack, xScale, yScale, zScale, operation, state, false);
 	}
 
 	@ModifyReturnValue(
@@ -62,16 +62,19 @@ public abstract class AbstractCubeMobRendererMixin<T extends AbstractCubeMob, S 
 		at = @At("RETURN")
 	)
 	public float lunaSlimes$newShadows(float original, SlimeRenderState state) {
-		if (!LunaSlimesVisualsAudioConfig.NEW_SHADOWS.get()) return original;
+		if (!LSVisualsAudioConfig.NEW_SHADOWS.get()) return original;
+
 		final boolean skipSquish = state instanceof SulfurCubeRenderState sulfurCubeRenderState && !sulfurCubeRenderState.containedBlock.isEmpty();
-		final float slimeSize = state.frozenLib$getDataOrDefault(LunaSlimesRenderStateDataKeys.SIZE, 1F);
-		final Pair<Float, Float> wobble = state.frozenLib$getDataOrDefault(LunaSlimesRenderStateDataKeys.WOBBLE, LunaSlimesRenderUtil.FALLBACK_WOBBLE);
+		final float slimeSize = state.frozenLib$getDataOrDefault(LSRenderStateDataKeys.SIZE, 1F);
+		final Pair<Float, Float> wobble = state.frozenLib$getDataOrDefault(LSRenderStateDataKeys.WOBBLE, LSRenderUtils.FALLBACK_WOBBLE);
+
 		final float wobbleXZ = wobble.getFirst() * 2F;
 		final float cubeSize = ((slimeSize * 0.999F) * 0.75F) * wobbleXZ;
 		final float squish = !skipSquish
-			? (state.squish * (LunaSlimesVisualsAudioConfig.SQUISH_MULTIPLIER.get() * 0.1F)) / (cubeSize * 0.5F + 1F)
+			? (state.squish * (LSVisualsAudioConfig.SQUISH_MULTIPLIER.get() * 0.1F)) / (cubeSize * 0.5F + 1F)
 			: 0F;
 		final float relativeSquish = (1F / (squish + 1F));
+
 		return 0.25F * (relativeSquish * cubeSize);
 	}
 }

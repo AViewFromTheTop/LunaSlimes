@@ -3,8 +3,8 @@ package net.lunade.slime.mixin;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import java.util.Optional;
 import net.lunade.slime.LunaSlimesUtil;
-import net.lunade.slime.config.frozenlib.LunaSlimesGameplayConfig;
-import net.lunade.slime.config.frozenlib.LunaSlimesVisualsAudioConfig;
+import net.lunade.slime.config.frozenlib.LSGameplayConfig;
+import net.lunade.slime.config.frozenlib.LSVisualsAudioConfig;
 import net.lunade.slime.impl.AbstractCubeMobInterface;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.resources.ResourceKey;
@@ -28,7 +28,7 @@ public class LivingEntityMixin {
 
 	@Inject(method = "recreateFromPacket", at = @At("TAIL"))
 	public void luneSlimes$recreateFromPacket(ClientboundAddEntityPacket packet, CallbackInfo info) {
-		if (LivingEntity.class.cast(this) instanceof AbstractCubeMobInterface abstractCubeMobInterface) abstractCubeMobInterface.lunaSlimes$setInWorld(true);
+		if (LivingEntity.class.cast(this) instanceof AbstractCubeMobInterface abstractCubeMobInterface) abstractCubeMobInterface.lunaSlimes$setInLevel(true);
 	}
 
 	@ModifyReturnValue(method = "hurtServer", at = @At("RETURN"))
@@ -37,7 +37,7 @@ public class LivingEntityMixin {
 			&& LivingEntity.class.cast(this) instanceof AbstractCubeMob cubeMob
 			&& !cubeMob.isTiny()
 			&& cubeMob.isDeadOrDying()
-			&& LunaSlimesGameplayConfig.USE_SPLITTING.get()
+			&& LSGameplayConfig.USE_SPLITTING.get()
 		) {
 			final int split = LunaSlimesUtil.spawnSingleCube(cubeMob);
 			cubeMob.setSize(cubeMob.getSize() - split, true);
@@ -61,7 +61,7 @@ public class LivingEntityMixin {
 	public void lunaSlimes$die(DamageSource source, CallbackInfo info) {
 		if (!(LivingEntity.class.cast(this) instanceof AbstractCubeMob cube)) return;
 		final Optional<ResourceKey<DamageType>> type = source.typeHolder().unwrapKey();
-		if (type.isPresent() && type.get() != DamageTypes.GENERIC_KILL && !cube.isTiny() && LunaSlimesGameplayConfig.USE_SPLITTING.get()) info.cancel();
+		if (type.isPresent() && type.get() != DamageTypes.GENERIC_KILL && !cube.isTiny() && LSGameplayConfig.USE_SPLITTING.get()) info.cancel();
 	}
 
 	@Inject(method = "doPush", at = @At("HEAD"))
@@ -73,6 +73,6 @@ public class LivingEntityMixin {
 	@Inject(method = "knockback(DDDLnet/minecraft/world/damagesource/DamageSource;FZ)V", at = @At("HEAD"), cancellable = true)
 	public void lunaSlimes$knockback(double power, double xd, double zd, DamageSource source, float damage, boolean comesFromEffect, CallbackInfo info) {
 		if (!(LivingEntity.class.cast(this) instanceof AbstractCubeMob cube)) return;
-		if (cube.isTiny() && cube.isDeadOrDying() && LunaSlimesVisualsAudioConfig.DEATH_ANIM.get()) info.cancel();
+		if (cube.isTiny() && cube.isDeadOrDying() && LSVisualsAudioConfig.DEATH_ANIM.get()) info.cancel();
 	}
 }

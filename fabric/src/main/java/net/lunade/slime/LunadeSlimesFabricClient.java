@@ -1,16 +1,14 @@
 package net.lunade.slime;
 
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 
-@Environment(EnvType.CLIENT)
-public final class LunaSlimesClientFabric implements ClientModInitializer {
+@ClientOnly
+public final class LunadeSlimesFabricClient implements ClientModInitializer {
 
 	@Override
 	public void onInitializeClient() {
 		LunaSlimesClient.init();
 		LunaSlimesClient.setup();
 	}
-
 }

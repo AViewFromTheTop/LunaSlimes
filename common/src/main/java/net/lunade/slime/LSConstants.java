@@ -20,13 +20,12 @@ package net.lunade.slime;
 import net.frozenblock.lib.platform.ModLoader;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
-import org.jetbrains.annotations.Contract;
 import org.slf4j.Logger;
 
-public final class LunaSlimesConstants {
-	public static final String PROJECT_ID = LunaSlimesPreLoadConstants.PROJECT_ID;
-	public static final String MOD_ID = LunaSlimesPreLoadConstants.MOD_ID;
-	public static final Logger LOGGER = LunaSlimesPreLoadConstants.LOGGER;
+public final class LSConstants {
+	public static final String PROJECT_ID = LSPreLoadConstants.PROJECT_ID;
+	public static final String MOD_ID = LSPreLoadConstants.MOD_ID;
+	public static final Logger LOGGER = LSPreLoadConstants.LOGGER;
 	/**
 	 * Used for features that may be unstable and crash in public builds.
 	 * <p>
@@ -67,7 +66,6 @@ public final class LunaSlimesConstants {
 		return id(path).toString();
 	}
 
-	@Contract(pure = true)
 	public static String safeString(String path) {
 		return MOD_ID + "_" + path;
 	}
@@ -82,4 +80,6 @@ public final class LunaSlimesConstants {
 	public static Component tooltip(String key, final Object... args) {
 		return Component.translatable("tooltip." + MOD_ID + "." + key, args);
 	}
+
+	private LSConstants() {}
 }

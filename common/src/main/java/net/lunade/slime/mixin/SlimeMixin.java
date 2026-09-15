@@ -1,7 +1,7 @@
 package net.lunade.slime.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import net.lunade.slime.config.frozenlib.LunaSlimesVisualsAudioConfig;
+import net.lunade.slime.config.frozenlib.LSVisualsAudioConfig;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -18,6 +18,6 @@ public class SlimeMixin {
 
 	@ModifyReturnValue(method = "getParticleType", at = @At("RETURN"))
 	public ParticleOptions lunaSlimes$getParticleType(ParticleOptions original) {
-		return LunaSlimesVisualsAudioConfig.SLIME_BLOCK_PARTICLES.get() ? LUNASLIMES$NEW_SLIME_PARTICLES : original;
+		return LSVisualsAudioConfig.SLIME_BLOCK_PARTICLES.get() ? LUNASLIMES$NEW_SLIME_PARTICLES : original;
 	}
 }

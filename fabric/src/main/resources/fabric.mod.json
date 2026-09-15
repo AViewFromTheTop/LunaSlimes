@@ -3,7 +3,7 @@
   "id": "${mod_id}",
   "version": "${version}",
   "name": "Luna Slimes",
-  "description": "Improves Slimes and makes them configurable.",
+  "description": "Improves Slimes with new configurable features.",
   "authors": [
     "Lunade/AViewFromTheTop"
   ],
@@ -13,14 +13,14 @@
     "issues": "https://github.com/AViewFromTheTop/LunaSlimes/issues"
   },
   "license": "FrozenBlock Modding Oasis License v1.0",
-  "icon": "assets/lunaslimes/textures/lunaslimes.png",
+  "icon": "assets/lunaslimes/icon.png",
   "environment": "*",
   "entrypoints": {
     "main": [
       "net.lunade.slime.LunaSlimesFabric"
     ],
     "client": [
-      "net.lunade.slime.LunaSlimesClientFabric"
+      "net.lunade.slime.LunadeSlimesFabricClient"
     ],
     "modmenu": [
       "net.lunade.slime.config.gui.LunaSlimesModMenuIntegration"
@@ -31,9 +31,10 @@
   ],
   "accessWidener": "lunaslimes.classtweaker",
   "depends": {
+    "frozenlib": "${frozenlib_version}",
+    "fabricloader": "${fabric_loader_version}",
     "fabric-api": "*",
-    "minecraft": "*",
-    "frozenlib": "*",
+    "minecraft": "${minecraft_version}",
     "java": ">=25"
   },
   "suggests": {

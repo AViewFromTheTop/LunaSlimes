@@ -4,12 +4,14 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.lunade.slime.client.LunaSlimesRenderUtil;
+import net.lunade.slime.client.LSRenderUtils;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.renderer.entity.SulfurCubeRenderer;
 import net.minecraft.client.renderer.entity.state.SulfurCubeRenderState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
+@ClientOnly
 @Mixin(SulfurCubeRenderer.class)
 public class SulfurCubeRendererMixin {
 
@@ -26,6 +28,6 @@ public class SulfurCubeRendererMixin {
 		@Local(argsOnly = true) SulfurCubeRenderState state
 	) {
 		final boolean hasBlock = !state.containedBlock.isEmpty();
-		LunaSlimesRenderUtil.applyWobbleAndSquish(poseStack, xScale, yScale, zScale, operation, state, hasBlock);
+		LSRenderUtils.applyWobbleAndSquish(poseStack, xScale, yScale, zScale, operation, state, hasBlock);
 	}
 }

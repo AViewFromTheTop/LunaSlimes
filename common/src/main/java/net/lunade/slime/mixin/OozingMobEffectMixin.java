@@ -2,7 +2,7 @@ package net.lunade.slime.mixin;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.lunade.slime.registry.LunaSlimesAttachmentTypes;
+import net.lunade.slime.registry.LSAttachmentTypes;
 import net.minecraft.world.effect.OozingMobEffect;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.monster.cubemob.AbstractCubeMob;
@@ -21,7 +21,7 @@ public class OozingMobEffectMixin {
 		)
 	)
 	public boolean lunaSlimes$spawnSlimeOffspring(Level instance, Entity entity, Operation<Boolean> original) {
-		if (entity instanceof AbstractCubeMob cubeMob) cubeMob.frozenLib$setAttached(LunaSlimesAttachmentTypes.MERGE_COOLDOWN, 100);
+		if (entity instanceof AbstractCubeMob cubeMob) LSAttachmentTypes.MERGE_COOLDOWN.set(cubeMob, 100);
 		return original.call(instance, entity);
 	}
 }

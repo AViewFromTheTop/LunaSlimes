@@ -1,7 +1,8 @@
 package net.lunade.slime.client.renderer.entity.layers;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.lunade.slime.LunaSlimesConstants;
+import net.frozenblock.lib.FrozenBools;
+import net.lunade.slime.LSConstants;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.model.monster.slime.MagmaCubeModel;
 import net.minecraft.client.renderer.SubmitNodeCollector;
@@ -15,7 +16,7 @@ import net.minecraft.util.LightCoordsUtil;
 
 @ClientOnly
 public class MagmaCubeGlowingLayer extends RenderLayer<SlimeRenderState, MagmaCubeModel> {
-	private static final RenderType OVERLAY_TEXTURE = RenderTypes.eyes(LunaSlimesConstants.id("textures/entity/slime/magmacube_overlay.png"));
+	private static final RenderType OVERLAY_TEXTURE = RenderTypes.eyes(LSConstants.id("textures/entity/slime/magmacube_overlay.png"));
 
     public MagmaCubeGlowingLayer(RenderLayerParent<SlimeRenderState, MagmaCubeModel> parent) {
 		super(parent);
@@ -23,7 +24,7 @@ public class MagmaCubeGlowingLayer extends RenderLayer<SlimeRenderState, MagmaCu
 
 	@Override
 	public void submit(PoseStack poseStack, SubmitNodeCollector collector, int lightCoords, SlimeRenderState renderState, float yRot, float xRot) {
-		if (renderState.isInvisible) return;
+		if (renderState.isInvisible || FrozenBools.HAS_GLOWTONE) return;
 		collector.order(1).submitModel(
 			this.getParentModel(),
 			renderState,
@@ -37,5 +38,4 @@ public class MagmaCubeGlowingLayer extends RenderLayer<SlimeRenderState, MagmaCu
 			null
 		);
 	}
-
 }

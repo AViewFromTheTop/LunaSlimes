@@ -1,20 +1,19 @@
 package net.lunade.slime;
 
 import net.frozenblock.lib.entity.api.cubemob.sulfurcube.SulfurCubeEvents;
-import net.lunade.slime.config.frozenlib.LunaSlimesGameplayConfig;
-import net.lunade.slime.config.frozenlib.LunaSlimesVisualsAudioConfig;
+import net.lunade.slime.config.frozenlib.LSGameplayConfig;
+import net.lunade.slime.config.frozenlib.LSVisualsAudioConfig;
 import net.lunade.slime.impl.AbstractCubeMobInterface;
-import net.lunade.slime.registry.LunaSlimesAttachmentTypes;
-import net.lunade.slime.registry.LunaSlimesSounds;
+import net.lunade.slime.registry.LSAttachmentTypes;
+import net.lunade.slime.registry.LSSoundEvents;
 
-// TODO FIX ANIMATIONS ON NEOFORGE
 public final class LunaSlimes {
 
 	public static void init() {
-		LunaSlimesSounds.init();
-		LunaSlimesAttachmentTypes.init();
-		LunaSlimesGameplayConfig.CONFIG.load(true);
-		LunaSlimesVisualsAudioConfig.CONFIG.load(true);
+		LSSoundEvents.init();
+		LSAttachmentTypes.init();
+		LSGameplayConfig.CONFIG.load(true);
+		LSVisualsAudioConfig.CONFIG.load(true);
 
 		SulfurCubeEvents.ON_HIT.register((sulfurCube, pushVelocity, source, damage, comesFromEffect) -> {
 			if (pushVelocity.length() <= 0.9D) return;
@@ -28,4 +27,6 @@ public final class LunaSlimes {
 	}
 
 	public static void setup() {}
+
+	private LunaSlimes() {}
 }

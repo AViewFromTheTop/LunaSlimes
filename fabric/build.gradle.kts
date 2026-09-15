@@ -12,11 +12,12 @@ checkstyle {
 val githubActions: Boolean = System.getenv("GITHUB_ACTIONS") == "true"
 val licenseChecks: Boolean = githubActions
 
+val fabric_loader_version: String by project
+val min_fabric_loader_version: String by project
+
 val mod_id: String by project
 val mod_version: String by project
-val mod_loader: String by project
 val minecraft_version: String by project
-val fabric_loader_version: String by project
 val maven_group: String by project
 val archives_base_name: String by project
 
@@ -65,11 +66,11 @@ dependencies {
     implementation("net.fabricmc:fabric-loader:$fabric_loader_version")
     implementation("net.fabricmc.fabric-api:fabric-api:$fabric_api_version")
 
-    // Mod Menu
-    compileOnly("maven.modrinth:modmenu:$modmenu_version")
-
     // FrozenLib
     api("net.frozenblock:frozenlib-fabric:${frozenlib_version}")
+
+    // Mod Menu
+    compileOnly("maven.modrinth:modmenu:$modmenu_version")
 
     // Cloth Config
     compileOnly("me.shedaniel.cloth:cloth-config-fabric:$cloth_config_version") {
@@ -83,8 +84,9 @@ tasks {
         val properties = mapOf(
             "mod_id" to mod_id,
             "version" to version,
-            "minecraft_version" to "~26.2-",//minecraft_version,
+            "minecraft_version" to "~26.2-",
 
+            "fabric_loader_version" to ">=$min_fabric_loader_version",
             "fabric_api_version" to ">=$fabric_api_version",
             "frozenlib_version" to ">=${frozenlib_version.split('-').firstOrNull()}-"
         )
@@ -99,10 +101,12 @@ tasks {
                 "**/.cache/*",
                 "**/*.accesswidener",
                 "**/*.classtweaker",
+                "**/*.cfg",
                 "**/*.nbt",
                 "**/*.png",
                 "**/*.ogg",
                 "**/*.mixins.json",
+                "**/*.zip"
             )
         ) {
             expand(properties)
@@ -136,17 +140,45 @@ artifacts {
 }
 
 fun getModVersion(): String {
-    var version = "$mod_version-$mod_loader+$minecraft_version"
+    var version = "$mod_version-mc$minecraft_version"
 
-    if (release != null && !release) {
-        //version += "-unstable"
+    if (!release) {
+        version += "-unstable"
     }
 
     return version
 }
 
+val changelogText = run {
+    val split = rootProject.file("CHANGELOG.md").readText().split("-----------------")
+    check(split.size == 2) { "Malformed changelog" }
+    split[1].trim()
+}
+
 upload {
     maven {
         name.set("lunaslimes-fabric")
+    }
+
+    forEach {
+        changelog = changelogText
+    }
+
+    curseforge {
+        dependencies {
+            required("fabric-api")
+            required("frozenlib")
+            optional("modmenu")
+            optional("cloth-config")
+        }
+    }
+
+    modrinth {
+        dependencies {
+            required("fabric-api")
+            required("frozenlib")
+            optional("modmenu")
+            optional("cloth-config")
+        }
     }
 }

@@ -6,7 +6,7 @@ import net.frozenblock.lib.entrypoint.api.FrozenModInitializer;
 public final class LunaSlimesFabric extends FrozenModInitializer {
 
 	public LunaSlimesFabric() {
-		super(LunaSlimesConstants.MOD_ID);
+		super(LSConstants.MOD_ID);
 	}
 
 	@Override

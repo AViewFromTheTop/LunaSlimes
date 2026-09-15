@@ -2,7 +2,7 @@ package net.lunade.slime.mixin.client;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.lunade.slime.client.renderer.entity.layers.MagmaCubeGlowingLayer;
-import net.lunade.slime.config.frozenlib.LunaSlimesVisualsAudioConfig;
+import net.lunade.slime.config.frozenlib.LSVisualsAudioConfig;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.model.monster.slime.MagmaCubeModel;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -36,7 +36,7 @@ public abstract class MagmaCubeRendererMixin extends MobRenderer<MagmaCube, Slim
 		at = @At("RETURN")
 	)
 	public int lunaSlimes$getBlockLightLevel(int original, MagmaCube entity, BlockPos blockPos) {
-		if (!LunaSlimesVisualsAudioConfig.GLOWING_MAGMA.get() || entity.isOnFire()) return original;
+		if (!LSVisualsAudioConfig.GLOWING_MAGMA.get() || entity.isOnFire()) return original;
 		return entity.level().getBrightness(LightLayer.BLOCK, blockPos);
 	}
 }

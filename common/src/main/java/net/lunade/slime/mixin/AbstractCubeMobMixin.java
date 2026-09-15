@@ -5,10 +5,10 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import net.lunade.slime.LunaSlimesUtil;
-import net.lunade.slime.config.frozenlib.LunaSlimesGameplayConfig;
-import net.lunade.slime.config.frozenlib.LunaSlimesVisualsAudioConfig;
+import net.lunade.slime.config.frozenlib.LSGameplayConfig;
+import net.lunade.slime.config.frozenlib.LSVisualsAudioConfig;
 import net.lunade.slime.impl.AbstractCubeMobInterface;
-import net.lunade.slime.registry.LunaSlimesAttachmentTypes;
+import net.lunade.slime.registry.LSAttachmentTypes;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
@@ -22,6 +22,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -48,7 +49,7 @@ public class AbstractCubeMobMixin implements AbstractCubeMobInterface {
 	@Unique
 	public int lunaSlimes$prevDeathTime;
 	@Unique
-	private boolean lunaSlimes$inWorld;
+	private boolean lunaSlimes$inLevel;
 
 	@Shadow
 	public float targetSquish;
@@ -72,16 +73,16 @@ public class AbstractCubeMobMixin implements AbstractCubeMobInterface {
 	public void lunaSlimes$tick(CallbackInfo info) {
 		final AbstractCubeMob cube = AbstractCubeMob.class.cast(this);
 
-		cube.frozenLib$setAttached(LunaSlimesAttachmentTypes.MERGE_COOLDOWN, Math.max(0, cube.frozenLib$getAttachedOrCreate(LunaSlimesAttachmentTypes.MERGE_COOLDOWN) - 1));
+		LSAttachmentTypes.MERGE_COOLDOWN.set(cube, Math.max(0, LSAttachmentTypes.MERGE_COOLDOWN.getAttachedOrCreate(cube) - 1));
 
-		final float initialSize = cube.frozenLib$getAttachedOrCreate(LunaSlimesAttachmentTypes.SIZE);
+		final float initialSize = LSAttachmentTypes.SIZE.getAttachedOrCreate(cube);
 		this.lunaSlimes$prevSize = initialSize;
 		final float sizeDiff = cube.getSize() - initialSize;
 		final float newSize = initialSize + (sizeDiff * 0.25F);
-		cube.frozenLib$setAttached(LunaSlimesAttachmentTypes.SIZE, newSize);
+		LSAttachmentTypes.SIZE.set(cube, newSize);
 
-		this.lunaSlimes$prevWobbleAnim = cube.frozenLib$getAttachedOrCreate(LunaSlimesAttachmentTypes.WOBBLE_ANIM_PROGRESS);
-		cube.frozenLib$setAttached(LunaSlimesAttachmentTypes.WOBBLE_ANIM_PROGRESS, Math.max(0, this.lunaSlimes$prevWobbleAnim - 1));
+		this.lunaSlimes$prevWobbleAnim = LSAttachmentTypes.WOBBLE_ANIM_PROGRESS.getAttachedOrCreate(cube);
+		LSAttachmentTypes.WOBBLE_ANIM_PROGRESS.set(cube, Math.max(0, this.lunaSlimes$prevWobbleAnim - 1));
 
 		this.lunaSlimes$prevDeathTime = cube.deathTime;
 
@@ -100,10 +101,10 @@ public class AbstractCubeMobMixin implements AbstractCubeMobInterface {
 		this.lunaSlimes$landDelays.removeIf(integer -> integer <= -1);
 
 		jumpAntic: {
-			if (!LunaSlimesVisualsAudioConfig.JUMP_ANTIC.get()) break jumpAntic;
+			if (!LSVisualsAudioConfig.JUMP_ANTIC.get()) break jumpAntic;
 			if (this.lunaSlimes$jumpSquishes <= 0) break jumpAntic;
 
-			final boolean jumpAntic = cube.frozenLib$getAttachedOrCreate(LunaSlimesAttachmentTypes.JUMP_ANTIC);
+			final boolean jumpAntic = LSAttachmentTypes.JUMP_ANTIC.getAttachedOrCreate(cube);
 			if (this.lunaSlimes$jumpSquishes == 3 && jumpAntic) {
 				LunaSlimesUtil.setSquish(cube, -0.05F);
 			} else if (this.lunaSlimes$jumpSquishes == 2 && jumpAntic) {
@@ -120,8 +121,9 @@ public class AbstractCubeMobMixin implements AbstractCubeMobInterface {
 		at = @At(
 			value = "FIELD",
 			target = "Lnet/minecraft/world/entity/monster/cubemob/AbstractCubeMob;targetSquish:F",
-			ordinal = 1,
-			shift = At.Shift.BEFORE
+			ordinal = 0,
+			shift = At.Shift.BEFORE,
+			opcode = Opcodes.PUTFIELD
 		)
 	)
 	public void lunaSlimes$captureSquish(CallbackInfo info) {
@@ -134,8 +136,9 @@ public class AbstractCubeMobMixin implements AbstractCubeMobInterface {
 		at = @At(
 			value = "FIELD",
 			target = "Lnet/minecraft/world/entity/monster/cubemob/AbstractCubeMob;targetSquish:F",
-			ordinal = 1,
-			shift = At.Shift.AFTER
+			ordinal = 0,
+			shift = At.Shift.AFTER,
+			opcode = Opcodes.PUTFIELD
 		)
 	)
 	public void lunaSlimes$undoSquish(CallbackInfo info) {
@@ -147,8 +150,14 @@ public class AbstractCubeMobMixin implements AbstractCubeMobInterface {
 		ServerLevelAccessor level, DifficultyInstance difficulty, EntitySpawnReason spawnReason, SpawnGroupData groupData, CallbackInfoReturnable<SpawnGroupData> info
 	) {
 		this.lunaSlimes$playWobbleAnim();
-		if (spawnReason == EntitySpawnReason.SPAWN_ITEM_USE || spawnReason == EntitySpawnReason.MOB_SUMMONED || spawnReason == EntitySpawnReason.BUCKET || spawnReason == EntitySpawnReason.DISPENSER) return;
-		AbstractCubeMob.class.cast(this).frozenLib$setAttached(LunaSlimesAttachmentTypes.MERGE_COOLDOWN, LunaSlimesGameplayConfig.SPAWNED_MERGE_COOLDOWN.get());
+
+		if (spawnReason == EntitySpawnReason.SPAWN_ITEM_USE
+			|| spawnReason == EntitySpawnReason.MOB_SUMMONED
+			|| spawnReason == EntitySpawnReason.BUCKET
+			|| spawnReason == EntitySpawnReason.DISPENSER
+		) return;
+
+		LSAttachmentTypes.MERGE_COOLDOWN.set(AbstractCubeMob.class.cast(this), LSGameplayConfig.SPAWNED_MERGE_COOLDOWN.get());
 	}
 
 	@WrapOperation(
@@ -167,33 +176,21 @@ public class AbstractCubeMobMixin implements AbstractCubeMobInterface {
 	@Inject(method = "decreaseSquish", at = @At("HEAD"), cancellable = true)
 	public void lunaSlimes$decreaseSquish(CallbackInfo info) {
 		final AbstractCubeMob cubeMob = AbstractCubeMob.class.cast(this);
-		final boolean jumpAntic = cubeMob.frozenLib$getAttachedOrCreate(LunaSlimesAttachmentTypes.JUMP_ANTIC) && LunaSlimesVisualsAudioConfig.JUMP_ANTIC.get();
-		if (jumpAntic || !cubeMob.frozenLib$getAttachedOrCreate(LunaSlimesAttachmentTypes.CAN_SQUISH)) info.cancel();
+		final boolean jumpAntic = LSAttachmentTypes.JUMP_ANTIC.getAttachedOrCreate(cubeMob) && LSVisualsAudioConfig.JUMP_ANTIC.get();
+		if (jumpAntic || !LSAttachmentTypes.CAN_SQUISH.getAttachedOrCreate(cubeMob)) info.cancel();
 	}
 
 	@Inject(
 		method = "tick",
 		at = @At(
 			value = "INVOKE",
-			target = "Lnet/minecraft/world/entity/AgeableMob;tick()V",
-			shift = At.Shift.BEFORE
+			target = "Lnet/minecraft/world/entity/AgeableMob;tick()V"
 		)
 	)
 	public void lunaSlimes$moveDecreaseSquish(CallbackInfo info) {
-		AbstractCubeMob.class.cast(this).frozenLib$setAttached(LunaSlimesAttachmentTypes.CAN_SQUISH, true);
+		LSAttachmentTypes.CAN_SQUISH.set(AbstractCubeMob.class.cast(this), true);
 		this.decreaseSquish();
-	}
-
-	@Inject(
-		method = "tick",
-		at = @At(
-			value = "INVOKE",
-			target = "Lnet/minecraft/world/entity/monster/cubemob/AbstractCubeMob;decreaseSquish()V",
-			shift = At.Shift.BEFORE
-		)
-	)
-	public void lunaSlimes$stopDecreaseSquish(CallbackInfo info) {
-		AbstractCubeMob.class.cast(this).frozenLib$setAttached(LunaSlimesAttachmentTypes.CAN_SQUISH, false);
+		LSAttachmentTypes.CAN_SQUISH.set(AbstractCubeMob.class.cast(this), false);
 	}
 
 	@WrapWithCondition(
@@ -220,9 +217,9 @@ public class AbstractCubeMobMixin implements AbstractCubeMobInterface {
 
 	@Inject(method = "lambda$remove$0", at = @At("HEAD"))
 	public void lunaSlimes$beforeSpawnNewCubeMob(int halfSize, float xd, float zd, AbstractCubeMob cubeMob, CallbackInfo info) {
-		cubeMob.frozenLib$setAttached(
-			LunaSlimesAttachmentTypes.MERGE_COOLDOWN,
-			Math.max(LunaSlimesGameplayConfig.ON_SPLIT_COOLDOWN.get(), LunaSlimesGameplayConfig.SPLIT_COOLDOWN.get()) * 2
+		LSAttachmentTypes.MERGE_COOLDOWN.set(
+			cubeMob,
+			Math.max(LSGameplayConfig.ON_SPLIT_COOLDOWN.get(), LSGameplayConfig.SPLIT_COOLDOWN.get()) * 2
 		);
 		cubeMob.setSilent(cubeMob.isSilent());
 	}
@@ -234,7 +231,7 @@ public class AbstractCubeMobMixin implements AbstractCubeMobInterface {
 			Mth.lerp(
 				partialTicks,
 				this.lunaSlimes$prevWobbleAnim,
-				AbstractCubeMob.class.cast(this).frozenLib$getAttachedOrCreate(LunaSlimesAttachmentTypes.WOBBLE_ANIM_PROGRESS)
+				LSAttachmentTypes.WOBBLE_ANIM_PROGRESS.getAttachedOrCreate(AbstractCubeMob.class.cast(this))
 			) / LUNASLIMES$WOBBLE_ANIM_LENGTH
 		);
 	}
@@ -243,20 +240,20 @@ public class AbstractCubeMobMixin implements AbstractCubeMobInterface {
 	@Override
 	public void lunaSlimes$playWobbleAnim() {
 		final AbstractCubeMob cubeMob = AbstractCubeMob.class.cast(this);
-		if (cubeMob.frozenLib$getAttachedOrCreate(LunaSlimesAttachmentTypes.WOBBLE_ANIM_PROGRESS) != 0) return;
-		cubeMob.frozenLib$setAttached(LunaSlimesAttachmentTypes.WOBBLE_ANIM_PROGRESS, LUNASLIMES$WOBBLE_ANIM_LENGTH);
+		if (LSAttachmentTypes.WOBBLE_ANIM_PROGRESS.getAttachedOrCreate(cubeMob) != 0) return;
+		LSAttachmentTypes.WOBBLE_ANIM_PROGRESS.set(cubeMob, LUNASLIMES$WOBBLE_ANIM_LENGTH);
 	}
 
 	@Unique
 	@Override
 	public float lunaSlimes$getSizeScale(float partialTicks) {
-		return Mth.lerp(partialTicks, this.lunaSlimes$prevSize, AbstractCubeMob.class.cast(this).frozenLib$getAttachedOrCreate(LunaSlimesAttachmentTypes.SIZE));
+		return Mth.lerp(partialTicks, this.lunaSlimes$prevSize, LSAttachmentTypes.SIZE.getAttachedOrCreate(AbstractCubeMob.class.cast(this)));
 	}
 
 	@Unique
 	@Override
 	public void lunaSlimes$cheatSize(float size) {
-		AbstractCubeMob.class.cast(this).frozenLib$setAttached(LunaSlimesAttachmentTypes.SIZE, size);
+		LSAttachmentTypes.SIZE.set(AbstractCubeMob.class.cast(this), size);
 		this.lunaSlimes$prevSize = size;
 	}
 
@@ -269,21 +266,21 @@ public class AbstractCubeMobMixin implements AbstractCubeMobInterface {
 	@Unique
 	@Override
 	public float lunaSlimes$getDeathProgress(float partialTicks) {
-		return LunaSlimesVisualsAudioConfig.DEATH_ANIM.get() && AbstractCubeMob.class.cast(this).isDeadOrDying()
+		return LSVisualsAudioConfig.DEATH_ANIM.get() && AbstractCubeMob.class.cast(this).isDeadOrDying()
 			? ((20F - Mth.lerp(partialTicks, this.lunaSlimes$prevDeathTime, (AbstractCubeMob.class.cast(this).deathTime))) / 20F)
 			: 1F;
 	}
 
 	@Unique
 	@Override
-	public void lunaSlimes$setInWorld(boolean inWorld) {
-		this.lunaSlimes$inWorld = inWorld;
+	public void lunaSlimes$setInLevel(boolean inLevel) {
+		this.lunaSlimes$inLevel = inLevel;
 	}
 
 	@Unique
 	@Override
-	public boolean lunaSlimes$isInWorld() {
-		return this.lunaSlimes$inWorld;
+	public boolean lunaSlimes$isInLevel() {
+		return this.lunaSlimes$inLevel;
 	}
 
 	@Shadow
