@@ -11,7 +11,7 @@ config="lunaslimes.mixins.json"
     version="${mod_version}"
     displayName="Luna Slimes"
     displayURL="https://modrinth.com/mod/luna-slimes"
-    logoFile="assets/lunaslimes/textures/lunaslimes.png"
+    iconFile="assets/lunaslimes/textures/lunaslimes.png"
     authors="Lunade/AViewFromTheTop"
     description='''
 Improves Slimes with new configurable features.
