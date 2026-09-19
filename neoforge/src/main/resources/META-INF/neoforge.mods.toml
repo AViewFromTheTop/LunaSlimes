@@ -3,9 +3,6 @@ loaderVersion="[4,)"
 license="${mod_license}"
 issueTrackerURL="${issues_url}"
 
-[[mixins]]
-config="lunaslimes.mixins.json"
-
 [[mods]]
     modId="${mod_id}"
     version="${mod_version}"
@@ -16,6 +13,9 @@ config="lunaslimes.mixins.json"
     description='''
 Improves Slimes with new configurable features.
     '''
+
+[[mixins]]
+config="lunaslimes.mixins.json"
 
 [[ dependencies.lunaslimes ]]
     modId="neoforge"
