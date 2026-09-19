@@ -9,7 +9,6 @@ checkstyle {
     toolVersion = "10.20.2"
 }
 
-val mod_id: String by project
 val mod_version: String by project
 val minecraft_version: String by project
 val maven_group: String by project
@@ -54,6 +53,17 @@ val licenseChecks: Boolean = githubActions
 
 val applyLicenses: Task by tasks
 
+dependencies {
+    // FrozenLib
+    api("net.frozenblock:frozenlib-neoforge:${frozenlib_version}")?.let {
+        accessTransformers(it)
+        interfaceInjectionData(it)
+    }
+
+    // Cloth Config
+    implementation("me.shedaniel.cloth:cloth-config-neoforge:${cloth_config_version}")
+}
+
 tasks {
     license {
         if (licenseChecks) {
@@ -62,30 +72,6 @@ tasks {
             include("**/*.java")
         }
     }
-
-    processResources {
-        val properties = mapOf("mod_version" to getModVersion())
-        inputs.properties(properties)
-        filesMatching("META-INF/neoforge.mods.toml") {
-            expand(properties)
-        }
-    }
-
-    withType(JavaCompile::class) {
-        options.encoding = "UTF-8"
-        options.release = 25
-        options.isFork = true
-        options.isIncremental = true
-    }
-}
-
-dependencies {
-    api("net.frozenblock:frozenlib-neoforge:${frozenlib_version}")?.let {
-        accessTransformers(it)
-        interfaceInjectionData(it)
-    }
-
-    implementation("me.shedaniel.cloth:cloth-config-neoforge:${cloth_config_version}")
 }
 
 java {

@@ -13,9 +13,7 @@ val githubActions: Boolean = System.getenv("GITHUB_ACTIONS") == "true"
 val licenseChecks: Boolean = githubActions
 
 val fabric_loader_version: String by project
-val min_fabric_loader_version: String by project
 
-val mod_id: String by project
 val mod_version: String by project
 val minecraft_version: String by project
 val maven_group: String by project
@@ -63,8 +61,9 @@ repositories {
 }
 
 dependencies {
-    implementation("net.fabricmc:fabric-loader:$fabric_loader_version")
-    implementation("net.fabricmc.fabric-api:fabric-api:$fabric_api_version")
+    // Fabric
+    implementation("net.fabricmc:fabric-loader:${fabric_loader_version}")
+    implementation("net.fabricmc.fabric-api:fabric-api:${fabric_api_version}")
 
     // FrozenLib
     api("net.frozenblock:frozenlib-fabric:${frozenlib_version}")
@@ -80,39 +79,6 @@ dependencies {
 }
 
 tasks {
-    processResources {
-        val properties = mapOf(
-            "mod_id" to mod_id,
-            "version" to version,
-            "minecraft_version" to "~26.2-",
-
-            "fabric_loader_version" to ">=$min_fabric_loader_version",
-            "fabric_api_version" to ">=$fabric_api_version",
-            "frozenlib_version" to ">=${frozenlib_version.split('-').firstOrNull()}-"
-        )
-
-        properties.forEach { (a, b) -> inputs.property(a, b) }
-
-        filesNotMatching(
-            listOf(
-                "**/*.java",
-                "**/sounds.json",
-                "**/lang/*.json",
-                "**/.cache/*",
-                "**/*.accesswidener",
-                "**/*.classtweaker",
-                "**/*.cfg",
-                "**/*.nbt",
-                "**/*.png",
-                "**/*.ogg",
-                "**/*.mixins.json",
-                "**/*.zip"
-            )
-        ) {
-            expand(properties)
-        }
-    }
-
     license {
         if (licenseChecks) {
             rule(rootProject.file("codeformat/HEADER"))

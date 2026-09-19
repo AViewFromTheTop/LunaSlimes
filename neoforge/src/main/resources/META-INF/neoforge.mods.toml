@@ -1,16 +1,16 @@
 modLoader="javafml"
 loaderVersion="[4,)"
-license="FrozenBlock Modding Oasis License v1.0"
-issueTrackerURL="https://github.com/AViewFromTheTop/LunaSlimes/issues"
+license="${mod_license}"
+issueTrackerURL="${issues_url}"
 
 [[mixins]]
 config="lunaslimes.mixins.json"
 
 [[mods]]
-    modId="lunaslimes"
+    modId="${mod_id}"
     version="${mod_version}"
-    displayName="Luna Slimes"
-    displayURL="https://modrinth.com/mod/luna-slimes"
+    displayName="${mod_name}"
+    displayURL="${mod_url}"
     iconFile="assets/lunaslimes/textures/lunaslimes.png"
     authors="Lunade/AViewFromTheTop"
     description='''
@@ -20,21 +20,21 @@ Improves Slimes with new configurable features.
 [[ dependencies.lunaslimes ]]
     modId="neoforge"
     type="required"
-    versionRange="[~26.2-,)"
+    versionRange="[${minecraft_version},)"
     ordering="NONE"
     side="BOTH"
 
 [[ dependencies.lunaslimes ]]
     modId="minecraft"
     type="required"
-    versionRange="[~26.2-,)"
+    versionRange="[${minecraft_version},)"
     ordering="NONE"
     side="BOTH"
 
 [[ dependencies.lunaslimes ]]
     modId="frozenlib"
     type="required"
-    versionRange="[2.5-mc26.2,)"
+    versionRange="[${frozenlib_version},)"
     ordering="NONE"
     side="BOTH"
 

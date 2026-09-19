@@ -1,18 +1,18 @@
 {
   "schemaVersion": 1,
   "id": "${mod_id}",
-  "version": "${version}",
-  "name": "Luna Slimes",
+  "version": "${mod_version}",
+  "name": "${mod_name}",
   "description": "Improves Slimes with new configurable features.",
   "authors": [
     "Lunade/AViewFromTheTop"
   ],
   "contact": {
-    "homepage": "https://modrinth.com/mod/luna-slimes",
-    "sources": "https://github.com/AViewFromTheTop/LunaSlimes",
-    "issues": "https://github.com/AViewFromTheTop/LunaSlimes/issues"
+    "homepage": "${mod_url}",
+    "sources": "${source_url}",
+    "issues": "${issues_url}"
   },
-  "license": "FrozenBlock Modding Oasis License v1.0",
+  "license": "${mod_license}",
   "icon": "assets/lunaslimes/icon.png",
   "environment": "*",
   "entrypoints": {

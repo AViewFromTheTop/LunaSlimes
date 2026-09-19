@@ -27,19 +27,31 @@ checkstyle {
     toolVersion = "10.20.2"
 }
 
+val mod_id: String by project
+val mod_version: String by project
+val mod_name: String by project
+val license: String by project
+val mod_url: String by project
+val source_url: String by project
+val issues_url: String by project
 val min_fabric_loader_version: String by project
+val minecraft_version: String by project
+
+val fabric_api_version: String by project
 val frozenlib_version: String by project
 
 mod {
+    additional.add("mod_id", mod_id)
+    additional.add("mod_version", mod_version)
+    additional.add("mod_name", mod_name)
+    additional.add("mod_license", license)
+    additional.add("mod_url", mod_url)
+    additional.add("source_url", source_url)
+    additional.add("issues_url", issues_url)
     additional.add("fabric_loader_version", ">=$min_fabric_loader_version")
-    additional.add("minecraft_version", "~26.2-")
+    additional.add("fabric_api_version", ">=$fabric_api_version")
+    additional.add("minecraft_version", "~$minecraft_version-")
     additional.add("frozenlib_version", ">=${frozenlib_version.split('-').firstOrNull()}-")
-    additional.add("mod_description")
-    additional.add("mod_credits")
-    additional.add("mod_license")
-    additional.add("mod_homepage")
-    additional.add("mod_authors")
-    additional.add("mod_github")
 }
 
 val changelogText = run {
@@ -60,7 +72,7 @@ val githubRelease by tasks.registering {
     val token = env["GITHUB_TOKEN"]
     val repository = mod.repository.get()
     val tag = project(":ls-fabric").version.toString()
-    val releaseTitle = "Luna Slimes $tag"
+    val releaseTitle = "$mod_name $tag"
     val isPrerelease = mod.releaseType.get() != "release"
     val commitish = env["GITHUB_SHA"]
 
