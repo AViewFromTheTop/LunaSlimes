@@ -26,7 +26,7 @@ import com.mojang.datafixers.util.Pair;
 import net.lunade.slime.LunaSlimesUtil;
 import net.lunade.slime.client.LSRenderStateDataKeys;
 import net.lunade.slime.client.LSRenderUtils;
-import net.lunade.slime.config.frozenlib.LSVisualsAudioConfig;
+import net.lunade.slime.config.LSVisualsAudioConfig;
 import net.lunade.slime.impl.AbstractCubeMobInterface;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.model.EntityModel;

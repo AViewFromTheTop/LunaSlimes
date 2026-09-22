@@ -28,7 +28,7 @@ public final class LunaSlimesModMenuIntegration implements ModMenuApi {
 
 	@Override
 	public ConfigScreenFactory<Screen> getModConfigScreenFactory() {
-		if (FrozenBools.HAS_CLOTH_CONFIG) return LSConfigGui::buildScreen;
+		if (FrozenBools.HAS_CLOTH_CONFIG) return LSMainConfigGui::buildScreen;
 		return screen -> null;
 	}
 }

@@ -18,8 +18,8 @@
 package net.lunade.slime;
 
 import net.frozenblock.lib.entity.api.cubemob.sulfurcube.SulfurCubeEvents;
-import net.lunade.slime.config.frozenlib.LSGameplayConfig;
-import net.lunade.slime.config.frozenlib.LSVisualsAudioConfig;
+import net.lunade.slime.config.LSGameplayConfig;
+import net.lunade.slime.config.LSVisualsAudioConfig;
 import net.lunade.slime.impl.AbstractCubeMobInterface;
 import net.lunade.slime.registry.LSAttachmentTypes;
 import net.lunade.slime.registry.LSSoundEvents;

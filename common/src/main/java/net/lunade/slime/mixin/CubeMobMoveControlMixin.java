@@ -17,7 +17,7 @@
 
 package net.lunade.slime.mixin;
 
-import net.lunade.slime.config.frozenlib.LSVisualsAudioConfig;
+import net.lunade.slime.config.LSVisualsAudioConfig;
 import net.lunade.slime.registry.LSAttachmentTypes;
 import net.minecraft.world.entity.EntityEvent;
 import net.minecraft.world.entity.monster.cubemob.AbstractCubeMob;

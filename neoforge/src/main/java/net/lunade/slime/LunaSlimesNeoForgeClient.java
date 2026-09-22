@@ -18,7 +18,7 @@
 package net.lunade.slime;
 
 import net.frozenblock.lib.platform.ModLoader;
-import net.lunade.slime.config.gui.LSConfigGui;
+import net.lunade.slime.config.gui.LSMainConfigGui;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModLoadingContext;
@@ -38,7 +38,7 @@ public final class LunaSlimesNeoForgeClient {
 		if (ModLoader.isModLoaded("cloth-config") || ModLoader.isModLoaded("cloth_config")) {
 			ModLoadingContext.get().registerExtensionPoint(
 				IConfigScreenFactory.class,
-				() -> (container, parent) -> LSConfigGui.buildScreen(parent)
+				() -> (container, parent) -> LSMainConfigGui.buildScreen(parent)
 			);
 		}
 	}

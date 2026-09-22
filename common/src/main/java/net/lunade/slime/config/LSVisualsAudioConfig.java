@@ -15,9 +15,8 @@
  * along with this program; if not, see <https://github.com/FrozenBlock/Licenses>.
  */
 
-package net.lunade.slime.config.frozenlib;
+package net.lunade.slime.config;
 
-import blue.endless.jankson.JsonElement;
 import net.frozenblock.lib.config.v2.config.ConfigData;
 import net.frozenblock.lib.config.v2.config.ConfigSettings;
 import net.frozenblock.lib.config.v2.entry.ConfigEntry;
@@ -26,7 +25,7 @@ import net.frozenblock.lib.config.v2.registry.ID;
 import net.lunade.slime.LSConstants;
 
 public final class LSVisualsAudioConfig {
-	public static final ConfigData<JsonElement> CONFIG = ConfigData.createAndRegister(
+	public static final ConfigData<?> CONFIG = ConfigData.createAndRegister(
 		ID.of(LSConstants.id("visuals_audio")),
 		ConfigSettings.JSON
 	);

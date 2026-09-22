@@ -19,8 +19,8 @@ package net.lunade.slime;
 
 import com.mojang.datafixers.util.Pair;
 import java.util.List;
-import net.lunade.slime.config.frozenlib.LSGameplayConfig;
-import net.lunade.slime.config.frozenlib.LSVisualsAudioConfig;
+import net.lunade.slime.config.LSGameplayConfig;
+import net.lunade.slime.config.LSVisualsAudioConfig;
 import net.lunade.slime.impl.AbstractCubeMobInterface;
 import net.lunade.slime.registry.LSAttachmentTypes;
 import net.lunade.slime.registry.LSSoundEvents;

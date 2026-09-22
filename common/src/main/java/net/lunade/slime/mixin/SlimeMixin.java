@@ -18,7 +18,7 @@
 package net.lunade.slime.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import net.lunade.slime.config.frozenlib.LSVisualsAudioConfig;
+import net.lunade.slime.config.LSVisualsAudioConfig;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;

@@ -19,7 +19,7 @@ package net.lunade.slime.config.gui;
 
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
-import net.lunade.slime.config.frozenlib.LSGameplayConfig;
+import net.lunade.slime.config.LSGameplayConfig;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
 
 @ClientOnly

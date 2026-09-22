@@ -19,7 +19,7 @@ package net.lunade.slime.mixin.client;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.lunade.slime.client.renderer.entity.layers.MagmaCubeGlowingLayer;
-import net.lunade.slime.config.frozenlib.LSVisualsAudioConfig;
+import net.lunade.slime.config.LSVisualsAudioConfig;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.model.monster.slime.MagmaCubeModel;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;

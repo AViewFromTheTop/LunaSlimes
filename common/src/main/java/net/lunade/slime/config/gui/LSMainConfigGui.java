@@ -22,13 +22,13 @@ import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import net.lunade.slime.LSConstants;
-import net.lunade.slime.config.frozenlib.LSGameplayConfig;
-import net.lunade.slime.config.frozenlib.LSVisualsAudioConfig;
+import net.lunade.slime.config.LSGameplayConfig;
+import net.lunade.slime.config.LSVisualsAudioConfig;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.gui.screens.Screen;
 
 @ClientOnly
-public final class LSConfigGui extends PartitioningSerializer.GlobalData {
+public final class LSMainConfigGui extends PartitioningSerializer.GlobalData {
 
 	public static Screen buildScreen(Screen parent) {
 		final ConfigBuilder configBuilder = ConfigBuilder.create().setParentScreen(parent).setTitle(LSConstants.text("component.title"));
