@@ -18,7 +18,7 @@
 package net.lunade.slime.client.renderer.entity.layers;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.frozenblock.lib.FrozenBools;
+import net.frozenblock.lib.FrozenLibEarlyConstants;
 import net.lunade.slime.LSConstants;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.model.monster.slime.MagmaCubeModel;
@@ -41,7 +41,8 @@ public class MagmaCubeGlowingLayer extends RenderLayer<SlimeRenderState, MagmaCu
 
 	@Override
 	public void submit(PoseStack poseStack, SubmitNodeCollector collector, int lightCoords, SlimeRenderState renderState, float yRot, float xRot) {
-		if (renderState.isInvisible || FrozenBools.HAS_GLOWTONE) return;
+		if (renderState.isInvisible || FrozenLibEarlyConstants.HAS_GLOWTONE) return;
+
 		collector.order(1).submitModel(
 			this.getParentModel(),
 			renderState,
@@ -51,8 +52,7 @@ public class MagmaCubeGlowingLayer extends RenderLayer<SlimeRenderState, MagmaCu
 			LivingEntityRenderer.getOverlayCoords(renderState, 0F),
 			-1,
 			null,
-			renderState.outlineColor,
-			null
+			renderState.outlineColor
 		);
 	}
 }

@@ -178,7 +178,7 @@ public class AbstractCubeMobMixin implements AbstractCubeMobInterface {
 	}
 
 	@WrapOperation(
-		method = "setcubeMobHealth",
+		method = "setCubeMobHealth",
 		at = @At(
 			value = "INVOKE",
 			target = "Lnet/minecraft/world/entity/ai/attributes/AttributeInstance;setBaseValue(D)V",

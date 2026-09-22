@@ -76,7 +76,8 @@ public final class LunaSlimesUtil {
 
 		if (cube2.isPersistenceRequired()) cube1.setPersistenceRequired();
 		if (cube2.hasCustomName() && !cube1.hasCustomName()) cube1.setCustomName(cube2.getCustomName());
-		cube1.setInvulnerable(cube2.isInvulnerable());
+		cube1.setPermanentlyInvulnerable(cube2.isPermanentlyInvulnerable());
+		cube1.setInvulnerableTime(cube2.getInvulnerableTime());
 		cube1.setSilent(cube2.isSilent());
 		cube1.setRemainingFireTicks((int) Math.max(cube1.getRemainingFireTicks(), cube2.getRemainingFireTicks() * 0.5));
 		cube1.setTicksFrozen((int) Math.max(cube1.getTicksFrozen(), cube2.getTicksFrozen() * 0.5));
@@ -109,7 +110,8 @@ public final class LunaSlimesUtil {
 		if (origin.isPersistenceRequired()) cube.setPersistenceRequired();
 		cube.setCustomName(customName);
 		cube.setNoAi(origin.isNoAi());
-		cube.setInvulnerable(origin.isInvulnerable());
+		cube.setPermanentlyInvulnerable(origin.isPermanentlyInvulnerable());
+		cube.setInvulnerableTime(origin.getInvulnerableTime());
 		cube.setSilent(origin.isSilent());
 		cube.setSize(splitOff = originalSize % 2 == 0 ? (int) (originalSize * 0.5) : 1, true);
 		cube.setRemainingFireTicks(origin.getRemainingFireTicks());

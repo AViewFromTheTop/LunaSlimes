@@ -17,7 +17,7 @@
 
 package net.lunade.slime;
 
-import net.frozenblock.lib.FrozenBools;
+import net.frozenblock.lib.FrozenLibEarlyConstants;
 import net.lunade.slime.config.gui.LSMainConfigGui;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
@@ -35,7 +35,7 @@ public final class LunaSlimesNeoForgeClient {
 		// AFTER register event
 		modBus.addListener(FMLClientSetupEvent.class, event -> LunaSlimesClient.setup());
 
-		if (FrozenBools.HAS_CLOTH_CONFIG) {
+		if (FrozenLibEarlyConstants.HAS_CLOTH_CONFIG) {
 			ModLoadingContext.get().registerExtensionPoint(
 				IConfigScreenFactory.class,
 				() -> (container, parent) -> LSMainConfigGui.buildScreen(parent)
